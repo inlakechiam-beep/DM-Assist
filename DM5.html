@@ -1,0 +1,2412 @@
+<!DOCTYPE html>
+<html lang="de" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sylvanus Spielleiter-Codex</title>
+
+    <!-- Google Fonts: Cinzel for Headings & Inter for Body -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        cinzel: ['Cinzel', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        forest: {
+                            50: '#f1f8f4',
+                            100: '#dfefe6',
+                            200: '#c1ded0',
+                            300: '#97c7b2',
+                            400: '#69a890',
+                            500: '#468c75',
+                            600: '#34705d',
+                            700: '#2a594b',
+                            800: '#23483d',
+                            900: '#1d3d34',
+                            950: '#0b1814',
+                        },
+                        gold: {
+                            300: '#f5e4a2',
+                            400: '#eacb67',
+                            500: '#d4af37',
+                            600: '#aa8822',
+                            700: '#806315',
+                        },
+                        parchment: {
+                            50: '#fcfaf5',
+                            100: '#f6f1e5',
+                            200: '#ede2cd',
+                            300: '#dfceab',
+                            800: '#423722',
+                            900: '#2d2415',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            /* Sylvanus Forest & Gold Theme Adjustments for Tracker */
+            --bg-card: #13251e;
+            --bg-card-active: #1c382e;
+            --bg-input: #0b1814;
+            --border-subtle: rgba(212, 175, 55, 0.25);
+            --text-main: #f1f8f4;
+            --text-muted: #97c7b2;
+            --accent-gold: #d4af37;
+            --accent-gold-glow: rgba(212, 175, 55, 0.3);
+            --accent-blue: #34705d;
+            --accent-green: #22c55e;
+            --accent-red: #ef4444;
+            --accent-purple: #a855f7;
+            --square-size: 110px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .font-cinzel {
+            font-family: 'Cinzel', serif;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 24, 20, 0.2);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(212, 175, 55, 0.3);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(212, 175, 55, 0.6);
+        }
+
+        .dark ::-webkit-scrollbar-track {
+            background: rgba(11, 24, 20, 0.6);
+        }
+
+        .dark .forest-pattern {
+            background-color: #0b1814;
+            background-image: radial-gradient(#1d3d34 0.8px, transparent 0.8px);
+            background-size: 20px 20px;
+        }
+
+        /* Initiative Tracker Scoped Styles */
+        .init-tracker-container {
+            width: 100%;
+        }
+
+        .init-header {
+            width: 100%;
+            background: #1d3d34;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .init-header-title {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #eacb67;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .init-header-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .init-tracker-container button {
+            background: #23483d;
+            color: var(--text-main);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .init-tracker-container button:hover {
+            background: #34705d;
+            border-color: #d4af37;
+        }
+
+        .init-tracker-container button:active {
+            transform: scale(0.97);
+        }
+
+        .init-tracker-container button.btn-primary {
+            background: #d4af37;
+            border-color: #d4af37;
+            color: #0b1814;
+            font-weight: 800;
+        }
+        .init-tracker-container button.btn-primary:hover {
+            background: #eacb67;
+        }
+
+        .init-tracker-container button.btn-danger-subtle {
+            background: rgba(239, 68, 68, 0.15);
+            border-color: rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+        }
+        .init-tracker-container button.btn-danger-subtle:hover {
+            background: rgba(239, 68, 68, 0.3);
+            border-color: var(--accent-red);
+            color: #ffffff;
+        }
+
+        .size-picker {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            background: var(--bg-input);
+            padding: 4px 8px;
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .size-picker input {
+            width: 60px;
+            accent-color: var(--accent-gold);
+            cursor: pointer;
+        }
+
+        #tracker-list {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .combatant-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 12px 14px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 14px;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+            position: relative;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+            cursor: pointer;
+        }
+
+        .combatant-card:hover {
+            border-color: #34705d;
+        }
+
+        .combatant-card.is-active {
+            border-color: var(--accent-gold);
+            background: var(--bg-card-active);
+            box-shadow: 0 0 18px var(--accent-gold-glow);
+        }
+
+        .combatant-card.is-active::before {
+            content: 'AM ZUG';
+            position: absolute;
+            top: -9px;
+            right: 20px;
+            background: var(--accent-gold);
+            color: #0b1814;
+            font-size: 0.62rem;
+            font-weight: 900;
+            padding: 2px 8px;
+            border-radius: 4px;
+            letter-spacing: 1px;
+        }
+
+        .init-badge {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-input);
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            padding: 6px 4px;
+            min-width: 52px;
+        }
+
+        .init-badge label {
+            font-size: 0.6rem;
+            font-weight: 800;
+            color: var(--accent-gold);
+            letter-spacing: 0.5px;
+        }
+
+        .init-badge input {
+            width: 40px;
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            font-size: 1.15rem;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .character-square-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            user-select: none;
+            border-right: 1px solid var(--border-subtle);
+            padding-right: 14px;
+        }
+
+        .character-square {
+            width: var(--square-size);
+            height: var(--square-size);
+            background: var(--bg-input);
+            border: 1px dashed var(--border-subtle);
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: width 0.2s, height 0.2s, border-color 0.2s;
+        }
+
+        .character-square:hover {
+            border-color: var(--accent-gold);
+        }
+
+        .character-square img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .upload-hint {
+            position: absolute;
+            inset: 0;
+            background: rgba(11, 24, 20, 0.8);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.68rem;
+            opacity: 0;
+            transition: opacity 0.2s;
+            text-align: center;
+            padding: 4px;
+        }
+
+        .character-square:hover .upload-hint,
+        .character-square.empty .upload-hint {
+            opacity: 1;
+        }
+
+        .character-square input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .name-input {
+            width: var(--square-size);
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: var(--text-main);
+            font-weight: 700;
+            text-align: center;
+            font-size: 0.85rem;
+            padding: 2px;
+            transition: border-color 0.2s;
+        }
+
+        .name-input:focus {
+            outline: none;
+            border-bottom-color: var(--accent-gold);
+        }
+
+        .hp-section {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            width: 230px;
+            max-width: 230px;
+            flex-shrink: 0;
+            border-right: 1px solid var(--border-subtle);
+            padding-right: 14px;
+        }
+
+        .hp-stats {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: bold;
+            flex-wrap: wrap;
+        }
+
+        .hp-display {
+            font-size: 1rem;
+            color: var(--accent-green);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .hp-number-input {
+            width: 46px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-subtle);
+            color: var(--accent-green);
+            padding: 3px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .max-hp-input {
+            width: 46px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-main);
+            padding: 3px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .btn-full-hp {
+            padding: 3px 6px;
+            font-size: 0.68rem;
+            background: var(--bg-input);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-muted);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-full-hp:hover {
+            background: var(--accent-gold);
+            color: #0b1814;
+            border-color: var(--accent-gold);
+        }
+
+        .temp-hp-display {
+            font-size: 0.78rem;
+            color: var(--accent-purple);
+            font-weight: 700;
+        }
+
+        .hp-inputs {
+            display: flex;
+            gap: 4px;
+        }
+
+        .hp-inputs input[type="number"] {
+            width: 50px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-main);
+            padding: 4px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 0.82rem;
+        }
+
+        .hp-buttons {
+            display: flex;
+            gap: 3px;
+        }
+
+        .hp-buttons button {
+            padding: 4px 6px;
+            font-size: 0.7rem;
+            border: 1px solid transparent;
+        }
+
+        .btn-dmg {
+            background: rgba(239, 68, 68, 0.15);
+            color: #fca5a5;
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+        .btn-dmg:hover {
+            background: var(--accent-red);
+            color: #fff;
+        }
+
+        .btn-heal {
+            background: rgba(34, 197, 94, 0.15);
+            color: #86efac;
+            border-color: rgba(34, 197, 94, 0.3);
+        }
+        .btn-heal:hover {
+            background: var(--accent-green);
+            color: #fff;
+        }
+
+        .btn-temp {
+            background: rgba(168, 85, 247, 0.15);
+            color: #d8b4fe;
+            border-color: rgba(168, 85, 247, 0.3);
+        }
+        .btn-temp:hover {
+            background: var(--accent-purple);
+            color: #fff;
+        }
+
+        .history-container {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .history-header {
+            font-size: 0.62rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+        }
+
+        .history-box {
+            background: var(--bg-input);
+            border-radius: 6px;
+            padding: 4px 6px;
+            height: 42px;
+            max-height: 42px;
+            overflow-y: auto;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .history-entry {
+            margin-bottom: 2px;
+            white-space: nowrap;
+        }
+        .history-entry.dmg { color: #fca5a5; }
+        .history-entry.heal { color: #86efac; }
+        .history-entry.temp { color: #d8b4fe; }
+        .history-entry.empty { color: #69a890; font-style: italic; }
+
+        .conditions-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            min-width: 220px;
+        }
+
+        .conditions-header {
+            font-size: 0.62rem;
+            font-weight: 800;
+            color: var(--text-muted);
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+        }
+
+        .conditions-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            align-content: flex-start;
+        }
+
+        .condition-btn {
+            background: var(--bg-input);
+            border: 1px solid var(--border-subtle);
+            color: #97c7b2;
+            padding: 3px 6px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            user-select: none;
+            white-space: nowrap;
+        }
+
+        .condition-btn:hover {
+            background: #23483d;
+            color: var(--text-main);
+            border-color: #34705d;
+        }
+
+        .condition-btn.active {
+            background: var(--cond-color);
+            color: var(--cond-text, #ffffff);
+            border-color: var(--cond-color);
+            font-weight: 700;
+            box-shadow: 0 0 8px var(--cond-color);
+            transform: scale(1.02);
+        }
+
+        .card-actions button {
+            padding: 5px 8px;
+            font-size: 0.85rem;
+            background: transparent;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-muted);
+            border-radius: 6px;
+        }
+
+        .card-actions button:hover {
+            background: var(--accent-red);
+            border-color: var(--accent-red);
+            color: #fff;
+        }
+
+        @media (max-width: 900px) {
+            .combatant-card {
+                flex-wrap: wrap;
+            }
+            .character-square-container {
+                border-right: none;
+                padding-right: 0;
+            }
+            .hp-section {
+                border-right: none;
+                border-bottom: 1px solid var(--border-subtle);
+                padding-right: 0;
+                padding-bottom: 10px;
+                width: 100%;
+                max-width: 100%;
+            }
+            .conditions-section {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body class="forest-pattern dark:bg-forest-950 dark:text-gray-100 bg-parchment-100 text-parchment-900 min-h-screen flex flex-col selection:bg-gold-500 selection:text-forest-950">
+
+<!-- Header / Navigation Bar -->
+<header class="sticky top-0 z-40 bg-forest-900/90 dark:bg-forest-950/95 border-b border-gold-500/30 backdrop-blur-md shadow-lg transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+
+        <!-- Logo & Title -->
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-lg bg-gold-500/10 border border-gold-500/40 flex items-center justify-center text-gold-400 shadow-inner">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                </svg>
+            </div>
+            <div>
+                <h1 class="font-cinzel text-lg sm:text-xl font-bold tracking-wider text-gold-400">Sylvanus</h1>
+                <p class="text-[10px] text-gray-300 dark:text-forest-300 font-medium tracking-widest uppercase">Spielleiter-Codex</p>
+            </div>
+        </div>
+
+        <!-- Global Action Controls -->
+        <div class="flex items-center space-x-2 sm:space-x-4">
+            <button id="themeToggleBtn" title="Design umschalten (Dark Forest / Tageslicht)" class="p-2 rounded-lg border border-gold-500/30 bg-forest-800/50 hover:bg-forest-700 text-gold-400 hover:text-gold-300 transition-all flex items-center space-x-1 text-xs">
+                <svg id="sunIcon" class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                </svg>
+                <svg id="moonIcon" class="w-4 h-4 block dark:hidden text-parchment-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                </svg>
+                <span class="hidden md:inline font-medium text-xs">Design</span>
+            </button>
+
+            <button id="resetDataBtn" title="Daten zurücksetzen" class="p-2 rounded-lg border border-red-500/30 bg-red-950/30 hover:bg-red-900/40 text-red-300 transition-all flex items-center space-x-1 text-xs">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                </svg>
+                <span class="hidden md:inline">Zurücksetzen</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <nav class="bg-forest-950/80 border-t border-forest-800/80 px-2 sm:px-6 overflow-x-auto">
+        <div class="max-w-7xl mx-auto flex space-x-1 sm:space-x-2 py-2 min-w-max" id="navTabsContainer">
+            <button data-tab="auftakt" class="nav-tab active-tab px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-all flex items-center space-x-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A2.5 2.5 0 013 11.2 2.5 2.5 0 015.436 8.717"></path></svg>
+                <span>Auftakt & Rückblick</span>
+            </button>
+            <button data-tab="geheimnisse" class="nav-tab px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-all flex items-center space-x-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                <span>Geheimnisse (10)</span>
+            </button>
+            <button data-tab="namensgen" class="nav-tab px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-all flex items-center space-x-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                <span>Namensgenerator</span>
+            </button>
+            <button data-tab="rollendeck" class="nav-tab px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-all flex items-center space-x-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                <span>NPC-Rollendeck</span>
+            </button>
+            <button data-tab="monster" class="nav-tab px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-all flex items-center space-x-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                <span>Monster & Taktiken</span>
+            </button>
+            <button data-tab="knoten" class="nav-tab px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-all flex items-center space-x-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
+                <span>Knoten-Ablaufplan</span>
+            </button>
+            <button data-tab="initiative" class="nav-tab px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-all flex items-center space-x-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <span>Initiative & Notizen</span>
+            </button>
+        </div>
+    </nav>
+</header>
+
+<!-- Notification Toast Container -->
+<div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col space-y-2 pointer-events-none"></div>
+
+<!-- Main Content Viewport -->
+<main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+    <!-- TAB 1: AUFTAKT & RÜCKBLICK -->
+    <section id="tab-auftakt" class="tab-content block space-y-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-2 bg-forest-900/60 dark:bg-forest-900/80 bg-white border border-forest-700/40 dark:border-forest-700/60 rounded-xl p-5 shadow-md">
+                <div class="flex items-center justify-between mb-4 border-b border-gold-500/20 pb-3">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-3 h-3 rounded-full bg-gold-500"></div>
+                        <h2 class="font-cinzel text-lg font-bold text-gold-400">Sitzungs-Auftakt (Der Hook)</h2>
+                    </div>
+                    <span class="text-xs text-gray-400">Direkter Einstieg für die heutige Runde</span>
+                </div>
+                <p class="text-xs text-gray-400 dark:text-gray-300 mb-3">Verwende ein klares, dramatisches Ereignis oder eine prägnante Beschreibung, um die Spieler sofort einzusaugen.</p>
+                <textarea id="sessionHookInput" rows="5" class="w-full bg-forest-950/70 dark:bg-forest-950/80 bg-parchment-50 border border-forest-700/50 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-gold-500 text-gray-100 dark:text-gray-100 text-parchment-900" placeholder="z.B. Das Krächzen eines eisigen Rabens zerschneidet die Stille der Taverne. Die Tür fliegt auf, Schnee wirbelt herein, und der Bote bricht mit drei schwarzen Pfeilen im Rücken zusammen..."></textarea>
+            </div>
+
+            <div class="bg-forest-900/60 dark:bg-forest-900/80 bg-white border border-forest-700/40 dark:border-forest-700/60 rounded-xl p-5 shadow-md">
+                <div class="flex items-center justify-between mb-4 border-b border-gold-500/20 pb-3">
+                    <h2 class="font-cinzel text-lg font-bold text-gold-400">Tages-Meilensteine</h2>
+                    <button id="addChecklistItemBtn" class="p-1 rounded bg-gold-500/20 hover:bg-gold-500/30 text-gold-400 text-xs flex items-center space-x-1 px-2">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                        <span>Neu</span>
+                    </button>
+                </div>
+                <div id="checklistItemsContainer" class="space-y-2.5 max-h-64 overflow-y-auto pr-1"></div>
+            </div>
+        </div>
+
+        <div class="bg-forest-900/60 dark:bg-forest-900/80 bg-white border border-forest-700/40 dark:border-forest-700/60 rounded-xl p-5 shadow-md">
+            <div class="flex items-center justify-between mb-4 border-b border-gold-500/20 pb-3">
+                <div class="flex items-center space-x-2">
+                    <svg class="w-5 h-5 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <h2 class="font-cinzel text-lg font-bold text-gold-400">Rückblick der letzten Sitzung</h2>
+                </div>
+                <button id="addRecapItemBtn" class="px-3 py-1.5 rounded-lg bg-gold-500/20 hover:bg-gold-500/30 text-gold-400 text-xs font-medium border border-gold-500/30 transition-all flex items-center space-x-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                    <span>Stichpunkt hinzufügen</span>
+                </button>
+            </div>
+            <div id="recapListContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+        </div>
+    </section>
+
+    <!-- TAB 2: GEHEIMNISSE & HINWEISE -->
+    <section id="tab-geheimnisse" class="tab-content hidden space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-forest-900/60 dark:bg-forest-900/80 bg-white p-4 rounded-xl border border-forest-700/40">
+            <div>
+                <h2 class="font-cinzel text-xl font-bold text-gold-400">10 Modulare Geheimnisse & Hinweise</h2>
+                <p class="text-xs text-gray-400 dark:text-gray-300">Ort-unabhängige Hinweise. Markiere enthüllte Geheimnisse direkt während des Spiels.</p>
+            </div>
+            <div class="flex items-center space-x-2">
+                <div class="inline-flex rounded-lg bg-forest-950 p-1 border border-forest-700/50">
+                    <button data-filter="all" class="secret-filter-btn active-filter px-3 py-1 rounded text-xs font-medium text-gray-300">Alle</button>
+                    <button data-filter="hidden" class="secret-filter-btn px-3 py-1 rounded text-xs font-medium text-gray-400">Verborgen</button>
+                    <button data-filter="revealed" class="secret-filter-btn px-3 py-1 rounded text-xs font-medium text-gray-400">Enthüllt</button>
+                </div>
+                <button id="addSecretBtn" class="px-3 py-1.5 rounded-lg bg-gold-500 text-forest-950 font-semibold text-xs hover:bg-gold-400 transition-all flex items-center space-x-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                    <span>Neues Geheimnis</span>
+                </button>
+            </div>
+        </div>
+
+        <div id="secretsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+    </section>
+
+    <!-- TAB 3: NAMENSGENERATOR -->
+    <section id="tab-namensgen" class="tab-content hidden space-y-6">
+        <div class="bg-forest-900/60 dark:bg-forest-900/80 bg-white border border-forest-700/40 rounded-xl p-5 shadow-md space-y-5">
+            <div class="flex flex-col md:flex-row md:items-center justify-between border-b border-gold-500/20 pb-4 gap-4">
+                <div>
+                    <h2 class="font-cinzel text-xl font-bold text-gold-400">Sylvanus Namensschmiede</h2>
+                    <p class="text-xs text-gray-400">Klicke jeweils auf einen Vorname & Nachname, um sie frei zu kombinieren.</p>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-3">
+                    <div>
+                        <label class="block text-[10px] text-gray-400 uppercase tracking-wider mb-1">Volk</label>
+                        <select id="nameGenRaceSelect" class="bg-forest-950 text-gold-400 border border-forest-700 text-xs rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-gold-500">
+                            <option value="mensch">Mensch</option>
+                            <option value="elf">Elf</option>
+                            <option value="tiefling">Tiefling</option>
+                            <option value="zwerg">Zwerg</option>
+                            <option value="teufel">Teufel / Infernal</option>
+                            <option value="ork">Ork</option>
+                            <option value="drachenbluetig">Drachenblütig</option>
+                            <option value="halbling">Halbling</option>
+                            <option value="gnom">Gnom</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] text-gray-400 uppercase tracking-wider mb-1">Geschlecht</label>
+                        <select id="nameGenGenderSelect" class="bg-forest-950 text-gold-400 border border-forest-700 text-xs rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-gold-500">
+                            <option value="maennlich">Männlich</option>
+                            <option value="weiblich">Weiblich</option>
+                            <option value="neutral">Geschlechtsneutral</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Combined Quick Result Banner -->
+            <div class="bg-forest-950/80 border border-gold-500/30 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                    <span class="text-[10px] text-gold-500 font-semibold uppercase tracking-widest">Ausgewählter Voller Name</span>
+                    <div id="fullGeneratedNameDisplay" class="font-cinzel text-xl text-white font-bold tracking-wide">...</div>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button id="copyFullNameBtn" class="px-3 py-1.5 rounded bg-forest-800 hover:bg-forest-700 text-gold-300 text-xs border border-forest-600 transition-all flex items-center space-x-1">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                        <span>Kopieren</span>
+                    </button>
+                    <button id="transferFullNameToNPCBtn" class="px-3 py-1.5 rounded bg-gold-500 hover:bg-gold-400 text-forest-950 font-semibold text-xs transition-all flex items-center space-x-1">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
+                        <span>Als NPC anlegen</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Two Selectable Columns -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Column 1: First Names -->
+                <div class="bg-forest-950/40 rounded-xl p-4 border border-forest-700/50 space-y-4">
+                    <div class="flex items-center justify-between border-b border-forest-700/60 pb-2">
+                        <h3 class="font-cinzel text-md font-bold text-gold-400">Vornamen</h3>
+                        <button id="refreshVornamenBtn" class="px-3 py-1 text-xs rounded bg-forest-800 hover:bg-forest-700 text-gold-400 flex items-center space-x-1">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                            <span>Neu</span>
+                        </button>
+                    </div>
+                    <div id="vornamenListContainer" class="space-y-2"></div>
+                </div>
+
+                <!-- Column 2: Last Names -->
+                <div class="bg-forest-950/40 rounded-xl p-4 border border-forest-700/50 space-y-4">
+                    <div class="flex items-center justify-between border-b border-forest-700/60 pb-2">
+                        <h3 class="font-cinzel text-md font-bold text-gold-400">Nachnamen & Sippen</h3>
+                        <button id="refreshNachnamenBtn" class="px-3 py-1 text-xs rounded bg-forest-800 hover:bg-forest-700 text-gold-400 flex items-center space-x-1">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                            <span>Neu</span>
+                        </button>
+                    </div>
+                    <div id="nachnamenListContainer" class="space-y-2"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TAB 4: NPC-ROLLENDECK -->
+    <section id="tab-rollendeck" class="tab-content hidden space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-forest-900/60 dark:bg-forest-900/80 bg-white p-4 rounded-xl border border-forest-700/40">
+            <div class="flex items-center space-x-3">
+                <input id="npcSearchInput" type="text" placeholder="NPC suchen nach Name, Rolle, Ort..." class="bg-forest-950 text-xs rounded-lg px-3 py-2 border border-forest-700 text-gray-200 focus:outline-none focus:ring-1 focus:ring-gold-500 w-64">
+            </div>
+            <button id="openNewNpcModalBtn" class="px-4 py-2 rounded-lg bg-gold-500 hover:bg-gold-400 text-forest-950 font-semibold text-xs transition-all flex items-center space-x-2 shadow-md">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                <span>Neuen NPC anlegen</span>
+            </button>
+        </div>
+
+        <div id="npcCardsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+    </section>
+
+    <!-- TAB 5: MONSTER-TAKTIKEN & STATBLOCKS -->
+    <section id="tab-monster" class="tab-content hidden space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-forest-900/60 dark:bg-forest-900/80 bg-white p-4 rounded-xl border border-forest-700/40">
+            <div>
+                <h2 class="font-cinzel text-xl font-bold text-gold-400">Monster & KI-Kampftaktiken</h2>
+                <p class="text-xs text-gray-400">Kompakte Statblocks mit gezielten Verhaltensempfehlungen für schnelle Kämpfe.</p>
+            </div>
+            <button id="openNewMonsterModalBtn" class="px-3 py-1.5 rounded-lg bg-gold-500 hover:bg-gold-400 text-forest-950 font-semibold text-xs transition-all flex items-center space-x-1">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                <span>Monster hinzufügen</span>
+            </button>
+        </div>
+
+        <div id="monstersGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+    </section>
+
+    <!-- TAB 6: KNOTEN-ABENTEUER-ABLAUFPLAN -->
+    <section id="tab-knoten" class="tab-content hidden space-y-6">
+        <div class="bg-forest-900/60 dark:bg-forest-900/80 bg-white border border-forest-700/40 rounded-xl p-5 space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-gold-500/20 pb-3 gap-3">
+                <div>
+                    <h2 class="font-cinzel text-xl font-bold text-gold-400">Knoten-Ablaufplan (Szenen-Graph)</h2>
+                    <p class="text-xs text-gray-400">Strukturierter Szenen-Verlauf. Klicke auf Knoten für Details & Statusänderungen.</p>
+                </div>
+                <button id="addNodeBtn" class="px-3 py-1.5 rounded-lg bg-gold-500 hover:bg-gold-400 text-forest-950 font-semibold text-xs transition-all flex items-center space-x-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                    <span>Szene / Knoten hinzufügen</span>
+                </button>
+            </div>
+
+            <div id="nodesGraphContainer" class="grid grid-cols-1 md:grid-cols-3 gap-4 min-h-[300px]"></div>
+        </div>
+    </section>
+
+    <!-- TAB 7: INITIATIVE & SCHNELL-NOTIZEN -->
+    <section id="tab-initiative" class="tab-content hidden space-y-6">
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+
+            <!-- Initiative & HP Tracker -->
+            <div class="xl:col-span-2 space-y-4">
+                <div class="init-tracker-container">
+                    <div class="init-header">
+                        <div class="init-header-title">
+                            <span class="icon">⚔️</span> Initiative & HP Tracker
+                        </div>
+
+                        <div class="init-header-controls">
+                            <div class="size-picker">
+                                <label for="square-slider">Token:</label>
+                                <input type="range" id="square-slider" min="70" max="150" value="110" oninput="adjustSquareSize(this.value)" />
+                            </div>
+
+                            <button onclick="addCombatant()" class="btn-primary">+ Kreatur</button>
+                            <button onclick="resetAllLogs()" title="Logs für alle Kreaturen leeren">📜 Logs leeren</button>
+                            <button onclick="resetTracker()" class="btn-danger-subtle">Alle Löschen</button>
+                        </div>
+                    </div>
+
+                    <div id="tracker-list">
+                        <!-- Dynamic Combatant Cards Rendered Here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Schnell-Notizen Scratchpad -->
+            <div class="bg-forest-900/60 dark:bg-forest-900/80 bg-white border border-forest-700/40 rounded-xl p-5 flex flex-col shadow-md min-h-[400px]">
+                <div class="flex items-center justify-between border-b border-gold-500/20 pb-3 mb-3">
+                    <h2 class="font-cinzel text-lg font-bold text-gold-400">Schnell-Notizen</h2>
+                    <button id="clearNotesBtn" class="text-xs text-gray-400 hover:text-red-400 transition-colors">Leeren</button>
+                </div>
+                <textarea id="scratchpadNotes" class="flex-grow w-full h-full min-h-[300px] bg-forest-950/80 border border-forest-700/60 rounded-lg p-3 text-xs text-gray-200 focus:outline-none focus:ring-1 focus:ring-gold-500 resize-none font-mono" placeholder="Spontane Notizen während der Sitzung... (Wird automatisch gespeichert)"></textarea>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<!-- MODAL: NPC Creator / Editor -->
+<div id="npcModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-forest-900 border border-gold-500/40 rounded-xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
+        <div class="flex items-center justify-between border-b border-gold-500/20 pb-3">
+            <h3 id="npcModalTitle" class="font-cinzel text-lg font-bold text-gold-400">Neuen NPC anlegen</h3>
+            <button class="closeModalBtn text-gray-400 hover:text-white">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+        <form id="npcForm" class="space-y-3">
+            <input type="hidden" id="npcIdInput">
+            <div>
+                <label class="block text-xs text-gray-300 mb-1">Name & Titel</label>
+                <input id="npcNameInput" type="text" required class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100 focus:outline-none focus:ring-1 focus:ring-gold-500" placeholder="z.B. Valeria Frostglut">
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs text-gray-300 mb-1">Volk / Profession</label>
+                    <input id="npcRoleInput" type="text" placeholder="z.B. Tiefling Diplomat" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100 focus:outline-none focus:ring-1 focus:ring-gold-500">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-300 mb-1">Ort / Fraktion</label>
+                    <input id="npcLocationInput" type="text" placeholder="z.B. Nebelhafen" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100 focus:outline-none focus:ring-1 focus:ring-gold-500">
+                </div>
+            </div>
+            <div>
+                <label class="block text-xs text-gold-400 font-semibold mb-1">👁️ Optischer Anker</label>
+                <input id="npcVisualInput" type="text" placeholder="z.B. Silbernes Monokel, riecht nach Nelken" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100 focus:outline-none focus:ring-1 focus:ring-gold-500">
+            </div>
+            <div>
+                <label class="block text-xs text-gold-400 font-semibold mb-1">🗣️ Stimme / Eigenheit</label>
+                <input id="npcVoiceInput" type="text" placeholder="z.B. Leise, kratzige Stimme; tippt nervös auf Tische" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100 focus:outline-none focus:ring-1 focus:ring-gold-500">
+            </div>
+            <div>
+                <label class="block text-xs text-gold-400 font-semibold mb-1">🎯 Hauptmotivation</label>
+                <input id="npcGoalInput" type="text" placeholder="z.B. Suche nach dem verschollenen Pergament" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100 focus:outline-none focus:ring-1 focus:ring-gold-500">
+            </div>
+            <div>
+                <label class="block text-xs text-gold-400 font-semibold mb-1">🗝️ Geheimnis</label>
+                <input id="npcSecretInput" type="text" placeholder="z.B. Besitzt einen gefälschten Adelsbrief" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100 focus:outline-none focus:ring-1 focus:ring-gold-500">
+            </div>
+            <div class="flex justify-end space-x-2 pt-2">
+                <button type="button" class="closeModalBtn px-4 py-2 rounded-lg bg-forest-800 text-gray-300 text-xs hover:bg-forest-700">Abbrechen</button>
+                <button type="submit" class="px-4 py-2 rounded-lg bg-gold-500 text-forest-950 font-bold text-xs hover:bg-gold-400">Speichern</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- MODAL: Monster Creator / Editor -->
+<div id="monsterModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-forest-900 border border-gold-500/40 rounded-xl max-w-lg w-full p-6 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
+        <div class="flex items-center justify-between border-b border-gold-500/20 pb-3">
+            <h3 id="monsterModalTitle" class="font-cinzel text-lg font-bold text-gold-400">Monster / Gegner bearbeiten</h3>
+            <button class="closeMonsterModalBtn text-gray-400 hover:text-white">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+        <form id="monsterForm" class="space-y-3">
+            <input type="hidden" id="monsterIdInput">
+            <div>
+                <label class="block text-xs text-gray-300 mb-1">Monster / Gegner Name</label>
+                <input id="monsterNameInput" type="text" required class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100 focus:outline-none focus:ring-1 focus:ring-gold-500" placeholder="z.B. Schattenpanther">
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs text-gray-300 mb-1">Typ / Kategorie</label>
+                    <input id="monsterTypeInput" type="text" placeholder="z.B. Bestie (Mittel)" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100 focus:outline-none focus:ring-1 focus:ring-gold-500">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-300 mb-1">Erfahrungspunkte (XP)</label>
+                    <input id="monsterXpInput" type="text" placeholder="z.B. 700 XP" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100 focus:outline-none focus:ring-1 focus:ring-gold-500">
+                </div>
+            </div>
+            <div class="grid grid-cols-4 gap-2">
+                <div>
+                    <label class="block text-xs text-gray-300 mb-1">RK (AC)</label>
+                    <input id="monsterAcInput" type="number" required placeholder="15" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100 focus:outline-none focus:ring-1 focus:ring-gold-500">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-300 mb-1">TP (HP)</label>
+                    <input id="monsterHpInput" type="number" required placeholder="45" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100 focus:outline-none focus:ring-1 focus:ring-gold-500">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-300 mb-1">Initiative</label>
+                    <input id="monsterInitInput" type="text" placeholder="+4" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100 focus:outline-none focus:ring-1 focus:ring-gold-500">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-300 mb-1">Tempo</label>
+                    <input id="monsterSpeedInput" type="text" placeholder="9m" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100 focus:outline-none focus:ring-1 focus:ring-gold-500">
+                </div>
+            </div>
+            <div>
+                <label class="block text-xs text-gold-400 font-semibold mb-1">⚔️ KI-Kampftaktik & Verhalten</label>
+                <textarea id="monsterTacticsInput" rows="2" placeholder="Verhalten im Kampf, Prioritätsziele..." class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100 focus:outline-none focus:ring-1 focus:ring-gold-500 resize-none"></textarea>
+            </div>
+            <div>
+                <label class="block text-xs text-gold-400 font-semibold mb-1">💥 Aktionen & Angriffe</label>
+                <input id="monsterActionsInput" type="text" placeholder="z.B. Bissserie (2d6+4 Hieb)" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100 focus:outline-none focus:ring-1 focus:ring-gold-500">
+            </div>
+            <div>
+                <label class="block text-xs text-gray-300 mb-1">📝 Notizen</label>
+                <input id="monsterNotesInput" type="text" placeholder="z.B. Besondere Immunitäten, Hinterhalt..." class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100 focus:outline-none focus:ring-1 focus:ring-gold-500">
+            </div>
+            <div class="flex justify-end space-x-2 pt-2">
+                <button type="button" class="closeMonsterModalBtn px-4 py-2 rounded-lg bg-forest-800 text-gray-300 text-xs hover:bg-forest-700">Abbrechen</button>
+                <button type="submit" class="px-4 py-2 rounded-lg bg-gold-500 text-forest-950 font-bold text-xs hover:bg-gold-400">Speichern</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    const CONDITIONS = [
+        { id: 'betaeubt', name: 'Betäubt', color: '#f59e0b', textOnActive: '#000000' },
+        { id: 'bewusstlos', name: 'Bewusstlos', color: '#64748b', textOnActive: '#ffffff' },
+        { id: 'bezaubert', name: 'Bezaubert', color: '#ec4899', textOnActive: '#ffffff' },
+        { id: 'blind', name: 'Blind', color: '#3b82f6', textOnActive: '#ffffff' },
+        { id: 'erschoepft', name: 'Erschöpft', color: '#d97706', textOnActive: '#ffffff' },
+        { id: 'festgesetzt', name: 'Festgesetzt', color: '#8b5cf6', textOnActive: '#ffffff' },
+        { id: 'gelaehmt', name: 'Gelähmt', color: '#ef4444', textOnActive: '#ffffff' },
+        { id: 'gepackt', name: 'Gepackt', color: '#14b8a6', textOnActive: '#000000' },
+        { id: 'kampfunfaehig', name: 'Kampfunfähig', color: '#dc2626', textOnActive: '#ffffff' },
+        { id: 'liegend', name: 'Liegend', color: '#a855f7', textOnActive: '#ffffff' },
+        { id: 'taub', name: 'Taub', color: '#6366f1', textOnActive: '#ffffff' },
+        { id: 'unsichtbar', name: 'Unsichtbar', color: '#06b6d4', textOnActive: '#ffffff' },
+        { id: 'veraengstigt', name: 'Verängstigt', color: '#10b981', textOnActive: '#ffffff' },
+        { id: 'vergiftet', name: 'Vergiftet', color: '#22c55e', textOnActive: '#ffffff' },
+        { id: 'versteinert', name: 'Versteinert', color: '#78716c', textOnActive: '#ffffff' }
+    ];
+
+    const DEFAULT_SECRETS = [
+        { id: '1', text: 'Der Baron steht heimlich unter dem Einfluss einer Erzteufelin und zahlt Tribut in Seelen.', status: 'hidden', tag: 'Politik' },
+        { id: '2', text: 'Im versunkenen Tempel ruht ein Stück des Ur-Smaragds, der Tote reanimieren kann.', status: 'hidden', tag: 'Artefakt' },
+        { id: '3', text: 'Der Schmied Thorin ist in Wahrheit der verbannte Thronfolger des Zwergenreichs.', status: 'hidden', tag: 'NPC' },
+        { id: '4', text: 'Die Waldläufer der Schatteneihe nutzen halluzinogenes Gift für ihre Pfeile.', status: 'revealed', tag: 'Fraktion' },
+        { id: '5', text: 'Unter der Hauptschänke existiert ein verlassener Fluchttunnel aus der Kaiserzeit.', status: 'hidden', tag: 'Ort' },
+        { id: '6', text: 'Das Siegel auf der Truhe der Magiergilde bricht bei der nächsten Vollmondnacht.', status: 'hidden', tag: 'Magie' },
+        { id: '7', text: 'Der Wirt mischt Traumblütenstaub in den Met, um Gäste gefügig zu machen.', status: 'hidden', tag: 'Geheimnis' },
+        { id: '8', text: 'Die Nebel im Schattenwald werden von einem uralten, erwachten Baumhirten geatmet.', status: 'hidden', tag: 'Natur' },
+        { id: '9', text: 'Ein Mitglied der Stadtwache spioniert für die Diebesgilde "Der Rote Raben".', status: 'hidden', tag: 'Verrat' },
+        { id: '10', text: 'Das Buch der Wahrheiten verbrennt jeden, der eine Lüge im Herzen trägt.', status: 'revealed', tag: 'Legende' }
+    ];
+
+    const DEFAULT_NPCS = [
+        {
+            id: 'npc-1',
+            name: 'Valeria Frostglut',
+            role: 'Tiefling Diplomat',
+            location: 'Silber-Zitadelle',
+            visual: 'Silbernes Monokel, riecht nach Gewürznelken und Rauch',
+            voice: 'Sehr leise, ruhige Stimme; tippt mit den Ringen auf die Armlehne',
+            goal: 'Möchte den Handelspakt zwischen Zwergen und Menschen erzwingen',
+            secret: 'Verkauft Waffen an die Rebellen auf dem Nordpass'
+        },
+        {
+            id: 'npc-2',
+            name: 'Gideon Schattenwanderer',
+            role: 'Halbling Informant',
+            location: 'Schattenmarkt',
+            visual: 'Abgewetzter Ledermantel, Narbe über der linken Braue',
+            voice: 'Hektisches Flüstern, blickt ständig über beide Schultern',
+            goal: 'Sammelt genug Gold für eine Überfahrt über den Ozean',
+            secret: 'Kennt den geheimen Eingang ins Gewölbe der Magiergilde'
+        }
+    ];
+
+    const DEFAULT_MONSTERS = [
+        {
+            id: 'm-1',
+            name: 'Schattenpanther',
+            type: 'Bestie (Mittel)',
+            xp: '700 XP',
+            ac: 15,
+            hp: 45,
+            init: '+4',
+            speed: '12m / Klettern 9m',
+            tactics: 'Nutzt Dämmerung & Hinterhalt. Zielt bevorzugt auf isolated/schwache Zauberwirker in der Hinterreihe. Flieht schlagartig, wenn Leben unter 25% fällt.',
+            actions: 'Anspringen (Vorteil bei Überraschung), Bissserie (2d6+4 Hieb)',
+            notes: 'Tarnung im dichten Unterholz extrem hoch.'
+        },
+        {
+            id: 'm-2',
+            name: 'Goblin-Kriegsfürst',
+            type: 'Humanoid (Mittel)',
+            xp: '1.100 XP',
+            ac: 17,
+            hp: 68,
+            init: '+3',
+            speed: '9m',
+            tactics: 'Schickt Diener als Futter vor. Nutzt Bonusaktion zum Verstecken / Entkommen. Befiehlt seinen Bogenschützen konzentriertes Feuer.',
+            actions: 'Krummsäbel-Multiattacke (2x 1d8+3), Führungsschrei (Gewährt Verbündeten Vorteil)',
+            notes: 'Trägt einen gestohlenen magischen Ring des Schutzes.'
+        }
+    ];
+
+    const DEFAULT_NODES = [
+        {
+            id: 'n-1',
+            title: '1. Das Nebel-Wirtshaus',
+            status: 'completed',
+            description: 'Die Helden treffen sich im Gasthaus "Zum Tanzenden Eber" und erhalten das Dokument vom sterbenden Boten.',
+            clues: 'Blutbeflecktes Siegel, Wegbeschreibung zum Ruinenberg',
+            npcs: 'Wirt Barnabas, Bote Eldon'
+        },
+        {
+            id: 'n-2',
+            title: '2A. Der verlassene Wachturm',
+            status: 'active',
+            description: 'Ein steiler Aufstieg durch den Nebelwald. Goblins haben am Turmfuß einen Hinterhalt vorbereitet.',
+            clues: 'Gefundene Skizze des Ritualplatzes',
+            npcs: 'Goblin-Späher'
+        },
+        {
+            id: 'n-3',
+            title: '2B. Der Flusspfad durch die Klamm',
+            status: 'bypassed',
+            description: 'Alternative Route über den reißenden Bergfluss. Rutschige Felsen und wilde Bären.',
+            clues: 'Verlorenes Tagebuch im Wasser',
+            npcs: 'Einsiedler Kael'
+        },
+        {
+            id: 'n-4',
+            title: '3. Die Tempelruine von Sylvanus',
+            status: 'planned',
+            description: 'Das Finale der Sitzung: Ein unterirdischer Ritualraum mit dem unheilvollen Blutstein.',
+            clues: 'Das Uralte Codex-Fragment',
+            npcs: 'Kultisten-Anführer Malakor'
+        }
+    ];
+
+    const NAME_DATABASE = {
+        mensch: {
+            vornamen: {
+                maennlich: ['Alaric', 'Cedric', 'Gareth', 'Henrik', 'Konrad', 'Leopold', 'Roderick', 'Valentin', 'Wilhelm', 'Kaelen'],
+                weiblich: ['Adelheid', 'Beatrice', 'Clara', 'Eleanor', 'Helena', 'Isolda', 'Johanna', 'Mathilda', 'Rosalie', 'Theresa'],
+                neutral: ['Arian', 'Darian', 'Evelyn', 'Jonas', 'Miran', 'Quinn', 'Rowan', 'Shiloh', 'Taylor', 'Valery']
+            },
+            nachnamen: ['Dornenwall', 'Eichenschild', 'Falkenhorst', 'Greifenfels', 'Holzmann', 'Kranich', 'Mühlenberg', 'Rosenzweig', 'Steinmetz', 'Winterberg']
+        },
+        elf: {
+            vornamen: {
+                maennlich: ['Aerion', 'Caelynn', 'Erevan', 'Fenris', 'Gaelen', 'Lycidas', 'Silas', 'Tharanor', 'Valandil', 'Zethor'],
+                weiblich: ['Alysia', 'Celestia', 'Elenora', 'Faeriel', 'Ilyana', 'Lyra', 'Miriella', 'Saria', 'Theala', 'Xiloscient'],
+                neutral: ['Aelori', 'Corell', 'Faelan', 'Ilonis', 'Lorian', 'Merinn', 'Nael', 'Rion', 'Thael', 'Zephyr']
+            },
+            nachnamen: ['Mondflüstern', 'Schattenlaub', 'Silberzweig', 'Sternentau', 'Windläufer', 'Dämmerlicht', 'Glanzfeder', 'Nebelweber', 'Thronweide', 'Seelenklang']
+        },
+        tiefling: {
+            vornamen: {
+                maennlich: ['Azazel', 'Barakas', 'Damien', 'Kairon', 'Malphas', 'Mephisto', 'Orus', 'Ravus', 'Valafar', 'Zepar'],
+                weiblich: ['Aktaia', 'Bryseis', 'Damaia', 'Kallista', 'Lerissa', 'Nemeia', 'Phaedra', 'Rieta', 'Tenebris', 'Velos'],
+                neutral: ['Anarchie', 'Barmherzigkeit', 'Chaos', 'Hoffnung', 'Kummer', 'Nacht', 'Rache', 'Stille', 'Zorn', 'Zweifel']
+            },
+            nachnamen: ['Aschenbringer', 'Dunkelglut', 'Höllenbrand', 'Nachtschatten', 'Rußherz', 'Schwefelstein', 'Teufelskrone', 'Verderbnis', 'Schattenfunke', 'Glutwind']
+        },
+        zwerg: {
+            vornamen: {
+                maennlich: ['Bared', 'Brokk', 'Dain', 'Durin', 'Gimli', 'Harbek', 'Kazador', 'Thorin', 'Thrain', 'Varok'],
+                weiblich: ['Amber', 'Bardryn', 'Dagnal', 'Eldeth', 'Gurdis', 'Helja', 'Kathra', 'Mardin', 'Torbera', 'Vondra'],
+                neutral: ['Argus', 'Brin', 'Durn', 'Gim', 'Karn', 'Krag', 'Rurik', 'Storn', 'Thor', 'Thrum']
+            },
+            nachnamen: ['Ambossbrecher', 'Erzfelsen', 'Goldader', 'Hammerschlag', 'Kupferschmied', 'Schildspalter', 'Stahlfaust', 'Steinbrecher', 'Tiefengrub', 'Zinnerz']
+        },
+        teufel: {
+            vornamen: {
+                maennlich: ['Astaroth', 'Belial', 'Dispater', 'Mammon', 'Mephistopheles', 'Moloch', 'Satanus', 'Asmodeus', 'Infernus', 'Bael'],
+                weiblich: ['Lilith', 'Fieryna', 'Glasya', 'Naamah', 'Eisheth', 'Agrat', 'Morbus', 'Malice', 'Infernix', 'Hekate'],
+                neutral: ['Abaddon', 'Beelzebub', 'Legion', 'Lucifer', 'Nebel', 'Orcus', 'Pazuzu', 'Schatten', 'Void', 'Gehenna']
+            },
+            nachnamen: ['von der Neunten Hölle', 'vom Flammenthron', 'Gallenblut', 'Seelenfresser', 'Höllenfürst', 'Blutvertrag', 'Schwarzzunge', 'Ketzerbrand', 'Eisfeuer', 'Teufelsgalle']
+        },
+        ork: {
+            vornamen: {
+                maennlich: ['Grommash', 'Guldan', 'Kargath', 'Thok', 'Urgok', 'Varok', 'Zuggar', 'Bresh', 'Drakka', 'Ghar'],
+                weiblich: ['Bagra', 'Draka', 'Gola', 'Kasha', 'Mogra', 'Reka', 'Shautha', 'Ugrash', 'Vola', 'Yash'],
+                neutral: ['Azog', 'Ghor', 'Krag', 'Mogh', 'Ruk', 'Shag', 'Thok', 'Urg', 'Zog', 'Zur']
+            },
+            nachnamen: ['Blutfaust', 'Knochenbrecher', 'Schädelspalter', 'Hauerschlag', 'Kriegsschrei', 'Erzfresser', 'Rottenschild', 'Todeshieb', 'Eisenhaut', 'Wildzahn']
+        },
+        drachenbluetig: {
+            vornamen: {
+                maennlich: ['Arjhan', 'Balasar', 'Dharshan', 'Heskan', 'Medrash', 'Rassimer', 'Shamash', 'Tarhun', 'Torinn', 'Kriv'],
+                weiblich: ['Akra', 'Biri', 'Kava', 'Mishann', 'Nala', 'Perra', 'Raiann', 'Thava', 'Uda', 'Sora'],
+                neutral: ['Bala', 'Dhar', 'Hesk', 'Kriv', 'Med', 'Nal', 'Rass', 'Tar', 'Tor', 'Zor']
+            },
+            nachnamen: ['Drachenschuppe', 'Feueratem', 'Glutkrone', 'Schuppenpanzer', 'Zornklaue', 'Mondschuppe', 'Goldzahn', 'Sturmschwinge', 'Lavaherz', 'Urvater']
+        },
+        halbling: {
+            vornamen: {
+                maennlich: ['Alton', 'Ander', 'Cade', 'Corrin', 'Eldon', 'Finnan', 'Garret', 'Lyle', 'Milo', 'Wellby'],
+                weiblich: ['Bree', 'Callie', 'Cora', 'Euphemia', 'Jillian', 'Lavinia', 'Merla', 'Nedda', 'Seraphina', 'Verna'],
+                neutral: ['Andi', 'Charlie', 'Fin', 'Jori', 'Kip', 'Lorin', 'Pippin', 'Robin', 'Sami', 'Toby']
+            },
+            nachnamen: ['Apfelblüte', 'Beutlin', 'Grünberg', 'Kleeblatt', 'Mühlenrad', 'Teichrose', 'Unterberg', 'Wiesenreich', 'Zuckerbrot', 'Sommerfeld']
+        },
+        gnom: {
+            vornamen: {
+                maennlich: ['Boddynock', 'Dimble', 'Fonkin', 'Gimpten', 'Kribben', 'Nobil', 'Orryn', 'Roondar', 'Seebo', 'Zook'],
+                weiblich: ['Bimpnottin', 'Caramip', 'Ellywick', 'Loopmottin', 'Mardnab', 'Nissa', 'Roywyn', 'Shamil', 'Tana', 'Zanna'],
+                neutral: ['Bip', 'Fizz', 'Gim', 'Krip', 'Nip', 'Pox', 'Rink', 'Tink', 'Zeb', 'Zip']
+            },
+            nachnamen: ['Funkenflug', 'Kupferzahn', 'Zahnrad', 'Tüftelwerk', 'Dampfkessel', 'Schraubenschlüssel', 'Blitzdraht', 'Uhrwerk', 'Federleicht', 'Quarzfunke']
+        }
+    };
+
+    let state = {
+        theme: 'dark',
+        activeTab: 'auftakt',
+        secrets: DEFAULT_SECRETS,
+        npcs: DEFAULT_NPCS,
+        monsters: DEFAULT_MONSTERS,
+        nodes: DEFAULT_NODES,
+        sessionHook: '',
+        checklist: [
+            { id: '1', text: 'Spionage-Hinweis im Wirtshaus auflösen', done: true },
+            { id: '2', text: 'Hinterhalt am Wachturm ausspielen', done: false },
+            { id: '3', text: 'Geheimnis des Boten aufdecken', done: false }
+        ],
+        recap: [
+            'Die Helden entkamen knapp der brennenden Scheune.',
+            'Kleriker Gabriel fand eine verzauberte Münze mit dem Siegel von Sylvanus.',
+            'Die Gruppe schloss eine Allianz mit dem Zwergenspähertrupp.'
+        ],
+        combatants: [
+            { id: '1', name: 'Held Paladin', init: 20, hp: 50, maxHp: 50, tempHp: 0, img: 'https://picsum.photos/seed/paladin/200', conditions: [], history: ['Erstellt mit 50 HP'] },
+            { id: '2', name: 'Goblin Anführer', init: 14, hp: 18, maxHp: 18, tempHp: 0, img: 'https://picsum.photos/seed/goblin/200', conditions: [], history: ['Erstellt mit 18 HP'] },
+            { id: '3', name: 'Magier', init: 8, hp: 22, maxHp: 22, tempHp: 0, img: 'https://picsum.photos/seed/wizard/200', conditions: [], history: ['Erstellt mit 22 HP'] }
+        ],
+        activeId: '1',
+        notes: ''
+    };
+
+    function loadState() {
+        try {
+            const saved = localStorage.getItem('sylvanus_codex_data_v4');
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                state = { ...state, ...parsed };
+            }
+        } catch (e) {
+            console.error("Fehler beim Laden des Speichers:", e);
+        }
+    }
+
+    function saveState() {
+        try {
+            localStorage.setItem('sylvanus_codex_data_v4', JSON.stringify(state));
+        } catch (e) {
+            console.error("Fehler beim Speichern:", e);
+        }
+    }
+
+    function showToast(message, type = 'info') {
+        const container = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        toast.className = `pointer-events-auto px-4 py-2.5 rounded-lg text-xs font-semibold shadow-xl border flex items-center space-x-2 transition-all transform translate-y-2 opacity-0 duration-200 ${
+            type === 'success' ? 'bg-forest-900 border-gold-500 text-gold-300' : 'bg-forest-900 border-forest-600 text-gray-200'
+        }`;
+        toast.innerHTML = `
+            <svg class="w-4 h-4 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <span>${message}</span>
+        `;
+        container.appendChild(toast);
+
+        setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 10);
+        setTimeout(() => {
+            toast.classList.add('opacity-0', 'translate-y-2');
+            setTimeout(() => toast.remove(), 200);
+        }, 3000);
+    }
+
+    function initTabs() {
+        const tabs = document.querySelectorAll('.nav-tab');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const target = tab.getAttribute('data-tab');
+                state.activeTab = target;
+
+                tabs.forEach(t => {
+                    t.classList.remove('active-tab', 'bg-gold-500/20', 'text-gold-400', 'border', 'border-gold-500/40');
+                    t.classList.add('text-gray-400', 'hover:text-gray-200');
+                });
+
+                tab.classList.add('active-tab', 'bg-gold-500/20', 'text-gold-400', 'border', 'border-gold-500/40');
+                tab.classList.remove('text-gray-400');
+
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
+
+                const activeContent = document.getElementById(`tab-${target}`);
+                if (activeContent) activeContent.classList.remove('hidden');
+
+                saveState();
+            });
+        });
+    }
+
+    function initTheme() {
+        const themeBtn = document.getElementById('themeToggleBtn');
+        const htmlEl = document.documentElement;
+
+        function applyTheme(theme) {
+            if (theme === 'dark') {
+                htmlEl.classList.add('dark');
+            } else {
+                htmlEl.classList.remove('dark');
+            }
+            state.theme = theme;
+            saveState();
+        }
+
+        themeBtn.addEventListener('click', () => {
+            const newTheme = htmlEl.classList.contains('dark') ? 'light' : 'dark';
+            applyTheme(newTheme);
+        });
+
+        applyTheme(state.theme || 'dark');
+    }
+
+    function renderAuftaktTab() {
+        const hookInput = document.getElementById('sessionHookInput');
+        hookInput.value = state.sessionHook || '';
+        hookInput.oninput = (e) => {
+            state.sessionHook = e.target.value;
+            saveState();
+        };
+
+        const checklistContainer = document.getElementById('checklistItemsContainer');
+        checklistContainer.innerHTML = '';
+        state.checklist.forEach(item => {
+            const row = document.createElement('div');
+            row.className = 'flex items-center justify-between p-2 rounded bg-forest-950/50 border border-forest-700/40 text-xs';
+            row.innerHTML = `
+                <label class="flex items-center space-x-2 cursor-pointer flex-grow">
+                    <input type="checkbox" ${item.done ? 'checked' : ''} class="checklist-check rounded bg-forest-900 border-forest-600 text-gold-500 focus:ring-0">
+                    <span class="${item.done ? 'line-through text-gray-500' : 'text-gray-200'}">${item.text}</span>
+                </label>
+                <button class="delete-checklist-btn text-gray-500 hover:text-red-400 p-1">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                </button>
+            `;
+
+            row.querySelector('.checklist-check').onchange = (e) => {
+                item.done = e.target.checked;
+                saveState();
+                renderAuftaktTab();
+            };
+
+            row.querySelector('.delete-checklist-btn').onclick = () => {
+                state.checklist = state.checklist.filter(c => c.id !== item.id);
+                saveState();
+                renderAuftaktTab();
+            };
+
+            checklistContainer.appendChild(row);
+        });
+
+        const recapContainer = document.getElementById('recapListContainer');
+        recapContainer.innerHTML = '';
+        state.recap.forEach((pt, index) => {
+            const card = document.createElement('div');
+            card.className = 'bg-forest-950/60 p-3 rounded-lg border border-forest-700/50 flex justify-between items-start space-x-2 text-xs text-gray-200';
+            card.innerHTML = `
+                <div class="flex items-start space-x-2">
+                    <span class="text-gold-400 font-bold">•</span>
+                    <span>${pt}</span>
+                </div>
+                <button class="delete-recap-btn text-gray-500 hover:text-red-400 p-0.5">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            `;
+            card.querySelector('.delete-recap-btn').onclick = () => {
+                state.recap.splice(index, 1);
+                saveState();
+                renderAuftaktTab();
+            };
+            recapContainer.appendChild(card);
+        });
+    }
+
+    document.getElementById('addChecklistItemBtn').onclick = () => {
+        const text = prompt('Neues Meilenstein-Ziel:');
+        if (text) {
+            state.checklist.push({ id: Date.now().toString(), text: text, done: false });
+            saveState();
+            renderAuftaktTab();
+        }
+    };
+
+    document.getElementById('addRecapItemBtn').onclick = () => {
+        const text = prompt('Neuer Stichpunkt für den Rückblick:');
+        if (text) {
+            state.recap.push(text);
+            saveState();
+            renderAuftaktTab();
+        }
+    };
+
+    let currentSecretFilter = 'all';
+
+    function renderSecretsTab() {
+        const secretsContainer = document.getElementById('secretsGrid');
+        secretsContainer.innerHTML = '';
+
+        const filtered = state.secrets.filter(s => {
+            if (currentSecretFilter === 'hidden') return s.status === 'hidden';
+            if (currentSecretFilter === 'revealed') return s.status === 'revealed';
+            return true;
+        });
+
+        filtered.forEach(secret => {
+            const isRevealed = secret.status === 'revealed';
+            const card = document.createElement('div');
+            card.className = `p-4 rounded-xl border transition-all shadow-md flex flex-col justify-between ${
+                isRevealed ? 'bg-forest-950/40 border-forest-800 text-gray-400' : 'bg-forest-900/80 border-forest-700/60 text-gray-100'
+            }`;
+
+            card.innerHTML = `
+                <div class="space-y-2">
+                    <div class="flex items-center justify-between">
+                        <span class="px-2 py-0.5 rounded text-[10px] font-semibold tracking-wider uppercase ${
+                isRevealed ? 'bg-forest-900 text-forest-400 border border-forest-800' : 'bg-gold-500/20 text-gold-400 border border-gold-500/30'
+            }">${secret.tag || 'Geheimnis'}</span>
+                        <span class="text-[10px] font-semibold ${isRevealed ? 'text-forest-400' : 'text-gold-500'}">
+                            ${isRevealed ? '✓ Enthüllt' : '🔒 Verborgen'}
+                        </span>
+                    </div>
+                    <p class="text-xs leading-relaxed ${isRevealed ? 'line-through opacity-75' : 'font-medium'}">${secret.text}</p>
+                </div>
+                <div class="flex items-center justify-end space-x-2 pt-3 border-t border-forest-800/40 mt-3">
+                    <button class="toggle-secret-btn px-2.5 py-1 rounded text-xs font-semibold border transition-all ${
+                isRevealed ? 'border-forest-700 bg-forest-900 hover:bg-forest-800 text-gray-300' : 'border-gold-500/50 bg-gold-500/20 hover:bg-gold-500/30 text-gold-300'
+            }">
+                        ${isRevealed ? 'Verbergen' : 'Als Enthüllt markieren'}
+                    </button>
+                    <button class="delete-secret-btn p-1 text-gray-500 hover:text-red-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    </button>
+                </div>
+            `;
+
+            card.querySelector('.toggle-secret-btn').onclick = () => {
+                secret.status = isRevealed ? 'hidden' : 'revealed';
+                saveState();
+                renderSecretsTab();
+            };
+
+            card.querySelector('.delete-secret-btn').onclick = () => {
+                state.secrets = state.secrets.filter(s => s.id !== secret.id);
+                saveState();
+                renderSecretsTab();
+            };
+
+            secretsContainer.appendChild(card);
+        });
+    }
+
+    document.querySelectorAll('.secret-filter-btn').forEach(btn => {
+        btn.onclick = () => {
+            document.querySelectorAll('.secret-filter-btn').forEach(b => {
+                b.classList.remove('active-filter', 'bg-gold-500', 'text-forest-950');
+                b.classList.add('text-gray-400');
+            });
+            btn.classList.add('active-filter', 'bg-gold-500', 'text-forest-950');
+            btn.classList.remove('text-gray-400');
+            currentSecretFilter = btn.getAttribute('data-filter');
+            renderSecretsTab();
+        };
+    });
+
+    document.getElementById('addSecretBtn').onclick = () => {
+        const text = prompt('Geheimnis / Hinweis eingeben:');
+        if (text) {
+            const tag = prompt('Kategorie / Tag (z.B. Ort, NPC, Magie):', 'Geheimnis') || 'Geheimnis';
+            state.secrets.unshift({
+                id: Date.now().toString(),
+                text: text,
+                status: 'hidden',
+                tag: tag
+            });
+            saveState();
+            renderSecretsTab();
+        }
+    };
+
+    /* NAMENSGENERATOR - MIT INTERAKTIVER AUSWAHL */
+    let generatedVornamen = [];
+    let generatedNachnamen = [];
+    let selectedVornameIndex = 0;
+    let selectedNachnameIndex = 0;
+
+    function generateNames() {
+        const race = document.getElementById('nameGenRaceSelect').value;
+        const gender = document.getElementById('nameGenGenderSelect').value;
+
+        const raceData = NAME_DATABASE[race] || NAME_DATABASE.mensch;
+        const vornamenPool = raceData.vornamen[gender] || raceData.vornamen.maennlich;
+        const nachnamenPool = raceData.nachnamen;
+
+        generatedVornamen = [...vornamenPool].sort(() => 0.5 - Math.random()).slice(0, 5);
+        generatedNachnamen = [...nachnamenPool].sort(() => 0.5 - Math.random()).slice(0, 5);
+
+        selectedVornameIndex = 0;
+        selectedNachnameIndex = 0;
+
+        renderNameGenTab();
+    }
+
+    function renderNameGenTab() {
+        const vorContainer = document.getElementById('vornamenListContainer');
+        const nachContainer = document.getElementById('nachnamenListContainer');
+
+        vorContainer.innerHTML = '';
+        nachContainer.innerHTML = '';
+
+        // Vor-Namen Spalte
+        generatedVornamen.forEach((vn, idx) => {
+            const isSelected = idx === selectedVornameIndex;
+            const row = document.createElement('div');
+            row.className = `flex items-center justify-between p-2.5 rounded-lg border text-xs cursor-pointer transition-all ${
+                isSelected
+                    ? 'bg-gold-500/20 border-gold-500 text-gold-300 font-bold shadow-md'
+                    : 'bg-forest-900/60 border-forest-700/40 text-gray-200 hover:border-gold-500/50'
+            }`;
+            row.onclick = () => {
+                selectedVornameIndex = idx;
+                renderNameGenTab();
+            };
+            row.innerHTML = `
+                <div class="flex items-center space-x-2">
+                    <span class="${isSelected ? 'text-gold-400 font-bold' : 'text-gray-500'}">${isSelected ? '●' : '○'}</span>
+                    <span>${vn}</span>
+                </div>
+                <button class="copy-vn-btn p-1 text-gray-400 hover:text-gold-400" title="Kopieren" onclick="event.stopPropagation(); copyTextToClipboard('${vn}')">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                </button>
+            `;
+            vorContainer.appendChild(row);
+        });
+
+        // Nach-Namen Spalte
+        generatedNachnamen.forEach((nn, idx) => {
+            const isSelected = idx === selectedNachnameIndex;
+            const row = document.createElement('div');
+            row.className = `flex items-center justify-between p-2.5 rounded-lg border text-xs cursor-pointer transition-all ${
+                isSelected
+                    ? 'bg-gold-500/20 border-gold-500 text-gold-300 font-bold shadow-md'
+                    : 'bg-forest-900/60 border-forest-700/40 text-gray-200 hover:border-gold-500/50'
+            }`;
+            row.onclick = () => {
+                selectedNachnameIndex = idx;
+                renderNameGenTab();
+            };
+            row.innerHTML = `
+                <div class="flex items-center space-x-2">
+                    <span class="${isSelected ? 'text-gold-400 font-bold' : 'text-gray-500'}">${isSelected ? '●' : '○'}</span>
+                    <span>${nn}</span>
+                </div>
+                <button class="copy-nn-btn p-1 text-gray-400 hover:text-gold-400" title="Kopieren" onclick="event.stopPropagation(); copyTextToClipboard('${nn}')">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                </button>
+            `;
+            nachContainer.appendChild(row);
+        });
+
+        const currentVor = generatedVornamen[selectedVornameIndex] || '';
+        const currentNach = generatedNachnamen[selectedNachnameIndex] || '';
+        const combined = `${currentVor} ${currentNach}`.trim();
+        document.getElementById('fullGeneratedNameDisplay').textContent = combined || '...';
+    }
+
+    function copyTextToClipboard(text) {
+        const temp = document.createElement('textarea');
+        temp.value = text;
+        document.body.appendChild(temp);
+        temp.select();
+        try {
+            document.execCommand('copy');
+            showToast(`"${text}" in Zwischenablage kopiert!`, 'success');
+        } catch (err) {
+            showToast('Fehler beim Kopieren', 'error');
+        }
+        document.body.removeChild(temp);
+    }
+
+    document.getElementById('nameGenRaceSelect').onchange = generateNames;
+    document.getElementById('nameGenGenderSelect').onchange = generateNames;
+
+    document.getElementById('refreshVornamenBtn').onclick = () => {
+        const race = document.getElementById('nameGenRaceSelect').value;
+        const gender = document.getElementById('nameGenGenderSelect').value;
+        const pool = NAME_DATABASE[race].vornamen[gender];
+        generatedVornamen = [...pool].sort(() => 0.5 - Math.random()).slice(0, 5);
+        selectedVornameIndex = 0;
+        renderNameGenTab();
+    };
+
+    document.getElementById('refreshNachnamenBtn').onclick = () => {
+        const race = document.getElementById('nameGenRaceSelect').value;
+        const pool = NAME_DATABASE[race].nachnamen;
+        generatedNachnamen = [...pool].sort(() => 0.5 - Math.random()).slice(0, 5);
+        selectedNachnameIndex = 0;
+        renderNameGenTab();
+    };
+
+    document.getElementById('copyFullNameBtn').onclick = () => {
+        const full = document.getElementById('fullGeneratedNameDisplay').textContent;
+        if (full && full !== '...') copyTextToClipboard(full);
+    };
+
+    document.getElementById('transferFullNameToNPCBtn').onclick = () => {
+        const full = document.getElementById('fullGeneratedNameDisplay').textContent;
+        const race = document.getElementById('nameGenRaceSelect').selectedOptions[0].text;
+        if (full && full !== '...') {
+            openNPCModalWithData(full, race);
+        }
+    };
+
+    function renderNPCsTab() {
+        const grid = document.getElementById('npcCardsGrid');
+        const searchQuery = (document.getElementById('npcSearchInput').value || '').toLowerCase();
+        grid.innerHTML = '';
+
+        const filtered = state.npcs.filter(npc => {
+            return npc.name.toLowerCase().includes(searchQuery) ||
+                (npc.role && npc.role.toLowerCase().includes(searchQuery)) ||
+                (npc.location && npc.location.toLowerCase().includes(searchQuery));
+        });
+
+        filtered.forEach(npc => {
+            const card = document.createElement('div');
+            card.className = 'bg-forest-900/80 border border-forest-700/60 rounded-xl p-4 shadow-md flex flex-col justify-between space-y-3';
+            card.innerHTML = `
+                <div class="space-y-2">
+                    <div class="flex items-start justify-between border-b border-forest-700/50 pb-2">
+                        <div>
+                            <h3 class="font-cinzel text-base font-bold text-gold-400">${npc.name}</h3>
+                            <p class="text-[11px] text-gray-400">${npc.role || 'Unbekannte Rolle'}</p>
+                        </div>
+                        ${npc.location ? `<span class="px-2 py-0.5 rounded bg-forest-950 border border-forest-700 text-[10px] text-gray-300 font-medium">${npc.location}</span>` : ''}
+                    </div>
+
+                    <div class="space-y-1.5 text-xs pt-1">
+                        <p><strong class="text-gold-500 font-medium">👁️ Optischer Anker:</strong> <span class="text-gray-200">${npc.visual || '-'}</span></p>
+                        <p><strong class="text-gold-500 font-medium">🗣️ Stimme / Eigenheit:</strong> <span class="text-gray-200">${npc.voice || '-'}</span></p>
+                        <p><strong class="text-gold-500 font-medium">🎯 Hauptmotivation:</strong> <span class="text-gray-200">${npc.goal || '-'}</span></p>
+                        <p><strong class="text-gold-500 font-medium">🗝️ Geheimnis:</strong> <span class="text-gray-200">${npc.secret || '-'}</span></p>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-end space-x-2 pt-2 border-t border-forest-800/60">
+                    <button class="edit-npc-btn p-1.5 text-gray-400 hover:text-gold-400 text-xs flex items-center space-x-1">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                        <span>Bearbeiten</span>
+                    </button>
+                    <button class="delete-npc-btn p-1.5 text-gray-400 hover:text-red-400 text-xs">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    </button>
+                </div>
+            `;
+
+            card.querySelector('.edit-npc-btn').onclick = () => openNPCModalForEdit(npc);
+            card.querySelector('.delete-npc-btn').onclick = () => {
+                state.npcs = state.npcs.filter(n => n.id !== npc.id);
+                saveState();
+                renderNPCsTab();
+            };
+
+            grid.appendChild(card);
+        });
+    }
+
+    document.getElementById('npcSearchInput').oninput = renderNPCsTab;
+
+    function openNPCModalWithData(name = '', role = '') {
+        document.getElementById('npcModalTitle').textContent = 'Neuen NPC anlegen';
+        document.getElementById('npcIdInput').value = '';
+        document.getElementById('npcNameInput').value = name;
+        document.getElementById('npcRoleInput').value = role;
+        document.getElementById('npcLocationInput').value = '';
+        document.getElementById('npcVisualInput').value = '';
+        document.getElementById('npcVoiceInput').value = '';
+        document.getElementById('npcGoalInput').value = '';
+        document.getElementById('npcSecretInput').value = '';
+        document.getElementById('npcModal').classList.remove('hidden');
+    }
+
+    function openNPCModalForEdit(npc) {
+        document.getElementById('npcModalTitle').textContent = 'NPC bearbeiten';
+        document.getElementById('npcIdInput').value = npc.id;
+        document.getElementById('npcNameInput').value = npc.name;
+        document.getElementById('npcRoleInput').value = npc.role || '';
+        document.getElementById('npcLocationInput').value = npc.location || '';
+        document.getElementById('npcVisualInput').value = npc.visual || '';
+        document.getElementById('npcVoiceInput').value = npc.voice || '';
+        document.getElementById('npcGoalInput').value = npc.goal || '';
+        document.getElementById('npcSecretInput').value = npc.secret || '';
+        document.getElementById('npcModal').classList.remove('hidden');
+    }
+
+    document.getElementById('openNewNpcModalBtn').onclick = () => openNPCModalWithData();
+
+    document.querySelectorAll('.closeModalBtn').forEach(btn => {
+        btn.onclick = () => document.getElementById('npcModal').classList.add('hidden');
+    });
+
+    document.getElementById('npcForm').onsubmit = (e) => {
+        e.preventDefault();
+        const id = document.getElementById('npcIdInput').value;
+        const npcData = {
+            id: id || 'npc-' + Date.now(),
+            name: document.getElementById('npcNameInput').value,
+            role: document.getElementById('npcRoleInput').value,
+            location: document.getElementById('npcLocationInput').value,
+            visual: document.getElementById('npcVisualInput').value,
+            voice: document.getElementById('npcVoiceInput').value,
+            goal: document.getElementById('npcGoalInput').value,
+            secret: document.getElementById('npcSecretInput').value
+        };
+
+        if (id) {
+            const idx = state.npcs.findIndex(n => n.id === id);
+            if (idx !== -1) state.npcs[idx] = npcData;
+        } else {
+            state.npcs.unshift(npcData);
+        }
+
+        saveState();
+        document.getElementById('npcModal').classList.add('hidden');
+        renderNPCsTab();
+        showToast('NPC erfolgreich gespeichert!', 'success');
+    };
+
+    /* MONSTER & TAKTIKEN - MIT MODAL MASK FOR EDIT & ADD */
+    function renderMonstersTab() {
+        const grid = document.getElementById('monstersGrid');
+        grid.innerHTML = '';
+
+        state.monsters.forEach(m => {
+            const card = document.createElement('div');
+            card.className = 'bg-forest-900/80 border border-forest-700/60 rounded-xl p-5 shadow-md space-y-3';
+            card.innerHTML = `
+                <div class="flex items-start justify-between border-b border-gold-500/20 pb-3">
+                    <div>
+                        <h3 class="font-cinzel text-lg font-bold text-gold-400">${m.name}</h3>
+                        <p class="text-xs text-gray-400">${m.type}</p>
+                    </div>
+                    <span class="px-2.5 py-1 rounded bg-gold-500/20 border border-gold-500/30 text-gold-300 font-bold text-xs">${m.xp || '0 XP'}</span>
+                </div>
+
+                <div class="grid grid-cols-4 gap-2 bg-forest-950/70 p-2.5 rounded-lg border border-forest-800 text-center text-xs">
+                    <div>
+                        <span class="block text-[10px] text-gray-400">RK (AC)</span>
+                        <strong class="text-gold-400">${m.ac}</strong>
+                    </div>
+                    <div>
+                        <span class="block text-[10px] text-gray-400">TP (HP)</span>
+                        <strong class="text-green-400">${m.hp}</strong>
+                    </div>
+                    <div>
+                        <span class="block text-[10px] text-gray-400">Initiative</span>
+                        <strong class="text-gray-200">${m.init}</strong>
+                    </div>
+                    <div>
+                        <span class="block text-[10px] text-gray-400">Tempo</span>
+                        <strong class="text-gray-200">${m.speed}</strong>
+                    </div>
+                </div>
+
+                <div class="bg-forest-950/40 p-3 rounded-lg border border-forest-700/40 space-y-1">
+                    <span class="text-[10px] uppercase font-bold text-gold-500 tracking-wider">⚔️ KI-Kampftaktik & Verhalten:</span>
+                    <p class="text-xs text-gray-200 leading-relaxed">${m.tactics}</p>
+                </div>
+
+                <div class="text-xs space-y-1">
+                    <p><strong class="text-gray-300">Aktionen & Angriff:</strong> <span class="text-gray-300">${m.actions}</span></p>
+                    ${m.notes ? `<p><strong class="text-gray-300">Notizen:</strong> <span class="text-gray-400">${m.notes}</span></p>` : ''}
+                </div>
+
+                <div class="flex items-center justify-end space-x-2 pt-2 border-t border-forest-800/60">
+                    <button class="add-to-init-btn px-2 py-1 bg-gold-500/20 hover:bg-gold-500/30 text-gold-300 border border-gold-500/30 rounded text-xs flex items-center space-x-1">
+                        <span>+ Initiative</span>
+                    </button>
+                    <button class="duplicate-monster-btn px-2 py-1 bg-forest-800 hover:bg-forest-700 text-gray-300 border border-forest-600 rounded text-xs" title="Monster duplizieren">
+                        📋 Duplizieren
+                    </button>
+                    <button class="edit-monster-btn px-2 py-1 bg-forest-800 hover:bg-forest-700 text-gold-400 border border-forest-600 rounded text-xs" title="Monster bearbeiten">
+                        ✏️ Bearbeiten
+                    </button>
+                    <button class="delete-monster-btn text-gray-500 hover:text-red-400 p-1" title="Löschen">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    </button>
+                </div>
+            `;
+
+            card.querySelector('.add-to-init-btn').onclick = () => {
+                const initVal = Math.floor(Math.random() * 20) + 1 + (parseInt(m.init) || 0);
+                const hp = m.hp || 10;
+                const id = Date.now().toString() + Math.random().toString(36).substr(2, 4);
+                if (!state.combatants) state.combatants = [];
+                state.combatants.push({
+                    id: id,
+                    name: m.name,
+                    init: initVal,
+                    hp: hp,
+                    maxHp: hp,
+                    tempHp: 0,
+                    img: '',
+                    conditions: [],
+                    history: [`Aus Bestiarium hinzugefügt (${hp} HP)`]
+                });
+                sortCombatants();
+                if (!state.activeId) state.activeId = id;
+                saveState();
+                showToast(`${m.name} zur Initiative hinzugefügt (Init: ${initVal})`, 'success');
+            };
+
+            card.querySelector('.duplicate-monster-btn').onclick = () => duplicateMonster(m);
+            card.querySelector('.edit-monster-btn').onclick = () => openMonsterModalWithData(m);
+
+            card.querySelector('.delete-monster-btn').onclick = () => {
+                state.monsters = state.monsters.filter(mon => mon.id !== m.id);
+                saveState();
+                renderMonstersTab();
+            };
+
+            grid.appendChild(card);
+        });
+    }
+
+    function openMonsterModalWithData(m = null) {
+        if (m) {
+            document.getElementById('monsterModalTitle').textContent = 'Monster / Gegner bearbeiten';
+            document.getElementById('monsterIdInput').value = m.id;
+            document.getElementById('monsterNameInput').value = m.name || '';
+            document.getElementById('monsterTypeInput').value = m.type || '';
+            document.getElementById('monsterXpInput').value = m.xp || '';
+            document.getElementById('monsterAcInput').value = m.ac || 10;
+            document.getElementById('monsterHpInput').value = m.hp || 10;
+            document.getElementById('monsterInitInput').value = m.init || '+0';
+            document.getElementById('monsterSpeedInput').value = m.speed || '9m';
+            document.getElementById('monsterTacticsInput').value = m.tactics || '';
+            document.getElementById('monsterActionsInput').value = m.actions || '';
+            document.getElementById('monsterNotesInput').value = m.notes || '';
+        } else {
+            document.getElementById('monsterModalTitle').textContent = 'Neues Monster / Gegner anlegen';
+            document.getElementById('monsterIdInput').value = '';
+            document.getElementById('monsterNameInput').value = '';
+            document.getElementById('monsterTypeInput').value = 'Kreatur';
+            document.getElementById('monsterXpInput').value = '450 XP';
+            document.getElementById('monsterAcInput').value = 13;
+            document.getElementById('monsterHpInput').value = 30;
+            document.getElementById('monsterInitInput').value = '+2';
+            document.getElementById('monsterSpeedInput').value = '9m';
+            document.getElementById('monsterTacticsInput').value = '';
+            document.getElementById('monsterActionsInput').value = '';
+            document.getElementById('monsterNotesInput').value = '';
+        }
+        document.getElementById('monsterModal').classList.remove('hidden');
+    }
+
+    function duplicateMonster(m) {
+        const clone = {
+            ...m,
+            id: 'm-' + Date.now() + Math.random().toString(36).substr(2, 3),
+            name: m.name + ' (Kopie)'
+        };
+        state.monsters.push(clone);
+        saveState();
+        renderMonstersTab();
+        showToast(`"${m.name}" dupliziert!`, 'success');
+    }
+
+    document.getElementById('openNewMonsterModalBtn').onclick = () => openMonsterModalWithData();
+
+    document.querySelectorAll('.closeMonsterModalBtn').forEach(btn => {
+        btn.onclick = () => document.getElementById('monsterModal').classList.add('hidden');
+    });
+
+    document.getElementById('monsterForm').onsubmit = (e) => {
+        e.preventDefault();
+        const id = document.getElementById('monsterIdInput').value;
+        const monsterData = {
+            id: id || 'm-' + Date.now(),
+            name: document.getElementById('monsterNameInput').value,
+            type: document.getElementById('monsterTypeInput').value || 'Kreatur',
+            xp: document.getElementById('monsterXpInput').value || '0 XP',
+            ac: parseInt(document.getElementById('monsterAcInput').value) || 10,
+            hp: parseInt(document.getElementById('monsterHpInput').value) || 10,
+            init: document.getElementById('monsterInitInput').value || '+0',
+            speed: document.getElementById('monsterSpeedInput').value || '9m',
+            tactics: document.getElementById('monsterTacticsInput').value || '',
+            actions: document.getElementById('monsterActionsInput').value || '',
+            notes: document.getElementById('monsterNotesInput').value || ''
+        };
+
+        if (id) {
+            const idx = state.monsters.findIndex(m => m.id === id);
+            if (idx !== -1) state.monsters[idx] = monsterData;
+        } else {
+            state.monsters.unshift(monsterData);
+        }
+
+        saveState();
+        document.getElementById('monsterModal').classList.add('hidden');
+        renderMonstersTab();
+        showToast('Monster erfolgreich gespeichert!', 'success');
+    };
+
+    function renderNodesTab() {
+        const container = document.getElementById('nodesGraphContainer');
+        container.innerHTML = '';
+
+        state.nodes.forEach((node) => {
+            let statusColor = 'border-forest-700 bg-forest-900/60';
+            let statusBadge = '<span class="px-2 py-0.5 rounded text-[10px] bg-gray-800 text-gray-400">Geplant</span>';
+
+            if (node.status === 'active') {
+                statusColor = 'border-gold-500 bg-forest-900 shadow-lg shadow-gold-500/10';
+                statusBadge = '<span class="px-2 py-0.5 rounded text-[10px] bg-gold-500 text-forest-950 font-bold">AKTIVE SZENE</span>';
+            } else if (node.status === 'completed') {
+                statusColor = 'border-green-800/80 bg-forest-950/60 opacity-80';
+                statusBadge = '<span class="px-2 py-0.5 rounded text-[10px] bg-green-900/60 text-green-300">Abgeschlossen</span>';
+            } else if (node.status === 'bypassed') {
+                statusColor = 'border-red-900/50 bg-forest-950/40 opacity-60';
+                statusBadge = '<span class="px-2 py-0.5 rounded text-[10px] bg-red-950 text-red-400">Übersprungen</span>';
+            }
+
+            const card = document.createElement('div');
+            card.className = `p-4 rounded-xl border flex flex-col justify-between space-y-3 relative ${statusColor}`;
+            card.innerHTML = `
+                <div class="space-y-2">
+                    <div class="flex items-center justify-between border-b border-forest-800 pb-2">
+                        <h3 class="font-cinzel text-sm font-bold text-gray-100">${node.title}</h3>
+                        ${statusBadge}
+                    </div>
+                    <p class="text-xs text-gray-300 leading-relaxed">${node.description}</p>
+
+                    ${node.clues ? `<div class="text-[11px]"><strong class="text-gold-400">Hinweise:</strong> <span class="text-gray-300">${node.clues}</span></div>` : ''}
+                    ${node.npcs ? `<div class="text-[11px]"><strong class="text-gold-400">Anwesende NPCs:</strong> <span class="text-gray-300">${node.npcs}</span></div>` : ''}
+                </div>
+
+                <div class="flex items-center justify-between pt-2 border-t border-forest-800/60">
+                    <select class="node-status-select bg-forest-950 border border-forest-700 text-[10px] rounded px-2 py-1 text-gold-400">
+                        <option value="planned" ${node.status === 'planned' ? 'selected' : ''}>Geplant</option>
+                        <option value="active" ${node.status === 'active' ? 'selected' : ''}>Aktive Szene</option>
+                        <option value="completed" ${node.status === 'completed' ? 'selected' : ''}>Abgeschlossen</option>
+                        <option value="bypassed" ${node.status === 'bypassed' ? 'selected' : ''}>Übersprungen</option>
+                    </select>
+
+                    <button class="delete-node-btn text-gray-500 hover:text-red-400 p-1">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    </button>
+                </div>
+            `;
+
+            card.querySelector('.node-status-select').onchange = (e) => {
+                node.status = e.target.value;
+                saveState();
+                renderNodesTab();
+            };
+
+            card.querySelector('.delete-node-btn').onclick = () => {
+                state.nodes = state.nodes.filter(n => n.id !== node.id);
+                saveState();
+                renderNodesTab();
+            };
+
+            container.appendChild(card);
+        });
+    }
+
+    document.getElementById('addNodeBtn').onclick = () => {
+        const title = prompt('Szenentitel / Knoten-Bezeichnung:');
+        if (!title) return;
+        const desc = prompt('Kurze Szenenbeschreibung:') || '';
+        const clues = prompt('Geheime Hinweise im Raum:') || '';
+
+        state.nodes.push({
+            id: 'n-' + Date.now(),
+            title: title,
+            status: 'planned',
+            description: desc,
+            clues: clues,
+            npcs: ''
+        });
+
+        saveState();
+        renderNodesTab();
+    };
+
+    /* INITIATIVE TRACKER ENGINE */
+    function adjustSquareSize(val) {
+        document.documentElement.style.setProperty('--square-size', `${val}px`);
+    }
+
+    function sortCombatants() {
+        if (!state.combatants) state.combatants = [];
+        state.combatants.sort((a, b) => b.init - a.init);
+    }
+
+    function addCombatant(name = 'Neue Kreatur', init = 10, maxHp = 30, imgUrl = '') {
+        if (!state.combatants) state.combatants = [];
+        const id = Date.now() + Math.random().toString(36).substr(2, 4);
+        const hp = Number(maxHp);
+        state.combatants.push({
+            id,
+            name,
+            init: Number(init),
+            hp,
+            maxHp: hp,
+            tempHp: 0,
+            img: imgUrl,
+            conditions: [],
+            history: [`Erstellt mit ${hp} HP`]
+        });
+        sortCombatants();
+        if (!state.activeId) state.activeId = id;
+        saveState();
+        renderInitiativeTab();
+    }
+
+    function removeCombatant(id, e) {
+        if (e) e.stopPropagation();
+        state.combatants = state.combatants.filter(c => c.id !== id);
+        if (state.activeId === id) {
+            state.activeId = state.combatants.length > 0 ? state.combatants[0].id : null;
+        }
+        saveState();
+        renderInitiativeTab();
+    }
+
+    function setActive(id) {
+        state.activeId = id;
+        saveState();
+        renderInitiativeTab();
+    }
+
+    function handleMaxHpInput(id, val) {
+        const c = state.combatants.find(x => x.id === id);
+        if (c) {
+            const newMax = Math.max(0, parseInt(val) || 0);
+            c.maxHp = newMax;
+            c.hp = newMax;
+
+            const currInput = document.getElementById(`curr-hp-${id}`);
+            if (currInput) currInput.value = newMax;
+            saveState();
+        }
+    }
+
+    function handleCurrentHpInput(id, val) {
+        const c = state.combatants.find(x => x.id === id);
+        if (c) {
+            c.hp = Math.max(0, parseInt(val) || 0);
+            saveState();
+        }
+    }
+
+    function handleInitInput(id, val) {
+        const c = state.combatants.find(x => x.id === id);
+        if (c) {
+            c.init = parseInt(val) || 0;
+            saveState();
+        }
+    }
+
+    function finalizeInitChange() {
+        sortCombatants();
+        saveState();
+        renderInitiativeTab();
+    }
+
+    function resetToFullHp(id) {
+        const c = state.combatants.find(x => x.id === id);
+        if (c) {
+            c.hp = c.maxHp;
+            c.history.unshift(`Vollständig geheilt (${c.maxHp} HP)`);
+            saveState();
+            renderInitiativeTab();
+        }
+    }
+
+    function applyDamage(id) {
+        const c = state.combatants.find(x => x.id === id);
+        const valInput = document.getElementById(`val-${id}`);
+        if (!valInput) return;
+        let amount = parseInt(valInput.value) || 0;
+        if (amount <= 0) return;
+
+        let dmgRemaining = amount;
+        let tempAbsorbed = 0;
+
+        if (c.tempHp > 0) {
+            if (c.tempHp >= dmgRemaining) {
+                c.tempHp -= dmgRemaining;
+                tempAbsorbed = dmgRemaining;
+                dmgRemaining = 0;
+            } else {
+                tempAbsorbed = c.tempHp;
+                dmgRemaining -= c.tempHp;
+                c.tempHp = 0;
+            }
+        }
+
+        c.hp -= dmgRemaining;
+        if (c.hp < 0) c.hp = 0;
+
+        let logMsg = `-${amount} Schdn`;
+        if (tempAbsorbed > 0) logMsg += ` (${tempAbsorbed} Temp HP)`;
+        c.history.unshift(logMsg);
+
+        valInput.value = '';
+        saveState();
+        renderInitiativeTab();
+    }
+
+    function applyHeal(id) {
+        const c = state.combatants.find(x => x.id === id);
+        const valInput = document.getElementById(`val-${id}`);
+        if (!valInput) return;
+        let amount = parseInt(valInput.value) || 0;
+        if (amount <= 0) return;
+
+        c.hp += amount;
+        if (c.hp > c.maxHp) c.hp = c.maxHp;
+
+        c.history.unshift(`+${amount} Heilung`);
+        valInput.value = '';
+        saveState();
+        renderInitiativeTab();
+    }
+
+    function addTempHp(id) {
+        const c = state.combatants.find(x => x.id === id);
+        const valInput = document.getElementById(`val-${id}`);
+        if (!valInput) return;
+        let amount = parseInt(valInput.value) || 0;
+        if (amount <= 0) return;
+
+        c.tempHp = amount;
+        c.history.unshift(`+${amount} Temp HP`);
+        valInput.value = '';
+        saveState();
+        renderInitiativeTab();
+    }
+
+    function toggleCondition(combatantId, conditionId) {
+        const c = state.combatants.find(x => x.id === combatantId);
+        if (!c) return;
+        if (!Array.isArray(c.conditions)) c.conditions = [];
+
+        const index = c.conditions.indexOf(conditionId);
+        if (index > -1) {
+            c.conditions.splice(index, 1);
+        } else {
+            c.conditions.push(conditionId);
+        }
+
+        saveState();
+
+        const btn = document.getElementById(`cond-${combatantId}-${conditionId}`);
+        if (btn) {
+            if (c.conditions.includes(conditionId)) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        }
+    }
+
+    function resetAllLogs() {
+        if (!state.combatants || state.combatants.length === 0) return;
+        state.combatants.forEach(c => {
+            c.history = [];
+        });
+        saveState();
+        renderInitiativeTab();
+        showToast("📜 Alle Logs wurden zurückgesetzt!", "success");
+    }
+
+    function handleImageUpload(id, input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const c = state.combatants.find(x => x.id === id);
+                if (c) {
+                    c.img = e.target.result;
+                    saveState();
+                    renderInitiativeTab();
+                }
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function updateName(id, newName) {
+        const c = state.combatants.find(x => x.id === id);
+        if (c) {
+            c.name = newName;
+            saveState();
+        }
+    }
+
+    function resetTracker() {
+        if (confirm('Sämtliche Kreaturen aus der Initiative löschen?')) {
+            state.combatants = [];
+            state.activeId = null;
+            saveState();
+            renderInitiativeTab();
+            showToast("Alle Kreaturen gelöscht!", "info");
+        }
+    }
+
+    function renderInitiativeTab() {
+        const listEl = document.getElementById('tracker-list');
+        if (!listEl) return;
+        listEl.innerHTML = '';
+
+        if (!Array.isArray(state.combatants)) state.combatants = [];
+
+        state.combatants.forEach(c => {
+            if (!Array.isArray(c.conditions)) c.conditions = [];
+            if (!Array.isArray(c.history)) c.history = [];
+            if (c.hpCurrent !== undefined && c.hp === undefined) c.hp = c.hpCurrent;
+            if (c.hpMax !== undefined && c.maxHp === undefined) c.maxHp = c.hpMax;
+            if (c.tempHp === undefined) c.tempHp = 0;
+            if (c.img === undefined) c.img = '';
+        });
+
+        sortCombatants();
+
+        if (!state.activeId && state.combatants.length > 0) {
+            state.activeId = state.combatants[0].id;
+        }
+
+        state.combatants.forEach((c) => {
+            const isActive = c.id === state.activeId;
+
+            const card = document.createElement('div');
+            card.className = `combatant-card ${isActive ? 'is-active' : ''}`;
+            card.onclick = () => setActive(c.id);
+
+            const conditionsHtml = CONDITIONS.map(cond => {
+                const isCondActive = Array.isArray(c.conditions) && c.conditions.includes(cond.id);
+                return `
+                    <button
+                        id="cond-${c.id}-${cond.id}"
+                        class="condition-btn ${isCondActive ? 'active' : ''}"
+                        style="--cond-color: ${cond.color}; --cond-text: ${cond.textOnActive};"
+                        onclick="event.stopPropagation(); toggleCondition('${c.id}', '${cond.id}')"
+                        title="${cond.name}"
+                    >
+                        ${cond.name}
+                    </button>
+                `;
+            }).join('');
+
+            card.innerHTML = `
+                <!-- 1. INITIATIVE INPUT -->
+                <div class="init-badge" onclick="event.stopPropagation()">
+                    <label>INIT</label>
+                    <input type="number" value="${c.init}" oninput="handleInitInput('${c.id}', this.value)" onchange="finalizeInitChange()" />
+                </div>
+
+                <!-- 2. TOKEN IMAGE & NAME -->
+                <div class="character-square-container" onclick="event.stopPropagation()">
+                    <div class="character-square ${!c.img ? 'empty' : ''}">
+                        ${c.img ? `<img src="${c.img}" alt="Token" />` : `<span style="font-size:1.8rem; color:var(--text-muted);">👤</span>`}
+                        <div class="upload-hint">📷 Ändern</div>
+                        <input type="file" accept="image/*" onchange="handleImageUpload('${c.id}', this)" onclick="event.stopPropagation()" />
+                    </div>
+                    <input type="text" class="name-input" value="${c.name}" oninput="updateName('${c.id}', this.value)" onclick="event.stopPropagation()" />
+                </div>
+
+                <!-- 3. HP & CALCULATOR SECTION -->
+                <div class="hp-section" onclick="event.stopPropagation()">
+                    <div class="hp-stats">
+                        <span class="hp-display">
+                            ❤️
+                            <input type="number" id="curr-hp-${c.id}" class="hp-number-input" value="${c.hp}" title="Aktuelle HP" oninput="handleCurrentHpInput('${c.id}', this.value)" />
+                            /
+                            <input type="number" id="max-hp-${c.id}" class="max-hp-input" value="${c.maxHp}" title="Maximale HP" oninput="handleMaxHpInput('${c.id}', this.value)" />
+                        </span>
+                        <button class="btn-full-hp" onclick="resetToFullHp('${c.id}')" title="HP auf Max zurücksetzen">Full</button>
+                        ${c.tempHp > 0 ? `<span class="temp-hp-display">🛡️ +${c.tempHp}</span>` : ''}
+                    </div>
+
+                    <div class="hp-inputs">
+                        <input type="number" id="val-${c.id}" placeholder="Wert" min="1" />
+                        <div class="hp-buttons">
+                            <button onclick="applyDamage('${c.id}')" class="btn-dmg">- Dmg</button>
+                            <button onclick="applyHeal('${c.id}')" class="btn-heal">+ Heal</button>
+                            <button onclick="addTempHp('${c.id}')" class="btn-temp">+ Temp</button>
+                        </div>
+                    </div>
+
+                    <div class="history-container">
+                        <div class="history-header">VERLAUF</div>
+                        <div class="history-box">
+                            ${c.history && c.history.length > 0
+                ? c.history.map(h => {
+                    let classType = h.includes('Schdn') ? 'dmg' : h.includes('Heilung') || h.includes('Vollständig') ? 'heal' : 'temp';
+                    return `<div class="history-entry ${classType}">${h}</div>`;
+                }).join('')
+                : `<div class="history-entry empty">Keine Einträge</div>`
+            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. GERMAN CONDITIONS SECTION -->
+                <div class="conditions-section" onclick="event.stopPropagation()">
+                    <div class="conditions-header">Zustände</div>
+                    <div class="conditions-grid">
+                        ${conditionsHtml}
+                    </div>
+                </div>
+
+                <!-- 5. DELETE BUTTON -->
+                <div class="card-actions">
+                    <button onclick="removeCombatant('${c.id}', event)" title="Kreatur Entfernen">✕</button>
+                </div>
+            `;
+
+            listEl.appendChild(card);
+        });
+
+        const notesArea = document.getElementById('scratchpadNotes');
+        if (notesArea) {
+            notesArea.value = state.notes || '';
+            notesArea.oninput = (e) => {
+                state.notes = e.target.value;
+                saveState();
+            };
+        }
+    }
+
+    document.getElementById('clearNotesBtn').onclick = () => {
+        if (confirm('Schnellnotizen löschen?')) {
+            state.notes = '';
+            document.getElementById('scratchpadNotes').value = '';
+            saveState();
+        }
+    };
+
+    document.getElementById('resetDataBtn').onclick = () => {
+        if (confirm('Möchtest du sämtliche Codex-Daten auf den Standardzustand zurücksetzen?')) {
+            localStorage.removeItem('sylvanus_codex_data_v4');
+            location.reload();
+        }
+    };
+
+    window.onload = function() {
+        loadState();
+        initTheme();
+        initTabs();
+
+        renderAuftaktTab();
+        renderSecretsTab();
+        generateNames();
+        renderNPCsTab();
+        renderMonstersTab();
+        renderNodesTab();
+        renderInitiativeTab();
+
+        showToast('Sylvanus Spielleiter-Codex bereit.', 'success');
+    };
+</script>
+</body>
+</html>
