@@ -59,7 +59,7 @@
 
     <style>
         :root {
-            /* Sylvanus Forest & Gold Theme Adjustments for Tracker */
+            /* Sylvanus Forest & Gold Theme Adjustments */
             --bg-card: #13251e;
             --bg-card-active: #1c382e;
             --bg-input: #0b1814;
@@ -680,7 +680,7 @@
             </button>
             <button data-tab="monster" class="nav-tab px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-all flex items-center space-x-2">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                <span>Monster & Taktiken</span>
+                <span>Monster & Kampf</span>
             </button>
             <button data-tab="knoten" class="nav-tab px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-all flex items-center space-x-2">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
@@ -688,7 +688,7 @@
             </button>
             <button data-tab="initiative" class="nav-tab px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-all flex items-center space-x-2">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                <span>Initiative & Notizen</span>
+                <span>Initiative</span>
             </button>
         </div>
     </nav>
@@ -820,7 +820,6 @@
 
             <!-- Two Selectable Columns -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Column 1: First Names -->
                 <div class="bg-forest-950/40 rounded-xl p-4 border border-forest-700/50 space-y-4">
                     <div class="flex items-center justify-between border-b border-forest-700/60 pb-2">
                         <h3 class="font-cinzel text-md font-bold text-gold-400">Vornamen</h3>
@@ -832,7 +831,6 @@
                     <div id="vornamenListContainer" class="space-y-2"></div>
                 </div>
 
-                <!-- Column 2: Last Names -->
                 <div class="bg-forest-950/40 rounded-xl p-4 border border-forest-700/50 space-y-4">
                     <div class="flex items-center justify-between border-b border-forest-700/60 pb-2">
                         <h3 class="font-cinzel text-md font-bold text-gold-400">Nachnamen & Sippen</h3>
@@ -862,12 +860,12 @@
         <div id="npcCardsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
     </section>
 
-    <!-- TAB 5: MONSTER-TAKTIKEN & STATBLOCKS -->
+    <!-- TAB 5: MONSTER & KAMPF -->
     <section id="tab-monster" class="tab-content hidden space-y-6">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-forest-900/60 dark:bg-forest-900/80 bg-white p-4 rounded-xl border border-forest-700/40">
             <div>
-                <h2 class="font-cinzel text-xl font-bold text-gold-400">Monster & KI-Kampftaktiken</h2>
-                <p class="text-xs text-gray-400">Kompakte Statblocks mit gezielten Verhaltensempfehlungen für schnelle Kämpfe.</p>
+                <h2 class="font-cinzel text-xl font-bold text-gold-400">Monster & Kampf</h2>
+                <p class="text-xs text-gray-400">Vollständige Statblocks mit Attributen, Merkmalslisten, Aktionen und Taktiken.</p>
             </div>
             <button id="openNewMonsterModalBtn" class="px-3 py-1.5 rounded-lg bg-gold-500 hover:bg-gold-400 text-forest-950 font-semibold text-xs transition-all flex items-center space-x-1">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
@@ -896,16 +894,16 @@
         </div>
     </section>
 
-    <!-- TAB 7: INITIATIVE & SCHNELL-NOTIZEN -->
+    <!-- TAB 7: INITIATIVE -->
     <section id="tab-initiative" class="tab-content hidden space-y-6">
         <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
 
-            <!-- Initiative & HP Tracker -->
+            <!-- Initiative & HP Tracker Links -->
             <div class="xl:col-span-2 space-y-4">
                 <div class="init-tracker-container">
                     <div class="init-header">
                         <div class="init-header-title">
-                            <span class="icon">⚔️</span> Initiative & HP Tracker
+                            <span class="icon">⚔️</span> Initiative Tracker
                         </div>
 
                         <div class="init-header-controls">
@@ -926,13 +924,23 @@
                 </div>
             </div>
 
-            <!-- Schnell-Notizen Scratchpad -->
-            <div class="bg-forest-900/60 dark:bg-forest-900/80 bg-white border border-forest-700/40 rounded-xl p-5 flex flex-col shadow-md min-h-[400px]">
-                <div class="flex items-center justify-between border-b border-gold-500/20 pb-3 mb-3">
-                    <h2 class="font-cinzel text-lg font-bold text-gold-400">Schnell-Notizen</h2>
-                    <button id="clearNotesBtn" class="text-xs text-gray-400 hover:text-red-400 transition-colors">Leeren</button>
+            <!-- Rechter Bereich: Ausgewählte Kreatur Statblock + Schnell-Notizen -->
+            <div class="space-y-6">
+                <!-- Selected Combatant Statblock Card -->
+                <div id="selectedCombatantCardContainer" class="bg-forest-900/80 border border-gold-500/40 rounded-xl p-5 shadow-lg min-h-[300px]">
+                    <div class="text-center py-10 text-gray-400 text-xs italic">
+                        ⚔️ Klicke links auf eine Kreatur, um ihren Statblock hier anzuzeigen.
+                    </div>
                 </div>
-                <textarea id="scratchpadNotes" class="flex-grow w-full h-full min-h-[300px] bg-forest-950/80 border border-forest-700/60 rounded-lg p-3 text-xs text-gray-200 focus:outline-none focus:ring-1 focus:ring-gold-500 resize-none font-mono" placeholder="Spontane Notizen während der Sitzung... (Wird automatisch gespeichert)"></textarea>
+
+                <!-- Schnell-Notizen Scratchpad -->
+                <div class="bg-forest-900/60 dark:bg-forest-900/80 bg-white border border-forest-700/40 rounded-xl p-5 flex flex-col shadow-md">
+                    <div class="flex items-center justify-between border-b border-gold-500/20 pb-3 mb-3">
+                        <h2 class="font-cinzel text-md font-bold text-gold-400">Schnell-Notizen</h2>
+                        <button id="clearNotesBtn" class="text-xs text-gray-400 hover:text-red-400 transition-colors">Leeren</button>
+                    </div>
+                    <textarea id="scratchpadNotes" class="w-full h-40 bg-forest-950/80 border border-forest-700/60 rounded-lg p-3 text-xs text-gray-200 focus:outline-none focus:ring-1 focus:ring-gold-500 resize-none font-mono" placeholder="Spontane Notizen während der Sitzung..."></textarea>
+                </div>
             </div>
         </div>
     </section>
@@ -990,59 +998,170 @@
 
 <!-- MODAL: Monster Creator / Editor -->
 <div id="monsterModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="bg-forest-900 border border-gold-500/40 rounded-xl max-w-lg w-full p-6 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
+    <div class="bg-forest-900 border border-gold-500/40 rounded-xl max-w-2xl w-full p-6 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
         <div class="flex items-center justify-between border-b border-gold-500/20 pb-3">
             <h3 id="monsterModalTitle" class="font-cinzel text-lg font-bold text-gold-400">Monster / Gegner bearbeiten</h3>
             <button class="closeMonsterModalBtn text-gray-400 hover:text-white">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
         </div>
-        <form id="monsterForm" class="space-y-3">
+        <form id="monsterForm" class="space-y-4">
             <input type="hidden" id="monsterIdInput">
-            <div>
-                <label class="block text-xs text-gray-300 mb-1">Monster / Gegner Name</label>
-                <input id="monsterNameInput" type="text" required class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100 focus:outline-none focus:ring-1 focus:ring-gold-500" placeholder="z.B. Schattenpanther">
-            </div>
-            <div class="grid grid-cols-2 gap-3">
+
+            <!-- Name, Typ, XP -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div class="sm:col-span-1">
+                    <label class="block text-xs text-gray-300 mb-1">Name</label>
+                    <input id="monsterNameInput" type="text" required class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100 focus:outline-none focus:ring-1 focus:ring-gold-500" placeholder="Schattenpanther">
+                </div>
                 <div>
                     <label class="block text-xs text-gray-300 mb-1">Typ / Kategorie</label>
-                    <input id="monsterTypeInput" type="text" placeholder="z.B. Bestie (Mittel)" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100 focus:outline-none focus:ring-1 focus:ring-gold-500">
+                    <input id="monsterTypeInput" type="text" placeholder="Bestie (Mittel)" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100 focus:outline-none focus:ring-1 focus:ring-gold-500">
                 </div>
                 <div>
                     <label class="block text-xs text-gray-300 mb-1">Erfahrungspunkte (XP)</label>
-                    <input id="monsterXpInput" type="text" placeholder="z.B. 700 XP" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100 focus:outline-none focus:ring-1 focus:ring-gold-500">
+                    <input id="monsterXpInput" type="text" placeholder="700 XP" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100 focus:outline-none focus:ring-1 focus:ring-gold-500">
                 </div>
             </div>
+
+            <!-- Basic Combat Stats -->
             <div class="grid grid-cols-4 gap-2">
                 <div>
-                    <label class="block text-xs text-gray-300 mb-1">RK (AC)</label>
+                    <label class="block text-[11px] text-gray-300 mb-1">RK (AC)</label>
                     <input id="monsterAcInput" type="number" required placeholder="15" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100 focus:outline-none focus:ring-1 focus:ring-gold-500">
                 </div>
                 <div>
-                    <label class="block text-xs text-gray-300 mb-1">TP (HP)</label>
+                    <label class="block text-[11px] text-gray-300 mb-1">TP (HP)</label>
                     <input id="monsterHpInput" type="number" required placeholder="45" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100 focus:outline-none focus:ring-1 focus:ring-gold-500">
                 </div>
                 <div>
-                    <label class="block text-xs text-gray-300 mb-1">Initiative</label>
+                    <label class="block text-[11px] text-gray-300 mb-1">Initiative</label>
                     <input id="monsterInitInput" type="text" placeholder="+4" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100 focus:outline-none focus:ring-1 focus:ring-gold-500">
                 </div>
                 <div>
-                    <label class="block text-xs text-gray-300 mb-1">Tempo</label>
+                    <label class="block text-[11px] text-gray-300 mb-1">Tempo</label>
                     <input id="monsterSpeedInput" type="text" placeholder="9m" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100 focus:outline-none focus:ring-1 focus:ring-gold-500">
                 </div>
             </div>
+
+            <!-- Attribute Input Grid -->
+            <div class="bg-forest-950/60 p-3 rounded-lg border border-forest-700/50 space-y-2">
+                <span class="block text-xs font-bold text-gold-400">Attribute & Modifikatoren (Wert | Mod | RW)</span>
+                
+                <!-- Zeile 1: STÄ, GES, KON -->
+                <div class="grid grid-cols-3 gap-2">
+                    <div>
+                        <span class="text-[10px] text-gray-400 block font-bold">STÄRKE (STÄ)</span>
+                        <div class="grid grid-cols-3 gap-1">
+                            <input id="m_sta_val" type="number" placeholder="Wert" class="bg-forest-900 border border-forest-700 text-[11px] rounded p-1 text-center text-gray-100">
+                            <input id="m_sta_mod" type="text" placeholder="Mod" class="bg-forest-900 border border-forest-700 text-[11px] rounded p-1 text-center text-gray-100">
+                            <input id="m_sta_rw" type="text" placeholder="RW" class="bg-forest-900 border border-forest-700 text-[11px] rounded p-1 text-center text-gray-100">
+                        </div>
+                    </div>
+                    <div>
+                        <span class="text-[10px] text-gray-400 block font-bold">GESCHICK (GES)</span>
+                        <div class="grid grid-cols-3 gap-1">
+                            <input id="m_ges_val" type="number" placeholder="Wert" class="bg-forest-900 border border-forest-700 text-[11px] rounded p-1 text-center text-gray-100">
+                            <input id="m_ges_mod" type="text" placeholder="Mod" class="bg-forest-900 border border-forest-700 text-[11px] rounded p-1 text-center text-gray-100">
+                            <input id="m_ges_rw" type="text" placeholder="RW" class="bg-forest-900 border border-forest-700 text-[11px] rounded p-1 text-center text-gray-100">
+                        </div>
+                    </div>
+                    <div>
+                        <span class="text-[10px] text-gray-400 block font-bold">KONSTITUTION (KON)</span>
+                        <div class="grid grid-cols-3 gap-1">
+                            <input id="m_kon_val" type="number" placeholder="Wert" class="bg-forest-900 border border-forest-700 text-[11px] rounded p-1 text-center text-gray-100">
+                            <input id="m_kon_mod" type="text" placeholder="Mod" class="bg-forest-900 border border-forest-700 text-[11px] rounded p-1 text-center text-gray-100">
+                            <input id="m_kon_rw" type="text" placeholder="RW" class="bg-forest-900 border border-forest-700 text-[11px] rounded p-1 text-center text-gray-100">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Zeile 2: INT, WEI, CHA -->
+                <div class="grid grid-cols-3 gap-2 pt-1">
+                    <div>
+                        <span class="text-[10px] text-gray-400 block font-bold">INTELLIGENZ (INT)</span>
+                        <div class="grid grid-cols-3 gap-1">
+                            <input id="m_int_val" type="number" placeholder="Wert" class="bg-forest-900 border border-forest-700 text-[11px] rounded p-1 text-center text-gray-100">
+                            <input id="m_int_mod" type="text" placeholder="Mod" class="bg-forest-900 border border-forest-700 text-[11px] rounded p-1 text-center text-gray-100">
+                            <input id="m_int_rw" type="text" placeholder="RW" class="bg-forest-900 border border-forest-700 text-[11px] rounded p-1 text-center text-gray-100">
+                        </div>
+                    </div>
+                    <div>
+                        <span class="text-[10px] text-gray-400 block font-bold">WEISHEIT (WEI)</span>
+                        <div class="grid grid-cols-3 gap-1">
+                            <input id="m_wei_val" type="number" placeholder="Wert" class="bg-forest-900 border border-forest-700 text-[11px] rounded p-1 text-center text-gray-100">
+                            <input id="m_wei_mod" type="text" placeholder="Mod" class="bg-forest-900 border border-forest-700 text-[11px] rounded p-1 text-center text-gray-100">
+                            <input id="m_wei_rw" type="text" placeholder="RW" class="bg-forest-900 border border-forest-700 text-[11px] rounded p-1 text-center text-gray-100">
+                        </div>
+                    </div>
+                    <div>
+                        <span class="text-[10px] text-gray-400 block font-bold">CHARISMA (CHA)</span>
+                        <div class="grid grid-cols-3 gap-1">
+                            <input id="m_cha_val" type="number" placeholder="Wert" class="bg-forest-900 border border-forest-700 text-[11px] rounded p-1 text-center text-gray-100">
+                            <input id="m_cha_mod" type="text" placeholder="Mod" class="bg-forest-900 border border-forest-700 text-[11px] rounded p-1 text-center text-gray-100">
+                            <input id="m_cha_rw" type="text" placeholder="RW" class="bg-forest-900 border border-forest-700 text-[11px] rounded p-1 text-center text-gray-100">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Details Inputs -->
+            <div class="grid grid-cols-2 gap-3 text-xs">
+                <div>
+                    <label class="block text-gray-300 mb-1">Fähigkeiten:</label>
+                    <input id="monsterSkillsInput" type="text" placeholder="Wahrnehmung +5, Heimlichkeit +8" class="w-full bg-forest-950 border border-forest-700 rounded p-2 text-gray-100">
+                </div>
+                <div>
+                    <label class="block text-gray-300 mb-1">Resistenzen / Immunitäten:</label>
+                    <input id="monsterResistancesInput" type="text" placeholder="Feuer, Gift" class="w-full bg-forest-950 border border-forest-700 rounded p-2 text-gray-100">
+                </div>
+                <div>
+                    <label class="block text-gray-300 mb-1">Sinne:</label>
+                    <input id="monsterSensesInput" type="text" placeholder="Dunkelsicht 18m, Passiv 15" class="w-full bg-forest-950 border border-forest-700 rounded p-2 text-gray-100">
+                </div>
+                <div>
+                    <label class="block text-gray-300 mb-1">Sprachen:</label>
+                    <input id="monsterLanguagesInput" type="text" placeholder="Gemeinsprache, Infernalisch" class="w-full bg-forest-950 border border-forest-700 rounded p-2 text-gray-100">
+                </div>
+            </div>
+
+            <!-- MERKMALE -->
+            <div class="bg-forest-950/40 p-3 rounded-lg border border-forest-700/50 space-y-2">
+                <div class="flex items-center justify-between border-b border-forest-700/60 pb-1">
+                    <span class="text-xs font-bold text-gold-400">MERKMALE</span>
+                    <button type="button" id="addTraitBtn" class="px-2 py-0.5 rounded bg-gold-500/20 text-gold-300 text-xs font-bold hover:bg-gold-500/30">+ Merkmal</button>
+                </div>
+                <div id="traitsModalList" class="space-y-2"></div>
+            </div>
+
+            <!-- AKTIONEN -->
+            <div class="bg-forest-950/40 p-3 rounded-lg border border-forest-700/50 space-y-2">
+                <div class="flex items-center justify-between border-b border-forest-700/60 pb-1">
+                    <span class="text-xs font-bold text-gold-400">AKTIONEN</span>
+                    <button type="button" id="addActionBtn" class="px-2 py-0.5 rounded bg-gold-500/20 text-gold-300 text-xs font-bold hover:bg-gold-500/30">+ Aktion</button>
+                </div>
+                <div id="actionsModalList" class="space-y-2"></div>
+            </div>
+
+            <!-- BONUS-AKTIONEN -->
+            <div class="bg-forest-950/40 p-3 rounded-lg border border-forest-700/50 space-y-2">
+                <div class="flex items-center justify-between border-b border-forest-700/60 pb-1">
+                    <span class="text-xs font-bold text-gold-400">BONUS-AKTIONEN</span>
+                    <button type="button" id="addBonusActionBtn" class="px-2 py-0.5 rounded bg-gold-500/20 text-gold-300 text-xs font-bold hover:bg-gold-500/30">+ Bonus-Aktion</button>
+                </div>
+                <div id="bonusActionsModalList" class="space-y-2"></div>
+            </div>
+
+            <!-- Taktik & Notizen -->
             <div>
                 <label class="block text-xs text-gold-400 font-semibold mb-1">⚔️ KI-Kampftaktik & Verhalten</label>
-                <textarea id="monsterTacticsInput" rows="2" placeholder="Verhalten im Kampf, Prioritätsziele..." class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100 focus:outline-none focus:ring-1 focus:ring-gold-500 resize-none"></textarea>
-            </div>
-            <div>
-                <label class="block text-xs text-gold-400 font-semibold mb-1">💥 Aktionen & Angriffe</label>
-                <input id="monsterActionsInput" type="text" placeholder="z.B. Bissserie (2d6+4 Hieb)" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100 focus:outline-none focus:ring-1 focus:ring-gold-500">
+                <textarea id="monsterTacticsInput" rows="2" placeholder="Verhalten im Kampf, Prioritätsziele..." class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100 resize-none"></textarea>
             </div>
             <div>
                 <label class="block text-xs text-gray-300 mb-1">📝 Notizen</label>
-                <input id="monsterNotesInput" type="text" placeholder="z.B. Besondere Immunitäten, Hinterhalt..." class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100 focus:outline-none focus:ring-1 focus:ring-gold-500">
+                <input id="monsterNotesInput" type="text" placeholder="Besondere Beute, Standorte..." class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100">
             </div>
+
             <div class="flex justify-end space-x-2 pt-2">
                 <button type="button" class="closeMonsterModalBtn px-4 py-2 rounded-lg bg-forest-800 text-gray-300 text-xs hover:bg-forest-700">Abbrechen</button>
                 <button type="submit" class="px-4 py-2 rounded-lg bg-gold-500 text-forest-950 font-bold text-xs hover:bg-gold-400">Speichern</button>
@@ -1075,12 +1194,7 @@
         { id: '2', text: 'Im versunkenen Tempel ruht ein Stück des Ur-Smaragds, der Tote reanimieren kann.', status: 'hidden', tag: 'Artefakt' },
         { id: '3', text: 'Der Schmied Thorin ist in Wahrheit der verbannte Thronfolger des Zwergenreichs.', status: 'hidden', tag: 'NPC' },
         { id: '4', text: 'Die Waldläufer der Schatteneihe nutzen halluzinogenes Gift für ihre Pfeile.', status: 'revealed', tag: 'Fraktion' },
-        { id: '5', text: 'Unter der Hauptschänke existiert ein verlassener Fluchttunnel aus der Kaiserzeit.', status: 'hidden', tag: 'Ort' },
-        { id: '6', text: 'Das Siegel auf der Truhe der Magiergilde bricht bei der nächsten Vollmondnacht.', status: 'hidden', tag: 'Magie' },
-        { id: '7', text: 'Der Wirt mischt Traumblütenstaub in den Met, um Gäste gefügig zu machen.', status: 'hidden', tag: 'Geheimnis' },
-        { id: '8', text: 'Die Nebel im Schattenwald werden von einem uralten, erwachten Baumhirten geatmet.', status: 'hidden', tag: 'Natur' },
-        { id: '9', text: 'Ein Mitglied der Stadtwache spioniert für die Diebesgilde "Der Rote Raben".', status: 'hidden', tag: 'Verrat' },
-        { id: '10', text: 'Das Buch der Wahrheiten verbrennt jeden, der eine Lüge im Herzen trägt.', status: 'revealed', tag: 'Legende' }
+        { id: '5', text: 'Unter der Hauptschänke existiert ein verlassener Fluchttunnel aus der Kaiserzeit.', status: 'hidden', tag: 'Ort' }
     ];
 
     const DEFAULT_NPCS = [
@@ -1093,16 +1207,6 @@
             voice: 'Sehr leise, ruhige Stimme; tippt mit den Ringen auf die Armlehne',
             goal: 'Möchte den Handelspakt zwischen Zwergen und Menschen erzwingen',
             secret: 'Verkauft Waffen an die Rebellen auf dem Nordpass'
-        },
-        {
-            id: 'npc-2',
-            name: 'Gideon Schattenwanderer',
-            role: 'Halbling Informant',
-            location: 'Schattenmarkt',
-            visual: 'Abgewetzter Ledermantel, Narbe über der linken Braue',
-            voice: 'Hektisches Flüstern, blickt ständig über beide Schultern',
-            goal: 'Sammelt genug Gold für eine Überfahrt über den Ozean',
-            secret: 'Kennt den geheimen Eingang ins Gewölbe der Magiergilde'
         }
     ];
 
@@ -1116,22 +1220,30 @@
             hp: 45,
             init: '+4',
             speed: '12m / Klettern 9m',
-            tactics: 'Nutzt Dämmerung & Hinterhalt. Zielt bevorzugt auf isolated/schwache Zauberwirker in der Hinterreihe. Flieht schlagartig, wenn Leben unter 25% fällt.',
-            actions: 'Anspringen (Vorteil bei Überraschung), Bissserie (2d6+4 Hieb)',
-            notes: 'Tarnung im dichten Unterholz extrem hoch.'
-        },
-        {
-            id: 'm-2',
-            name: 'Goblin-Kriegsfürst',
-            type: 'Humanoid (Mittel)',
-            xp: '1.100 XP',
-            ac: 17,
-            hp: 68,
-            init: '+3',
-            speed: '9m',
-            tactics: 'Schickt Diener als Futter vor. Nutzt Bonusaktion zum Verstecken / Entkommen. Befiehlt seinen Bogenschützen konzentriertes Feuer.',
-            actions: 'Krummsäbel-Multiattacke (2x 1d8+3), Führungsschrei (Gewährt Verbündeten Vorteil)',
-            notes: 'Trägt einen gestohlenen magischen Ring des Schutzes.'
+            stats: {
+                sta: { val: 16, mod: '+3', rw: '+3' },
+                ges: { val: 18, mod: '+4', rw: '+6' },
+                kon: { val: 14, mod: '+2', rw: '+2' },
+                int: { val: 3, mod: '-4', rw: '-4' },
+                wei: { val: 12, mod: '+1', rw: '+3' },
+                cha: { val: 8, mod: '-1', rw: '-1' }
+            },
+            skills: 'Wahrnehmung +5, Heimlichkeit +8',
+            resistances: 'Keine',
+            senses: 'Dunkelsicht 18m, Passiv 15',
+            languages: '—',
+            traits: [
+                { name: 'Schatten-Tarnung', text: 'Hat Vorteil auf Würfe für Heimlichkeit im Dämmerlicht oder in Dunkelheit.' }
+            ],
+            actions: [
+                { name: 'Anspringen', text: 'Wenn der Panther sich 6m geradeaus auf das Ziel zubewegt, muss das Ziel einen Stärke-Rettungswurf (SG 14) bestehen oder liegt hin.' },
+                { name: 'Biss', text: '+6 zum Treffen, Reichweite 1.5m, Schaden: 10 (2d6 + 4) Hieb-Schaden.' }
+            ],
+            bonusActions: [
+                { name: 'Rückzug im Schatten', text: 'Kann im Dämmerlicht als Bonusaktion die Verstecken-Aktion nutzen.' }
+            ],
+            tactics: 'Nutzt Dämmerung & Hinterhalt. Zielt bevorzugt auf isolierte Zauberwirker.',
+            notes: 'Fell schimmert bläulich im Mondlicht.'
         }
     ];
 
@@ -1140,33 +1252,9 @@
             id: 'n-1',
             title: '1. Das Nebel-Wirtshaus',
             status: 'completed',
-            description: 'Die Helden treffen sich im Gasthaus "Zum Tanzenden Eber" und erhalten das Dokument vom sterbenden Boten.',
-            clues: 'Blutbeflecktes Siegel, Wegbeschreibung zum Ruinenberg',
-            npcs: 'Wirt Barnabas, Bote Eldon'
-        },
-        {
-            id: 'n-2',
-            title: '2A. Der verlassene Wachturm',
-            status: 'active',
-            description: 'Ein steiler Aufstieg durch den Nebelwald. Goblins haben am Turmfuß einen Hinterhalt vorbereitet.',
-            clues: 'Gefundene Skizze des Ritualplatzes',
-            npcs: 'Goblin-Späher'
-        },
-        {
-            id: 'n-3',
-            title: '2B. Der Flusspfad durch die Klamm',
-            status: 'bypassed',
-            description: 'Alternative Route über den reißenden Bergfluss. Rutschige Felsen und wilde Bären.',
-            clues: 'Verlorenes Tagebuch im Wasser',
-            npcs: 'Einsiedler Kael'
-        },
-        {
-            id: 'n-4',
-            title: '3. Die Tempelruine von Sylvanus',
-            status: 'planned',
-            description: 'Das Finale der Sitzung: Ein unterirdischer Ritualraum mit dem unheilvollen Blutstein.',
-            clues: 'Das Uralte Codex-Fragment',
-            npcs: 'Kultisten-Anführer Malakor'
+            description: 'Die Helden treffen sich im Gasthaus "Zum Tanzenden Eber".',
+            clues: 'Blutbeflecktes Siegel',
+            npcs: 'Wirt Barnabas'
         }
     ];
 
@@ -1255,18 +1343,15 @@
         sessionHook: '',
         checklist: [
             { id: '1', text: 'Spionage-Hinweis im Wirtshaus auflösen', done: true },
-            { id: '2', text: 'Hinterhalt am Wachturm ausspielen', done: false },
-            { id: '3', text: 'Geheimnis des Boten aufdecken', done: false }
+            { id: '2', text: 'Hinterhalt am Wachturm ausspielen', done: false }
         ],
         recap: [
             'Die Helden entkamen knapp der brennenden Scheune.',
-            'Kleriker Gabriel fand eine verzauberte Münze mit dem Siegel von Sylvanus.',
-            'Die Gruppe schloss eine Allianz mit dem Zwergenspähertrupp.'
+            'Kleriker Gabriel fand eine verzauberte Münze.'
         ],
         combatants: [
-            { id: '1', name: 'Held Paladin', init: 20, hp: 50, maxHp: 50, tempHp: 0, img: 'https://picsum.photos/seed/paladin/200', conditions: [], history: ['Erstellt mit 50 HP'] },
-            { id: '2', name: 'Goblin Anführer', init: 14, hp: 18, maxHp: 18, tempHp: 0, img: 'https://picsum.photos/seed/goblin/200', conditions: [], history: ['Erstellt mit 18 HP'] },
-            { id: '3', name: 'Magier', init: 8, hp: 22, maxHp: 22, tempHp: 0, img: 'https://picsum.photos/seed/wizard/200', conditions: [], history: ['Erstellt mit 22 HP'] }
+            { id: '1', name: 'Held Paladin', init: 20, hp: 50, maxHp: 50, tempHp: 0, img: '', conditions: [], history: ['Erstellt mit 50 HP'] },
+            { id: '2', name: 'Schattenpanther', init: 18, hp: 45, maxHp: 45, tempHp: 0, img: '', conditions: [], history: ['Aus Bestiarium hinzugefügt (45 HP)'], monsterData: DEFAULT_MONSTERS[0] }
         ],
         activeId: '1',
         notes: ''
@@ -1274,19 +1359,19 @@
 
     function loadState() {
         try {
-            const saved = localStorage.getItem('sylvanus_codex_data_v4');
+            const saved = localStorage.getItem('sylvanus_codex_data_v6');
             if (saved) {
                 const parsed = JSON.parse(saved);
                 state = { ...state, ...parsed };
             }
         } catch (e) {
-            console.error("Fehler beim Laden des Speichers:", e);
+            console.error("Fehler beim Laden:", e);
         }
     }
 
     function saveState() {
         try {
-            localStorage.setItem('sylvanus_codex_data_v4', JSON.stringify(state));
+            localStorage.setItem('sylvanus_codex_data_v6', JSON.stringify(state));
         } catch (e) {
             console.error("Fehler beim Speichern:", e);
         }
@@ -1298,12 +1383,8 @@
         toast.className = `pointer-events-auto px-4 py-2.5 rounded-lg text-xs font-semibold shadow-xl border flex items-center space-x-2 transition-all transform translate-y-2 opacity-0 duration-200 ${
             type === 'success' ? 'bg-forest-900 border-gold-500 text-gold-300' : 'bg-forest-900 border-forest-600 text-gray-200'
         }`;
-        toast.innerHTML = `
-            <svg class="w-4 h-4 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-            <span>${message}</span>
-        `;
+        toast.innerHTML = `<span>${message}</span>`;
         container.appendChild(toast);
-
         setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 10);
         setTimeout(() => {
             toast.classList.add('opacity-0', 'translate-y-2');
@@ -1327,7 +1408,6 @@
                 tab.classList.remove('text-gray-400');
 
                 document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
-
                 const activeContent = document.getElementById(`tab-${target}`);
                 if (activeContent) activeContent.classList.remove('hidden');
 
@@ -1358,13 +1438,140 @@
         applyTheme(state.theme || 'dark');
     }
 
+    /* NORMALIZER FOR MONSTER STATS */
+    function normalizeMonster(m) {
+        return {
+            id: m.id || 'm-' + Date.now(),
+            name: m.name || 'Unbekanntes Monster',
+            type: m.type || 'Kreatur',
+            xp: m.xp || '0 XP',
+            ac: m.ac || 10,
+            hp: m.hp || 10,
+            init: m.init || '+0',
+            speed: m.speed || '9m',
+            stats: m.stats || {
+                sta: { val: 10, mod: '+0', rw: '+0' },
+                ges: { val: 10, mod: '+0', rw: '+0' },
+                kon: { val: 10, mod: '+0', rw: '+0' },
+                int: { val: 10, mod: '+0', rw: '+0' },
+                wei: { val: 10, mod: '+0', rw: '+0' },
+                cha: { val: 10, mod: '+0', rw: '+0' }
+            },
+            skills: m.skills || '',
+            resistances: m.resistances || '',
+            senses: m.senses || '',
+            languages: m.languages || '',
+            traits: Array.isArray(m.traits) ? m.traits : [],
+            actions: Array.isArray(m.actions) ? m.actions : (typeof m.actions === 'string' && m.actions ? [{ name: 'Angriff', text: m.actions }] : []),
+            bonusActions: Array.isArray(m.bonusActions) ? m.bonusActions : [],
+            tactics: m.tactics || '',
+            notes: m.notes || ''
+        };
+    }
+
+    /* MONSTER CARD HTML GENERATOR */
+    function buildMonsterCardHTML(m, options = { showControls: true }) {
+        const monster = normalizeMonster(m);
+        const stats = monster.stats;
+
+        const traitsHtml = monster.traits.map(t => `<p class="text-xs text-gray-200"><strong class="text-gold-400 font-semibold">${t.name}:</strong> ${t.text}</p>`).join('');
+        const actionsHtml = monster.actions.map(a => `<p class="text-xs text-gray-200"><strong class="text-gold-400 font-semibold">${a.name}:</strong> ${a.text}</p>`).join('');
+        const bonusActionsHtml = monster.bonusActions.map(ba => `<p class="text-xs text-gray-200"><strong class="text-gold-400 font-semibold">${ba.name}:</strong> ${ba.text}</p>`).join('');
+
+        return `
+            <div class="space-y-3">
+                <div class="flex items-start justify-between border-b border-gold-500/30 pb-2">
+                    <div>
+                        <h3 class="font-cinzel text-lg font-bold text-gold-400">${monster.name}</h3>
+                        <p class="text-xs text-gray-400">${monster.type}</p>
+                    </div>
+                    <span class="px-2.5 py-1 rounded bg-gold-500/20 border border-gold-500/30 text-gold-300 font-bold text-xs">${monster.xp}</span>
+                </div>
+
+                <div class="grid grid-cols-4 gap-2 bg-forest-950/70 p-2 rounded-lg border border-forest-800 text-center text-xs">
+                    <div><span class="block text-[10px] text-gray-400">RK (AC)</span><strong class="text-gold-400">${monster.ac}</strong></div>
+                    <div><span class="block text-[10px] text-gray-400">TP (HP)</span><strong class="text-green-400">${monster.hp}</strong></div>
+                    <div><span class="block text-[10px] text-gray-400">Initiative</span><strong class="text-gray-200">${monster.init}</strong></div>
+                    <div><span class="block text-[10px] text-gray-400">Tempo</span><strong class="text-gray-200">${monster.speed}</strong></div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-center text-xs border border-forest-700/60 bg-forest-950/80 rounded-lg">
+                        <tbody>
+                            <tr class="border-b border-forest-800">
+                                <td class="p-1.5 border-r border-forest-800"><span class="font-bold text-gold-400">STÄ</span> ${stats.sta.val || 10} (${stats.sta.mod || '+0'}) <span class="text-[10px] text-gray-400">RW:${stats.sta.rw || '+0'}</span></td>
+                                <td class="p-1.5 border-r border-forest-800"><span class="font-bold text-gold-400">GES</span> ${stats.ges.val || 10} (${stats.ges.mod || '+0'}) <span class="text-[10px] text-gray-400">RW:${stats.ges.rw || '+0'}</span></td>
+                                <td class="p-1.5"><span class="font-bold text-gold-400">KON</span> ${stats.kon.val || 10} (${stats.kon.mod || '+0'}) <span class="text-[10px] text-gray-400">RW:${stats.kon.rw || '+0'}</span></td>
+                            </tr>
+                            <tr>
+                                <td class="p-1.5 border-r border-forest-800"><span class="font-bold text-gold-400">INT</span> ${stats.int.val || 10} (${stats.int.mod || '+0'}) <span class="text-[10px] text-gray-400">RW:${stats.int.rw || '+0'}</span></td>
+                                <td class="p-1.5 border-r border-forest-800"><span class="font-bold text-gold-400">WEI</span> ${stats.wei.val || 10} (${stats.wei.mod || '+0'}) <span class="text-[10px] text-gray-400">RW:${stats.wei.rw || '+0'}</span></td>
+                                <td class="p-1.5"><span class="font-bold text-gold-400">CHA</span> ${stats.cha.val || 10} (${stats.cha.mod || '+0'}) <span class="text-[10px] text-gray-400">RW:${stats.cha.rw || '+0'}</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="text-[11px] space-y-1 text-gray-300 border-b border-forest-800/60 pb-2">
+                    ${monster.skills ? `<p><strong class="text-gold-500">Fähigkeiten:</strong> ${monster.skills}</p>` : ''}
+                    ${monster.resistances ? `<p><strong class="text-gold-500">Resistenzen:</strong> ${monster.resistances}</p>` : ''}
+                    ${monster.senses ? `<p><strong class="text-gold-500">Sinne:</strong> ${monster.senses}</p>` : ''}
+                    ${monster.languages ? `<p><strong class="text-gold-500">Sprachen:</strong> ${monster.languages}</p>` : ''}
+                </div>
+
+                ${monster.traits.length > 0 ? `
+                    <div class="space-y-1">
+                        <span class="text-[10px] font-bold text-gold-500 tracking-wider uppercase">MERKMALE:</span>
+                        <div class="space-y-1 pl-1">${traitsHtml}</div>
+                    </div>
+                ` : ''}
+
+                ${monster.actions.length > 0 ? `
+                    <div class="space-y-1">
+                        <span class="text-[10px] font-bold text-gold-500 tracking-wider uppercase">AKTIONEN:</span>
+                        <div class="space-y-1 pl-1">${actionsHtml}</div>
+                    </div>
+                ` : ''}
+
+                ${monster.bonusActions.length > 0 ? `
+                    <div class="space-y-1">
+                        <span class="text-[10px] font-bold text-gold-500 tracking-wider uppercase">BONUS-AKTIONEN:</span>
+                        <div class="space-y-1 pl-1">${bonusActionsHtml}</div>
+                    </div>
+                ` : ''}
+
+                ${monster.tactics ? `
+                    <div class="bg-forest-950/50 p-2.5 rounded-lg border border-forest-800 space-y-1">
+                        <span class="text-[10px] font-bold text-gold-400 tracking-wider uppercase">⚔️ KI-Kampftaktik:</span>
+                        <p class="text-xs text-gray-300 leading-relaxed">${monster.tactics}</p>
+                    </div>
+                ` : ''}
+
+                ${options.showControls ? `
+                    <div class="flex items-center justify-end space-x-2 pt-2 border-t border-forest-800/60">
+                        <button class="add-to-init-btn px-2.5 py-1 bg-gold-500/20 hover:bg-gold-500/30 text-gold-300 border border-gold-500/30 rounded text-xs font-semibold flex items-center space-x-1">
+                            <span>+ Initiative</span>
+                        </button>
+                        <button class="duplicate-monster-btn px-2.5 py-1 bg-forest-800 hover:bg-forest-700 text-gray-300 border border-forest-600 rounded text-xs" title="Monster duplizieren">
+                            📋 Duplizieren
+                        </button>
+                        <button class="edit-monster-btn px-2.5 py-1 bg-forest-800 hover:bg-forest-700 text-gold-400 border border-forest-600 rounded text-xs" title="Monster bearbeiten">
+                            ✏️ Bearbeiten
+                        </button>
+                        <button class="delete-monster-btn text-gray-500 hover:text-red-400 p-1" title="Löschen">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                        </button>
+                    </div>
+                ` : ''}
+            </div>
+        `;
+    }
+
+    /* TAB 1: AUFTAKT & RÜCKBLICK */
     function renderAuftaktTab() {
         const hookInput = document.getElementById('sessionHookInput');
         hookInput.value = state.sessionHook || '';
-        hookInput.oninput = (e) => {
-            state.sessionHook = e.target.value;
-            saveState();
-        };
+        hookInput.oninput = (e) => { state.sessionHook = e.target.value; saveState(); };
 
         const checklistContainer = document.getElementById('checklistItemsContainer');
         checklistContainer.innerHTML = '';
@@ -1380,19 +1587,8 @@
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                 </button>
             `;
-
-            row.querySelector('.checklist-check').onchange = (e) => {
-                item.done = e.target.checked;
-                saveState();
-                renderAuftaktTab();
-            };
-
-            row.querySelector('.delete-checklist-btn').onclick = () => {
-                state.checklist = state.checklist.filter(c => c.id !== item.id);
-                saveState();
-                renderAuftaktTab();
-            };
-
+            row.querySelector('.checklist-check').onchange = (e) => { item.done = e.target.checked; saveState(); renderAuftaktTab(); };
+            row.querySelector('.delete-checklist-btn').onclick = () => { state.checklist = state.checklist.filter(c => c.id !== item.id); saveState(); renderAuftaktTab(); };
             checklistContainer.appendChild(row);
         });
 
@@ -1410,35 +1606,23 @@
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
             `;
-            card.querySelector('.delete-recap-btn').onclick = () => {
-                state.recap.splice(index, 1);
-                saveState();
-                renderAuftaktTab();
-            };
+            card.querySelector('.delete-recap-btn').onclick = () => { state.recap.splice(index, 1); saveState(); renderAuftaktTab(); };
             recapContainer.appendChild(card);
         });
     }
 
     document.getElementById('addChecklistItemBtn').onclick = () => {
         const text = prompt('Neues Meilenstein-Ziel:');
-        if (text) {
-            state.checklist.push({ id: Date.now().toString(), text: text, done: false });
-            saveState();
-            renderAuftaktTab();
-        }
+        if (text) { state.checklist.push({ id: Date.now().toString(), text: text, done: false }); saveState(); renderAuftaktTab(); }
     };
 
     document.getElementById('addRecapItemBtn').onclick = () => {
         const text = prompt('Neuer Stichpunkt für den Rückblick:');
-        if (text) {
-            state.recap.push(text);
-            saveState();
-            renderAuftaktTab();
-        }
+        if (text) { state.recap.push(text); saveState(); renderAuftaktTab(); }
     };
 
+    /* TAB 2: GEHEIMNISSE */
     let currentSecretFilter = 'all';
-
     function renderSecretsTab() {
         const secretsContainer = document.getElementById('secretsGrid');
         secretsContainer.innerHTML = '';
@@ -1455,13 +1639,12 @@
             card.className = `p-4 rounded-xl border transition-all shadow-md flex flex-col justify-between ${
                 isRevealed ? 'bg-forest-950/40 border-forest-800 text-gray-400' : 'bg-forest-900/80 border-forest-700/60 text-gray-100'
             }`;
-
             card.innerHTML = `
                 <div class="space-y-2">
                     <div class="flex items-center justify-between">
                         <span class="px-2 py-0.5 rounded text-[10px] font-semibold tracking-wider uppercase ${
-                isRevealed ? 'bg-forest-900 text-forest-400 border border-forest-800' : 'bg-gold-500/20 text-gold-400 border border-gold-500/30'
-            }">${secret.tag || 'Geheimnis'}</span>
+                            isRevealed ? 'bg-forest-900 text-forest-400 border border-forest-800' : 'bg-gold-500/20 text-gold-400 border border-gold-500/30'
+                        }">${secret.tag || 'Geheimnis'}</span>
                         <span class="text-[10px] font-semibold ${isRevealed ? 'text-forest-400' : 'text-gold-500'}">
                             ${isRevealed ? '✓ Enthüllt' : '🔒 Verborgen'}
                         </span>
@@ -1470,8 +1653,8 @@
                 </div>
                 <div class="flex items-center justify-end space-x-2 pt-3 border-t border-forest-800/40 mt-3">
                     <button class="toggle-secret-btn px-2.5 py-1 rounded text-xs font-semibold border transition-all ${
-                isRevealed ? 'border-forest-700 bg-forest-900 hover:bg-forest-800 text-gray-300' : 'border-gold-500/50 bg-gold-500/20 hover:bg-gold-500/30 text-gold-300'
-            }">
+                        isRevealed ? 'border-forest-700 bg-forest-900 hover:bg-forest-800 text-gray-300' : 'border-gold-500/50 bg-gold-500/20 hover:bg-gold-500/30 text-gold-300'
+                    }">
                         ${isRevealed ? 'Verbergen' : 'Als Enthüllt markieren'}
                     </button>
                     <button class="delete-secret-btn p-1 text-gray-500 hover:text-red-400">
@@ -1479,33 +1662,17 @@
                     </button>
                 </div>
             `;
-
-            card.querySelector('.toggle-secret-btn').onclick = () => {
-                secret.status = isRevealed ? 'hidden' : 'revealed';
-                saveState();
-                renderSecretsTab();
-            };
-
-            card.querySelector('.delete-secret-btn').onclick = () => {
-                state.secrets = state.secrets.filter(s => s.id !== secret.id);
-                saveState();
-                renderSecretsTab();
-            };
-
+            card.querySelector('.toggle-secret-btn').onclick = () => { secret.status = isRevealed ? 'hidden' : 'revealed'; saveState(); renderSecretsTab(); };
+            card.querySelector('.delete-secret-btn').onclick = () => { state.secrets = state.secrets.filter(s => s.id !== secret.id); saveState(); renderSecretsTab(); };
             secretsContainer.appendChild(card);
         });
     }
 
     document.querySelectorAll('.secret-filter-btn').forEach(btn => {
         btn.onclick = () => {
-            document.querySelectorAll('.secret-filter-btn').forEach(b => {
-                b.classList.remove('active-filter', 'bg-gold-500', 'text-forest-950');
-                b.classList.add('text-gray-400');
-            });
-            btn.classList.add('active-filter', 'bg-gold-500', 'text-forest-950');
-            btn.classList.remove('text-gray-400');
-            currentSecretFilter = btn.getAttribute('data-filter');
-            renderSecretsTab();
+            document.querySelectorAll('.secret-filter-btn').forEach(b => { b.classList.remove('active-filter', 'bg-gold-500', 'text-forest-950'); b.classList.add('text-gray-400'); });
+            btn.classList.add('active-filter', 'bg-gold-500', 'text-forest-950'); btn.classList.remove('text-gray-400');
+            currentSecretFilter = btn.getAttribute('data-filter'); renderSecretsTab();
         };
     });
 
@@ -1513,18 +1680,12 @@
         const text = prompt('Geheimnis / Hinweis eingeben:');
         if (text) {
             const tag = prompt('Kategorie / Tag (z.B. Ort, NPC, Magie):', 'Geheimnis') || 'Geheimnis';
-            state.secrets.unshift({
-                id: Date.now().toString(),
-                text: text,
-                status: 'hidden',
-                tag: tag
-            });
-            saveState();
-            renderSecretsTab();
+            state.secrets.unshift({ id: Date.now().toString(), text, status: 'hidden', tag });
+            saveState(); renderSecretsTab();
         }
     };
 
-    /* NAMENSGENERATOR - MIT INTERAKTIVER AUSWAHL */
+    /* TAB 3: NAMENSGENERATOR */
     let generatedVornamen = [];
     let generatedNachnamen = [];
     let selectedVornameIndex = 0;
@@ -1533,130 +1694,77 @@
     function generateNames() {
         const race = document.getElementById('nameGenRaceSelect').value;
         const gender = document.getElementById('nameGenGenderSelect').value;
-
         const raceData = NAME_DATABASE[race] || NAME_DATABASE.mensch;
         const vornamenPool = raceData.vornamen[gender] || raceData.vornamen.maennlich;
         const nachnamenPool = raceData.nachnamen;
 
         generatedVornamen = [...vornamenPool].sort(() => 0.5 - Math.random()).slice(0, 5);
         generatedNachnamen = [...nachnamenPool].sort(() => 0.5 - Math.random()).slice(0, 5);
-
-        selectedVornameIndex = 0;
-        selectedNachnameIndex = 0;
-
+        selectedVornameIndex = 0; selectedNachnameIndex = 0;
         renderNameGenTab();
     }
 
     function renderNameGenTab() {
         const vorContainer = document.getElementById('vornamenListContainer');
         const nachContainer = document.getElementById('nachnamenListContainer');
+        vorContainer.innerHTML = ''; nachContainer.innerHTML = '';
 
-        vorContainer.innerHTML = '';
-        nachContainer.innerHTML = '';
-
-        // Vor-Namen Spalte
         generatedVornamen.forEach((vn, idx) => {
             const isSelected = idx === selectedVornameIndex;
             const row = document.createElement('div');
-            row.className = `flex items-center justify-between p-2.5 rounded-lg border text-xs cursor-pointer transition-all ${
-                isSelected
-                    ? 'bg-gold-500/20 border-gold-500 text-gold-300 font-bold shadow-md'
-                    : 'bg-forest-900/60 border-forest-700/40 text-gray-200 hover:border-gold-500/50'
-            }`;
-            row.onclick = () => {
-                selectedVornameIndex = idx;
-                renderNameGenTab();
-            };
+            row.className = `flex items-center justify-between p-2.5 rounded-lg border text-xs cursor-pointer transition-all ${isSelected ? 'bg-gold-500/20 border-gold-500 text-gold-300 font-bold shadow-md' : 'bg-forest-900/60 border-forest-700/40 text-gray-200 hover:border-gold-500/50'}`;
+            row.onclick = () => { selectedVornameIndex = idx; renderNameGenTab(); };
             row.innerHTML = `
                 <div class="flex items-center space-x-2">
                     <span class="${isSelected ? 'text-gold-400 font-bold' : 'text-gray-500'}">${isSelected ? '●' : '○'}</span>
                     <span>${vn}</span>
                 </div>
-                <button class="copy-vn-btn p-1 text-gray-400 hover:text-gold-400" title="Kopieren" onclick="event.stopPropagation(); copyTextToClipboard('${vn}')">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-                </button>
+                <button class="p-1 text-gray-400 hover:text-gold-400" onclick="event.stopPropagation(); copyTextToClipboard('${vn}')">📋</button>
             `;
             vorContainer.appendChild(row);
         });
 
-        // Nach-Namen Spalte
         generatedNachnamen.forEach((nn, idx) => {
             const isSelected = idx === selectedNachnameIndex;
             const row = document.createElement('div');
-            row.className = `flex items-center justify-between p-2.5 rounded-lg border text-xs cursor-pointer transition-all ${
-                isSelected
-                    ? 'bg-gold-500/20 border-gold-500 text-gold-300 font-bold shadow-md'
-                    : 'bg-forest-900/60 border-forest-700/40 text-gray-200 hover:border-gold-500/50'
-            }`;
-            row.onclick = () => {
-                selectedNachnameIndex = idx;
-                renderNameGenTab();
-            };
+            row.className = `flex items-center justify-between p-2.5 rounded-lg border text-xs cursor-pointer transition-all ${isSelected ? 'bg-gold-500/20 border-gold-500 text-gold-300 font-bold shadow-md' : 'bg-forest-900/60 border-forest-700/40 text-gray-200 hover:border-gold-500/50'}`;
+            row.onclick = () => { selectedNachnameIndex = idx; renderNameGenTab(); };
             row.innerHTML = `
                 <div class="flex items-center space-x-2">
                     <span class="${isSelected ? 'text-gold-400 font-bold' : 'text-gray-500'}">${isSelected ? '●' : '○'}</span>
                     <span>${nn}</span>
                 </div>
-                <button class="copy-nn-btn p-1 text-gray-400 hover:text-gold-400" title="Kopieren" onclick="event.stopPropagation(); copyTextToClipboard('${nn}')">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-                </button>
+                <button class="p-1 text-gray-400 hover:text-gold-400" onclick="event.stopPropagation(); copyTextToClipboard('${nn}')">📋</button>
             `;
             nachContainer.appendChild(row);
         });
 
-        const currentVor = generatedVornamen[selectedVornameIndex] || '';
-        const currentNach = generatedNachnamen[selectedNachnameIndex] || '';
-        const combined = `${currentVor} ${currentNach}`.trim();
+        const combined = `${generatedVornamen[selectedVornameIndex] || ''} ${generatedNachnamen[selectedNachnameIndex] || ''}`.trim();
         document.getElementById('fullGeneratedNameDisplay').textContent = combined || '...';
     }
 
     function copyTextToClipboard(text) {
-        const temp = document.createElement('textarea');
-        temp.value = text;
-        document.body.appendChild(temp);
-        temp.select();
-        try {
-            document.execCommand('copy');
-            showToast(`"${text}" in Zwischenablage kopiert!`, 'success');
-        } catch (err) {
-            showToast('Fehler beim Kopieren', 'error');
-        }
-        document.body.removeChild(temp);
+        navigator.clipboard.writeText(text).then(() => showToast(`"${text}" kopiert!`, 'success')).catch(() => showToast('Kopierfehler', 'error'));
     }
 
     document.getElementById('nameGenRaceSelect').onchange = generateNames;
     document.getElementById('nameGenGenderSelect').onchange = generateNames;
-
     document.getElementById('refreshVornamenBtn').onclick = () => {
-        const race = document.getElementById('nameGenRaceSelect').value;
-        const gender = document.getElementById('nameGenGenderSelect').value;
-        const pool = NAME_DATABASE[race].vornamen[gender];
-        generatedVornamen = [...pool].sort(() => 0.5 - Math.random()).slice(0, 5);
-        selectedVornameIndex = 0;
-        renderNameGenTab();
+        const pool = NAME_DATABASE[document.getElementById('nameGenRaceSelect').value].vornamen[document.getElementById('nameGenGenderSelect').value];
+        generatedVornamen = [...pool].sort(() => 0.5 - Math.random()).slice(0, 5); selectedVornameIndex = 0; renderNameGenTab();
     };
-
     document.getElementById('refreshNachnamenBtn').onclick = () => {
-        const race = document.getElementById('nameGenRaceSelect').value;
-        const pool = NAME_DATABASE[race].nachnamen;
-        generatedNachnamen = [...pool].sort(() => 0.5 - Math.random()).slice(0, 5);
-        selectedNachnameIndex = 0;
-        renderNameGenTab();
+        const pool = NAME_DATABASE[document.getElementById('nameGenRaceSelect').value].nachnamen;
+        generatedNachnamen = [...pool].sort(() => 0.5 - Math.random()).slice(0, 5); selectedNachnameIndex = 0; renderNameGenTab();
     };
-
-    document.getElementById('copyFullNameBtn').onclick = () => {
-        const full = document.getElementById('fullGeneratedNameDisplay').textContent;
-        if (full && full !== '...') copyTextToClipboard(full);
-    };
-
+    document.getElementById('copyFullNameBtn').onclick = () => { copyTextToClipboard(document.getElementById('fullGeneratedNameDisplay').textContent); };
     document.getElementById('transferFullNameToNPCBtn').onclick = () => {
         const full = document.getElementById('fullGeneratedNameDisplay').textContent;
         const race = document.getElementById('nameGenRaceSelect').selectedOptions[0].text;
-        if (full && full !== '...') {
-            openNPCModalWithData(full, race);
-        }
+        if (full && full !== '...') openNPCModalWithData(full, race);
     };
 
+    /* TAB 4: NPC ROLLENDECK */
     function renderNPCsTab() {
         const grid = document.getElementById('npcCardsGrid');
         const searchQuery = (document.getElementById('npcSearchInput').value || '').toLowerCase();
@@ -1690,23 +1798,12 @@
                 </div>
 
                 <div class="flex items-center justify-end space-x-2 pt-2 border-t border-forest-800/60">
-                    <button class="edit-npc-btn p-1.5 text-gray-400 hover:text-gold-400 text-xs flex items-center space-x-1">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                        <span>Bearbeiten</span>
-                    </button>
-                    <button class="delete-npc-btn p-1.5 text-gray-400 hover:text-red-400 text-xs">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                    </button>
+                    <button class="edit-npc-btn p-1.5 text-gray-400 hover:text-gold-400 text-xs flex items-center space-x-1">✏️ <span>Bearbeiten</span></button>
+                    <button class="delete-npc-btn p-1.5 text-gray-400 hover:text-red-400 text-xs">🗑️</button>
                 </div>
             `;
-
             card.querySelector('.edit-npc-btn').onclick = () => openNPCModalForEdit(npc);
-            card.querySelector('.delete-npc-btn').onclick = () => {
-                state.npcs = state.npcs.filter(n => n.id !== npc.id);
-                saveState();
-                renderNPCsTab();
-            };
-
+            card.querySelector('.delete-npc-btn').onclick = () => { state.npcs = state.npcs.filter(n => n.id !== npc.id); saveState(); renderNPCsTab(); };
             grid.appendChild(card);
         });
     }
@@ -1740,10 +1837,7 @@
     }
 
     document.getElementById('openNewNpcModalBtn').onclick = () => openNPCModalWithData();
-
-    document.querySelectorAll('.closeModalBtn').forEach(btn => {
-        btn.onclick = () => document.getElementById('npcModal').classList.add('hidden');
-    });
+    document.querySelectorAll('.closeModalBtn').forEach(btn => btn.onclick = () => document.getElementById('npcModal').classList.add('hidden'));
 
     document.getElementById('npcForm').onsubmit = (e) => {
         e.preventDefault();
@@ -1772,156 +1866,131 @@
         showToast('NPC erfolgreich gespeichert!', 'success');
     };
 
-    /* MONSTER & TAKTIKEN - MIT MODAL MASK FOR EDIT & ADD */
+    /* TAB 5: MONSTER & KAMPF */
+    let currentModalTraits = [];
+    let currentModalActions = [];
+    let currentModalBonusActions = [];
+
+    function renderDynamicModalList(containerId, items, typeName) {
+        const container = document.getElementById(containerId);
+        container.innerHTML = '';
+        items.forEach((item, index) => {
+            const row = document.createElement('div');
+            row.className = 'grid grid-cols-12 gap-2 items-center';
+            row.innerHTML = `
+                <input type="text" value="${item.name || ''}" placeholder="Name (z.B. ${typeName})" class="col-span-4 bg-forest-950 border border-forest-700 text-xs rounded p-1.5 text-gold-400 font-bold">
+                <input type="text" value="${item.text || ''}" placeholder="Beschreibung / Fließtext" class="col-span-7 bg-forest-950 border border-forest-700 text-xs rounded p-1.5 text-gray-100">
+                <button type="button" class="col-span-1 text-gray-500 hover:text-red-400 font-bold text-sm">✕</button>
+            `;
+            const inputs = row.querySelectorAll('input');
+            inputs[0].oninput = (e) => items[index].name = e.target.value;
+            inputs[1].oninput = (e) => items[index].text = e.target.value;
+            row.querySelector('button').onclick = () => { items.splice(index, 1); renderDynamicModalList(containerId, items, typeName); };
+            container.appendChild(row);
+        });
+    }
+
+    document.getElementById('addTraitBtn').onclick = () => { currentModalTraits.push({ name: '', text: '' }); renderDynamicModalList('traitsModalList', currentModalTraits, 'Merkmal'); };
+    document.getElementById('addActionBtn').onclick = () => { currentModalActions.push({ name: '', text: '' }); renderDynamicModalList('actionsModalList', currentModalActions, 'Aktion'); };
+    document.getElementById('addBonusActionBtn').onclick = () => { currentModalBonusActions.push({ name: '', text: '' }); renderDynamicModalList('bonusActionsModalList', currentModalBonusActions, 'Bonus-Aktion'); };
+
     function renderMonstersTab() {
         const grid = document.getElementById('monstersGrid');
         grid.innerHTML = '';
 
         state.monsters.forEach(m => {
             const card = document.createElement('div');
-            card.className = 'bg-forest-900/80 border border-forest-700/60 rounded-xl p-5 shadow-md space-y-3';
-            card.innerHTML = `
-                <div class="flex items-start justify-between border-b border-gold-500/20 pb-3">
-                    <div>
-                        <h3 class="font-cinzel text-lg font-bold text-gold-400">${m.name}</h3>
-                        <p class="text-xs text-gray-400">${m.type}</p>
-                    </div>
-                    <span class="px-2.5 py-1 rounded bg-gold-500/20 border border-gold-500/30 text-gold-300 font-bold text-xs">${m.xp || '0 XP'}</span>
-                </div>
-
-                <div class="grid grid-cols-4 gap-2 bg-forest-950/70 p-2.5 rounded-lg border border-forest-800 text-center text-xs">
-                    <div>
-                        <span class="block text-[10px] text-gray-400">RK (AC)</span>
-                        <strong class="text-gold-400">${m.ac}</strong>
-                    </div>
-                    <div>
-                        <span class="block text-[10px] text-gray-400">TP (HP)</span>
-                        <strong class="text-green-400">${m.hp}</strong>
-                    </div>
-                    <div>
-                        <span class="block text-[10px] text-gray-400">Initiative</span>
-                        <strong class="text-gray-200">${m.init}</strong>
-                    </div>
-                    <div>
-                        <span class="block text-[10px] text-gray-400">Tempo</span>
-                        <strong class="text-gray-200">${m.speed}</strong>
-                    </div>
-                </div>
-
-                <div class="bg-forest-950/40 p-3 rounded-lg border border-forest-700/40 space-y-1">
-                    <span class="text-[10px] uppercase font-bold text-gold-500 tracking-wider">⚔️ KI-Kampftaktik & Verhalten:</span>
-                    <p class="text-xs text-gray-200 leading-relaxed">${m.tactics}</p>
-                </div>
-
-                <div class="text-xs space-y-1">
-                    <p><strong class="text-gray-300">Aktionen & Angriff:</strong> <span class="text-gray-300">${m.actions}</span></p>
-                    ${m.notes ? `<p><strong class="text-gray-300">Notizen:</strong> <span class="text-gray-400">${m.notes}</span></p>` : ''}
-                </div>
-
-                <div class="flex items-center justify-end space-x-2 pt-2 border-t border-forest-800/60">
-                    <button class="add-to-init-btn px-2 py-1 bg-gold-500/20 hover:bg-gold-500/30 text-gold-300 border border-gold-500/30 rounded text-xs flex items-center space-x-1">
-                        <span>+ Initiative</span>
-                    </button>
-                    <button class="duplicate-monster-btn px-2 py-1 bg-forest-800 hover:bg-forest-700 text-gray-300 border border-forest-600 rounded text-xs" title="Monster duplizieren">
-                        📋 Duplizieren
-                    </button>
-                    <button class="edit-monster-btn px-2 py-1 bg-forest-800 hover:bg-forest-700 text-gold-400 border border-forest-600 rounded text-xs" title="Monster bearbeiten">
-                        ✏️ Bearbeiten
-                    </button>
-                    <button class="delete-monster-btn text-gray-500 hover:text-red-400 p-1" title="Löschen">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                    </button>
-                </div>
-            `;
+            card.className = 'bg-forest-900/80 border border-forest-700/60 rounded-xl p-5 shadow-md';
+            card.innerHTML = buildMonsterCardHTML(m, { showControls: true });
 
             card.querySelector('.add-to-init-btn').onclick = () => {
-                const initVal = Math.floor(Math.random() * 20) + 1 + (parseInt(m.init) || 0);
-                const hp = m.hp || 10;
+                const norm = normalizeMonster(m);
+                const initVal = Math.floor(Math.random() * 20) + 1 + (parseInt(norm.init) || 0);
                 const id = Date.now().toString() + Math.random().toString(36).substr(2, 4);
+
                 if (!state.combatants) state.combatants = [];
                 state.combatants.push({
                     id: id,
-                    name: m.name,
+                    name: norm.name,
                     init: initVal,
-                    hp: hp,
-                    maxHp: hp,
+                    hp: norm.hp,
+                    maxHp: norm.hp,
                     tempHp: 0,
                     img: '',
                     conditions: [],
-                    history: [`Aus Bestiarium hinzugefügt (${hp} HP)`]
+                    history: [`Aus Bestiarium hinzugefügt (${norm.hp} HP)`],
+                    monsterData: norm
                 });
+
                 sortCombatants();
-                if (!state.activeId) state.activeId = id;
+                state.activeId = id;
                 saveState();
-                showToast(`${m.name} zur Initiative hinzugefügt (Init: ${initVal})`, 'success');
+                renderInitiativeTab();
+                showToast(`${norm.name} zur Initiative hinzugefügt (Init: ${initVal})`, 'success');
             };
 
-            card.querySelector('.duplicate-monster-btn').onclick = () => duplicateMonster(m);
-            card.querySelector('.edit-monster-btn').onclick = () => openMonsterModalWithData(m);
-
-            card.querySelector('.delete-monster-btn').onclick = () => {
-                state.monsters = state.monsters.filter(mon => mon.id !== m.id);
+            card.querySelector('.duplicate-monster-btn').onclick = () => {
+                const clone = JSON.parse(JSON.stringify(m));
+                clone.id = 'm-' + Date.now();
+                clone.name += ' (Kopie)';
+                state.monsters.push(clone);
                 saveState();
                 renderMonstersTab();
+                showToast('Monster dupliziert!', 'success');
             };
+
+            card.querySelector('.edit-monster-btn').onclick = () => openMonsterModalWithData(m);
+            card.querySelector('.delete-monster-btn').onclick = () => { state.monsters = state.monsters.filter(x => x.id !== m.id); saveState(); renderMonstersTab(); };
 
             grid.appendChild(card);
         });
     }
 
     function openMonsterModalWithData(m = null) {
-        if (m) {
-            document.getElementById('monsterModalTitle').textContent = 'Monster / Gegner bearbeiten';
-            document.getElementById('monsterIdInput').value = m.id;
-            document.getElementById('monsterNameInput').value = m.name || '';
-            document.getElementById('monsterTypeInput').value = m.type || '';
-            document.getElementById('monsterXpInput').value = m.xp || '';
-            document.getElementById('monsterAcInput').value = m.ac || 10;
-            document.getElementById('monsterHpInput').value = m.hp || 10;
-            document.getElementById('monsterInitInput').value = m.init || '+0';
-            document.getElementById('monsterSpeedInput').value = m.speed || '9m';
-            document.getElementById('monsterTacticsInput').value = m.tactics || '';
-            document.getElementById('monsterActionsInput').value = m.actions || '';
-            document.getElementById('monsterNotesInput').value = m.notes || '';
-        } else {
-            document.getElementById('monsterModalTitle').textContent = 'Neues Monster / Gegner anlegen';
-            document.getElementById('monsterIdInput').value = '';
-            document.getElementById('monsterNameInput').value = '';
-            document.getElementById('monsterTypeInput').value = 'Kreatur';
-            document.getElementById('monsterXpInput').value = '450 XP';
-            document.getElementById('monsterAcInput').value = 13;
-            document.getElementById('monsterHpInput').value = 30;
-            document.getElementById('monsterInitInput').value = '+2';
-            document.getElementById('monsterSpeedInput').value = '9m';
-            document.getElementById('monsterTacticsInput').value = '';
-            document.getElementById('monsterActionsInput').value = '';
-            document.getElementById('monsterNotesInput').value = '';
-        }
+        const norm = m ? normalizeMonster(m) : normalizeMonster({});
+        document.getElementById('monsterModalTitle').textContent = m ? 'Monster bearbeiten' : 'Neues Monster anlegen';
+        document.getElementById('monsterIdInput').value = m ? norm.id : '';
+        document.getElementById('monsterNameInput').value = m ? norm.name : '';
+        document.getElementById('monsterTypeInput').value = norm.type;
+        document.getElementById('monsterXpInput').value = norm.xp;
+        document.getElementById('monsterAcInput').value = norm.ac;
+        document.getElementById('monsterHpInput').value = norm.hp;
+        document.getElementById('monsterInitInput').value = norm.init;
+        document.getElementById('monsterSpeedInput').value = norm.speed;
+
+        const s = norm.stats;
+        ['sta', 'ges', 'kon', 'int', 'wei', 'cha'].forEach(attr => {
+            document.getElementById(`m_${attr}_val`).value = s[attr].val || 10;
+            document.getElementById(`m_${attr}_mod`).value = s[attr].mod || '+0';
+            document.getElementById(`m_${attr}_rw`).value = s[attr].rw || '+0';
+        });
+
+        document.getElementById('monsterSkillsInput').value = norm.skills;
+        document.getElementById('monsterResistancesInput').value = norm.resistances;
+        document.getElementById('monsterSensesInput').value = norm.senses;
+        document.getElementById('monsterLanguagesInput').value = norm.languages;
+        document.getElementById('monsterTacticsInput').value = norm.tactics;
+        document.getElementById('monsterNotesInput').value = norm.notes;
+
+        currentModalTraits = JSON.parse(JSON.stringify(norm.traits));
+        currentModalActions = JSON.parse(JSON.stringify(norm.actions));
+        currentModalBonusActions = JSON.parse(JSON.stringify(norm.bonusActions));
+
+        renderDynamicModalList('traitsModalList', currentModalTraits, 'Merkmal');
+        renderDynamicModalList('actionsModalList', currentModalActions, 'Aktion');
+        renderDynamicModalList('bonusActionsModalList', currentModalBonusActions, 'Bonus-Aktion');
+
         document.getElementById('monsterModal').classList.remove('hidden');
     }
 
-    function duplicateMonster(m) {
-        const clone = {
-            ...m,
-            id: 'm-' + Date.now() + Math.random().toString(36).substr(2, 3),
-            name: m.name + ' (Kopie)'
-        };
-        state.monsters.push(clone);
-        saveState();
-        renderMonstersTab();
-        showToast(`"${m.name}" dupliziert!`, 'success');
-    }
-
-    document.getElementById('openNewMonsterModalBtn').onclick = () => openMonsterModalWithData();
-
-    document.querySelectorAll('.closeMonsterModalBtn').forEach(btn => {
-        btn.onclick = () => document.getElementById('monsterModal').classList.add('hidden');
-    });
+    document.getElementById('openNewMonsterModalBtn').onclick = () => openMonsterModalWithData(null);
+    document.querySelectorAll('.closeMonsterModalBtn').forEach(b => b.onclick = () => document.getElementById('monsterModal').classList.add('hidden'));
 
     document.getElementById('monsterForm').onsubmit = (e) => {
         e.preventDefault();
         const id = document.getElementById('monsterIdInput').value;
-        const monsterData = {
+
+        const monsterObj = {
             id: id || 'm-' + Date.now(),
             name: document.getElementById('monsterNameInput').value,
             type: document.getElementById('monsterTypeInput').value || 'Kreatur',
@@ -1930,16 +1999,30 @@
             hp: parseInt(document.getElementById('monsterHpInput').value) || 10,
             init: document.getElementById('monsterInitInput').value || '+0',
             speed: document.getElementById('monsterSpeedInput').value || '9m',
-            tactics: document.getElementById('monsterTacticsInput').value || '',
-            actions: document.getElementById('monsterActionsInput').value || '',
-            notes: document.getElementById('monsterNotesInput').value || ''
+            stats: {
+                sta: { val: parseInt(document.getElementById('m_sta_val').value)||10, mod: document.getElementById('m_sta_mod').value||'+0', rw: document.getElementById('m_sta_rw').value||'+0' },
+                ges: { val: parseInt(document.getElementById('m_ges_val').value)||10, mod: document.getElementById('m_ges_mod').value||'+0', rw: document.getElementById('m_ges_rw').value||'+0' },
+                kon: { val: parseInt(document.getElementById('m_kon_val').value)||10, mod: document.getElementById('m_kon_mod').value||'+0', rw: document.getElementById('m_kon_rw').value||'+0' },
+                int: { val: parseInt(document.getElementById('m_int_val').value)||10, mod: document.getElementById('m_int_mod').value||'+0', rw: document.getElementById('m_int_rw').value||'+0' },
+                wei: { val: parseInt(document.getElementById('m_wei_val').value)||10, mod: document.getElementById('m_wei_mod').value||'+0', rw: document.getElementById('m_wei_rw').value||'+0' },
+                cha: { val: parseInt(document.getElementById('m_cha_val').value)||10, mod: document.getElementById('m_cha_mod').value||'+0', rw: document.getElementById('m_cha_rw').value||'+0' }
+            },
+            skills: document.getElementById('monsterSkillsInput').value,
+            resistances: document.getElementById('monsterResistancesInput').value,
+            senses: document.getElementById('monsterSensesInput').value,
+            languages: document.getElementById('monsterLanguagesInput').value,
+            traits: currentModalTraits.filter(t => t.name.trim() !== ''),
+            actions: currentModalActions.filter(a => a.name.trim() !== ''),
+            bonusActions: currentModalBonusActions.filter(ba => ba.name.trim() !== ''),
+            tactics: document.getElementById('monsterTacticsInput').value,
+            notes: document.getElementById('monsterNotesInput').value
         };
 
         if (id) {
             const idx = state.monsters.findIndex(m => m.id === id);
-            if (idx !== -1) state.monsters[idx] = monsterData;
+            if (idx !== -1) state.monsters[idx] = monsterObj;
         } else {
-            state.monsters.unshift(monsterData);
+            state.monsters.unshift(monsterObj);
         }
 
         saveState();
@@ -1948,14 +2031,13 @@
         showToast('Monster erfolgreich gespeichert!', 'success');
     };
 
+    /* TAB 6: KNOTEN ABLAUFPLAN */
     function renderNodesTab() {
         const container = document.getElementById('nodesGraphContainer');
         container.innerHTML = '';
-
         state.nodes.forEach((node) => {
             let statusColor = 'border-forest-700 bg-forest-900/60';
             let statusBadge = '<span class="px-2 py-0.5 rounded text-[10px] bg-gray-800 text-gray-400">Geplant</span>';
-
             if (node.status === 'active') {
                 statusColor = 'border-gold-500 bg-forest-900 shadow-lg shadow-gold-500/10';
                 statusBadge = '<span class="px-2 py-0.5 rounded text-[10px] bg-gold-500 text-forest-950 font-bold">AKTIVE SZENE</span>';
@@ -1976,11 +2058,8 @@
                         ${statusBadge}
                     </div>
                     <p class="text-xs text-gray-300 leading-relaxed">${node.description}</p>
-
                     ${node.clues ? `<div class="text-[11px]"><strong class="text-gold-400">Hinweise:</strong> <span class="text-gray-300">${node.clues}</span></div>` : ''}
-                    ${node.npcs ? `<div class="text-[11px]"><strong class="text-gold-400">Anwesende NPCs:</strong> <span class="text-gray-300">${node.npcs}</span></div>` : ''}
                 </div>
-
                 <div class="flex items-center justify-between pt-2 border-t border-forest-800/60">
                     <select class="node-status-select bg-forest-950 border border-forest-700 text-[10px] rounded px-2 py-1 text-gold-400">
                         <option value="planned" ${node.status === 'planned' ? 'selected' : ''}>Geplant</option>
@@ -1988,138 +2067,60 @@
                         <option value="completed" ${node.status === 'completed' ? 'selected' : ''}>Abgeschlossen</option>
                         <option value="bypassed" ${node.status === 'bypassed' ? 'selected' : ''}>Übersprungen</option>
                     </select>
-
-                    <button class="delete-node-btn text-gray-500 hover:text-red-400 p-1">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                    </button>
+                    <button class="delete-node-btn text-gray-500 hover:text-red-400 p-1">🗑️</button>
                 </div>
             `;
-
-            card.querySelector('.node-status-select').onchange = (e) => {
-                node.status = e.target.value;
-                saveState();
-                renderNodesTab();
-            };
-
-            card.querySelector('.delete-node-btn').onclick = () => {
-                state.nodes = state.nodes.filter(n => n.id !== node.id);
-                saveState();
-                renderNodesTab();
-            };
-
+            card.querySelector('.node-status-select').onchange = (e) => { node.status = e.target.value; saveState(); renderNodesTab(); };
+            card.querySelector('.delete-node-btn').onclick = () => { state.nodes = state.nodes.filter(n => n.id !== node.id); saveState(); renderNodesTab(); };
             container.appendChild(card);
         });
     }
 
     document.getElementById('addNodeBtn').onclick = () => {
         const title = prompt('Szenentitel / Knoten-Bezeichnung:');
-        if (!title) return;
-        const desc = prompt('Kurze Szenenbeschreibung:') || '';
-        const clues = prompt('Geheime Hinweise im Raum:') || '';
-
-        state.nodes.push({
-            id: 'n-' + Date.now(),
-            title: title,
-            status: 'planned',
-            description: desc,
-            clues: clues,
-            npcs: ''
-        });
-
-        saveState();
-        renderNodesTab();
+        if (title) { state.nodes.push({ id: 'n-' + Date.now(), title, status: 'planned', description: prompt('Beschreibung:') || '', clues: prompt('Hinweise:') || '', npcs: '' }); saveState(); renderNodesTab(); }
     };
 
-    /* INITIATIVE TRACKER ENGINE */
-    function adjustSquareSize(val) {
-        document.documentElement.style.setProperty('--square-size', `${val}px`);
-    }
+    /* TAB 7: INITIATIVE TRACKER ENGINE & FULL CARD RESTORATION */
+    function adjustSquareSize(val) { document.documentElement.style.setProperty('--square-size', `${val}px`); }
+    function sortCombatants() { if (!state.combatants) state.combatants = []; state.combatants.sort((a, b) => b.init - a.init); }
 
-    function sortCombatants() {
-        if (!state.combatants) state.combatants = [];
-        state.combatants.sort((a, b) => b.init - a.init);
-    }
-
-    function addCombatant(name = 'Neue Kreatur', init = 10, maxHp = 30, imgUrl = '') {
+    function addCombatant(name = 'Neue Kreatur', init = 10, maxHp = 30) {
         if (!state.combatants) state.combatants = [];
         const id = Date.now() + Math.random().toString(36).substr(2, 4);
-        const hp = Number(maxHp);
-        state.combatants.push({
-            id,
-            name,
-            init: Number(init),
-            hp,
-            maxHp: hp,
-            tempHp: 0,
-            img: imgUrl,
-            conditions: [],
-            history: [`Erstellt mit ${hp} HP`]
-        });
-        sortCombatants();
-        if (!state.activeId) state.activeId = id;
-        saveState();
-        renderInitiativeTab();
+        state.combatants.push({ id, name, init: Number(init), hp: Number(maxHp), maxHp: Number(maxHp), tempHp: 0, img: '', conditions: [], history: [`Erstellt mit ${maxHp} HP`] });
+        sortCombatants(); state.activeId = id; saveState(); renderInitiativeTab();
     }
 
     function removeCombatant(id, e) {
         if (e) e.stopPropagation();
         state.combatants = state.combatants.filter(c => c.id !== id);
-        if (state.activeId === id) {
-            state.activeId = state.combatants.length > 0 ? state.combatants[0].id : null;
-        }
-        saveState();
-        renderInitiativeTab();
+        if (state.activeId === id) state.activeId = state.combatants.length > 0 ? state.combatants[0].id : null;
+        saveState(); renderInitiativeTab();
     }
 
-    function setActive(id) {
-        state.activeId = id;
-        saveState();
-        renderInitiativeTab();
-    }
+    function setActive(id) { state.activeId = id; saveState(); renderInitiativeTab(); }
 
     function handleMaxHpInput(id, val) {
         const c = state.combatants.find(x => x.id === id);
-        if (c) {
-            const newMax = Math.max(0, parseInt(val) || 0);
-            c.maxHp = newMax;
-            c.hp = newMax;
-
-            const currInput = document.getElementById(`curr-hp-${id}`);
-            if (currInput) currInput.value = newMax;
-            saveState();
-        }
+        if (c) { c.maxHp = Math.max(0, parseInt(val) || 0); c.hp = c.maxHp; saveState(); renderInitiativeTab(); }
     }
 
     function handleCurrentHpInput(id, val) {
         const c = state.combatants.find(x => x.id === id);
-        if (c) {
-            c.hp = Math.max(0, parseInt(val) || 0);
-            saveState();
-        }
+        if (c) { c.hp = Math.max(0, parseInt(val) || 0); saveState(); }
     }
 
     function handleInitInput(id, val) {
         const c = state.combatants.find(x => x.id === id);
-        if (c) {
-            c.init = parseInt(val) || 0;
-            saveState();
-        }
+        if (c) { c.init = parseInt(val) || 0; saveState(); }
     }
 
-    function finalizeInitChange() {
-        sortCombatants();
-        saveState();
-        renderInitiativeTab();
-    }
+    function finalizeInitChange() { sortCombatants(); saveState(); renderInitiativeTab(); }
 
     function resetToFullHp(id) {
         const c = state.combatants.find(x => x.id === id);
-        if (c) {
-            c.hp = c.maxHp;
-            c.history.unshift(`Vollständig geheilt (${c.maxHp} HP)`);
-            saveState();
-            renderInitiativeTab();
-        }
+        if (c) { c.hp = c.maxHp; c.history.unshift(`Vollständig geheilt (${c.maxHp} HP)`); saveState(); renderInitiativeTab(); }
     }
 
     function applyDamage(id) {
@@ -2133,27 +2134,15 @@
         let tempAbsorbed = 0;
 
         if (c.tempHp > 0) {
-            if (c.tempHp >= dmgRemaining) {
-                c.tempHp -= dmgRemaining;
-                tempAbsorbed = dmgRemaining;
-                dmgRemaining = 0;
-            } else {
-                tempAbsorbed = c.tempHp;
-                dmgRemaining -= c.tempHp;
-                c.tempHp = 0;
-            }
+            if (c.tempHp >= dmgRemaining) { c.tempHp -= dmgRemaining; tempAbsorbed = dmgRemaining; dmgRemaining = 0; }
+            else { tempAbsorbed = c.tempHp; dmgRemaining -= c.tempHp; c.tempHp = 0; }
         }
 
-        c.hp -= dmgRemaining;
-        if (c.hp < 0) c.hp = 0;
-
+        c.hp = Math.max(0, c.hp - dmgRemaining);
         let logMsg = `-${amount} Schdn`;
         if (tempAbsorbed > 0) logMsg += ` (${tempAbsorbed} Temp HP)`;
         c.history.unshift(logMsg);
-
-        valInput.value = '';
-        saveState();
-        renderInitiativeTab();
+        valInput.value = ''; saveState(); renderInitiativeTab();
     }
 
     function applyHeal(id) {
@@ -2163,13 +2152,9 @@
         let amount = parseInt(valInput.value) || 0;
         if (amount <= 0) return;
 
-        c.hp += amount;
-        if (c.hp > c.maxHp) c.hp = c.maxHp;
-
+        c.hp = Math.min(c.maxHp, c.hp + amount);
         c.history.unshift(`+${amount} Heilung`);
-        valInput.value = '';
-        saveState();
-        renderInitiativeTab();
+        valInput.value = ''; saveState(); renderInitiativeTab();
     }
 
     function addTempHp(id) {
@@ -2181,9 +2166,7 @@
 
         c.tempHp = amount;
         c.history.unshift(`+${amount} Temp HP`);
-        valInput.value = '';
-        saveState();
-        renderInitiativeTab();
+        valInput.value = ''; saveState(); renderInitiativeTab();
     }
 
     function toggleCondition(combatantId, conditionId) {
@@ -2192,32 +2175,16 @@
         if (!Array.isArray(c.conditions)) c.conditions = [];
 
         const index = c.conditions.indexOf(conditionId);
-        if (index > -1) {
-            c.conditions.splice(index, 1);
-        } else {
-            c.conditions.push(conditionId);
-        }
+        if (index > -1) c.conditions.splice(index, 1);
+        else c.conditions.push(conditionId);
 
-        saveState();
-
-        const btn = document.getElementById(`cond-${combatantId}-${conditionId}`);
-        if (btn) {
-            if (c.conditions.includes(conditionId)) {
-                btn.classList.add('active');
-            } else {
-                btn.classList.remove('active');
-            }
-        }
+        saveState(); renderInitiativeTab();
     }
 
     function resetAllLogs() {
-        if (!state.combatants || state.combatants.length === 0) return;
-        state.combatants.forEach(c => {
-            c.history = [];
-        });
-        saveState();
-        renderInitiativeTab();
-        showToast("📜 Alle Logs wurden zurückgesetzt!", "success");
+        if (!state.combatants) return;
+        state.combatants.forEach(c => c.history = []);
+        saveState(); renderInitiativeTab(); showToast("📜 Logs zurückgesetzt!", "success");
     }
 
     function handleImageUpload(id, input) {
@@ -2225,11 +2192,7 @@
             const reader = new FileReader();
             reader.onload = function(e) {
                 const c = state.combatants.find(x => x.id === id);
-                if (c) {
-                    c.img = e.target.result;
-                    saveState();
-                    renderInitiativeTab();
-                }
+                if (c) { c.img = e.target.result; saveState(); renderInitiativeTab(); }
             };
             reader.readAsDataURL(input.files[0]);
         }
@@ -2237,19 +2200,12 @@
 
     function updateName(id, newName) {
         const c = state.combatants.find(x => x.id === id);
-        if (c) {
-            c.name = newName;
-            saveState();
-        }
+        if (c) { c.name = newName; saveState(); }
     }
 
     function resetTracker() {
         if (confirm('Sämtliche Kreaturen aus der Initiative löschen?')) {
-            state.combatants = [];
-            state.activeId = null;
-            saveState();
-            renderInitiativeTab();
-            showToast("Alle Kreaturen gelöscht!", "info");
+            state.combatants = []; state.activeId = null; saveState(); renderInitiativeTab(); showToast("Alle Kreaturen gelöscht!", "info");
         }
     }
 
@@ -2259,31 +2215,21 @@
         listEl.innerHTML = '';
 
         if (!Array.isArray(state.combatants)) state.combatants = [];
-
-        state.combatants.forEach(c => {
-            if (!Array.isArray(c.conditions)) c.conditions = [];
-            if (!Array.isArray(c.history)) c.history = [];
-            if (c.hpCurrent !== undefined && c.hp === undefined) c.hp = c.hpCurrent;
-            if (c.hpMax !== undefined && c.maxHp === undefined) c.maxHp = c.hpMax;
-            if (c.tempHp === undefined) c.tempHp = 0;
-            if (c.img === undefined) c.img = '';
-        });
-
         sortCombatants();
 
-        if (!state.activeId && state.combatants.length > 0) {
-            state.activeId = state.combatants[0].id;
-        }
+        if (!state.activeId && state.combatants.length > 0) state.activeId = state.combatants[0].id;
 
         state.combatants.forEach((c) => {
-            const isActive = c.id === state.activeId;
+            if (!Array.isArray(c.conditions)) c.conditions = [];
+            if (!Array.isArray(c.history)) c.history = [];
 
+            const isActive = c.id === state.activeId;
             const card = document.createElement('div');
             card.className = `combatant-card ${isActive ? 'is-active' : ''}`;
             card.onclick = () => setActive(c.id);
 
             const conditionsHtml = CONDITIONS.map(cond => {
-                const isCondActive = Array.isArray(c.conditions) && c.conditions.includes(cond.id);
+                const isCondActive = c.conditions.includes(cond.id);
                 return `
                     <button
                         id="cond-${c.id}-${cond.id}"
@@ -2340,12 +2286,12 @@
                         <div class="history-header">VERLAUF</div>
                         <div class="history-box">
                             ${c.history && c.history.length > 0
-                ? c.history.map(h => {
-                    let classType = h.includes('Schdn') ? 'dmg' : h.includes('Heilung') || h.includes('Vollständig') ? 'heal' : 'temp';
-                    return `<div class="history-entry ${classType}">${h}</div>`;
-                }).join('')
-                : `<div class="history-entry empty">Keine Einträge</div>`
-            }
+                                ? c.history.map(h => {
+                                    let classType = h.includes('Schdn') ? 'dmg' : h.includes('Heilung') || h.includes('Vollständig') ? 'heal' : 'temp';
+                                    return `<div class="history-entry ${classType}">${h}</div>`;
+                                }).join('')
+                                : `<div class="history-entry empty">Keine Einträge</div>`
+                            }
                         </div>
                     </div>
                 </div>
@@ -2367,29 +2313,40 @@
             listEl.appendChild(card);
         });
 
+        // Live Monster Stat Card Display on Right Panel
+        const rightContainer = document.getElementById('selectedCombatantCardContainer');
+        const activeCombatant = state.combatants.find(x => x.id === state.activeId);
+
+        if (activeCombatant && activeCombatant.monsterData) {
+            rightContainer.innerHTML = buildMonsterCardHTML(activeCombatant.monsterData, { showControls: false });
+        } else if (activeCombatant) {
+            rightContainer.innerHTML = `
+                <div class="space-y-3">
+                    <h3 class="font-cinzel text-lg font-bold text-gold-400">${activeCombatant.name}</h3>
+                    <p class="text-xs text-gray-400">Spieler-Charakter / Standard-Kreatur</p>
+                    <div class="bg-forest-950/60 p-3 rounded-lg border border-forest-800 text-xs text-gray-300">
+                        ❤️ HP: ${activeCombatant.hp} / ${activeCombatant.maxHp}<br>
+                        ⚔️ Initiative: ${activeCombatant.init}
+                    </div>
+                </div>
+            `;
+        } else {
+            rightContainer.innerHTML = `<div class="text-center py-10 text-gray-400 text-xs italic">⚔️ Klicke links auf eine Kreatur, um ihren Statblock hier anzuzeigen.</div>`;
+        }
+
         const notesArea = document.getElementById('scratchpadNotes');
         if (notesArea) {
             notesArea.value = state.notes || '';
-            notesArea.oninput = (e) => {
-                state.notes = e.target.value;
-                saveState();
-            };
+            notesArea.oninput = (e) => { state.notes = e.target.value; saveState(); };
         }
     }
 
     document.getElementById('clearNotesBtn').onclick = () => {
-        if (confirm('Schnellnotizen löschen?')) {
-            state.notes = '';
-            document.getElementById('scratchpadNotes').value = '';
-            saveState();
-        }
+        if (confirm('Schnellnotizen löschen?')) { state.notes = ''; document.getElementById('scratchpadNotes').value = ''; saveState(); }
     };
 
     document.getElementById('resetDataBtn').onclick = () => {
-        if (confirm('Möchtest du sämtliche Codex-Daten auf den Standardzustand zurücksetzen?')) {
-            localStorage.removeItem('sylvanus_codex_data_v4');
-            location.reload();
-        }
+        if (confirm('Sämtliche Daten zurücksetzen?')) { localStorage.removeItem('sylvanus_codex_data_v6'); location.reload(); }
     };
 
     window.onload = function() {
