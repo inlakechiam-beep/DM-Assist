@@ -896,10 +896,10 @@
 
     <!-- TAB 7: INITIATIVE -->
     <section id="tab-initiative" class="tab-content hidden space-y-6">
-        <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
             <!-- Initiative & HP Tracker Links -->
-            <div class="xl:col-span-2 space-y-4">
+            <div class="lg:col-span-2 space-y-4">
                 <div class="init-tracker-container">
                     <div class="init-header">
                         <div class="init-header-title">
@@ -924,16 +924,16 @@
                 </div>
             </div>
 
-            <!-- Rechter Bereich: Ausgewählte Kreatur Statblock + Schnell-Notizen -->
+            <!-- Rechter Bereich: Ausgewählte Kreatur Statblock (NUR in Horizontaler / Desktop Ansicht) + Schnell-Notizen -->
             <div class="space-y-6">
-                <!-- Selected Combatant Statblock Card -->
-                <div id="selectedCombatantCardContainer" class="bg-forest-900/80 border border-gold-500/40 rounded-xl p-5 shadow-lg min-h-[300px]">
+                <!-- Selected Combatant Statblock Card (Anzeigen ab lg) -->
+                <div id="selectedCombatantCardContainer" class="hidden lg:block bg-forest-900/80 border border-gold-500/40 rounded-xl p-5 shadow-lg min-h-[300px]">
                     <div class="text-center py-10 text-gray-400 text-xs italic">
                         ⚔️ Klicke links auf eine Kreatur, um ihren Statblock hier anzuzeigen.
                     </div>
                 </div>
 
-                <!-- Schnell-Notizen Scratchpad -->
+                <!-- Schnell-Notizen Scratchpad (Immer erreichbar) -->
                 <div class="bg-forest-900/60 dark:bg-forest-900/80 bg-white border border-forest-700/40 rounded-xl p-5 flex flex-col shadow-md">
                     <div class="flex items-center justify-between border-b border-gold-500/20 pb-3 mb-3">
                         <h2 class="font-cinzel text-md font-bold text-gold-400">Schnell-Notizen</h2>
@@ -1047,7 +1047,7 @@
             <!-- Attribute Input Grid -->
             <div class="bg-forest-950/60 p-3 rounded-lg border border-forest-700/50 space-y-2">
                 <span class="block text-xs font-bold text-gold-400">Attribute & Modifikatoren (Wert | Mod | RW)</span>
-                
+
                 <!-- Zeile 1: STÄ, GES, KON -->
                 <div class="grid grid-cols-3 gap-2">
                     <div>
@@ -1359,7 +1359,7 @@
 
     function loadState() {
         try {
-            const saved = localStorage.getItem('sylvanus_codex_data_v6');
+            const saved = localStorage.getItem('sylvanus_codex_data_v7');
             if (saved) {
                 const parsed = JSON.parse(saved);
                 state = { ...state, ...parsed };
@@ -1371,7 +1371,7 @@
 
     function saveState() {
         try {
-            localStorage.setItem('sylvanus_codex_data_v6', JSON.stringify(state));
+            localStorage.setItem('sylvanus_codex_data_v7', JSON.stringify(state));
         } catch (e) {
             console.error("Fehler beim Speichern:", e);
         }
@@ -1643,8 +1643,8 @@
                 <div class="space-y-2">
                     <div class="flex items-center justify-between">
                         <span class="px-2 py-0.5 rounded text-[10px] font-semibold tracking-wider uppercase ${
-                            isRevealed ? 'bg-forest-900 text-forest-400 border border-forest-800' : 'bg-gold-500/20 text-gold-400 border border-gold-500/30'
-                        }">${secret.tag || 'Geheimnis'}</span>
+                isRevealed ? 'bg-forest-900 text-forest-400 border border-forest-800' : 'bg-gold-500/20 text-gold-400 border border-gold-500/30'
+            }">${secret.tag || 'Geheimnis'}</span>
                         <span class="text-[10px] font-semibold ${isRevealed ? 'text-forest-400' : 'text-gold-500'}">
                             ${isRevealed ? '✓ Enthüllt' : '🔒 Verborgen'}
                         </span>
@@ -1653,8 +1653,8 @@
                 </div>
                 <div class="flex items-center justify-end space-x-2 pt-3 border-t border-forest-800/40 mt-3">
                     <button class="toggle-secret-btn px-2.5 py-1 rounded text-xs font-semibold border transition-all ${
-                        isRevealed ? 'border-forest-700 bg-forest-900 hover:bg-forest-800 text-gray-300' : 'border-gold-500/50 bg-gold-500/20 hover:bg-gold-500/30 text-gold-300'
-                    }">
+                isRevealed ? 'border-forest-700 bg-forest-900 hover:bg-forest-800 text-gray-300' : 'border-gold-500/50 bg-gold-500/20 hover:bg-gold-500/30 text-gold-300'
+            }">
                         ${isRevealed ? 'Verbergen' : 'Als Enthüllt markieren'}
                     </button>
                     <button class="delete-secret-btn p-1 text-gray-500 hover:text-red-400">
@@ -1755,7 +1755,7 @@
     };
     document.getElementById('refreshNachnamenBtn').onclick = () => {
         const pool = NAME_DATABASE[document.getElementById('nameGenRaceSelect').value].nachnamen;
-        generatedNachnamen = [...pool].sort(() => 0.5 - Math.random()).slice(0, 5); selectedNachnameIndex = 0; renderNameGenTab();
+        generatedNachnamen = [...pool].sort(() => 0.5 - Math.random()).slice(0, 5); selectedVornameIndex = 0; renderNameGenTab();
     };
     document.getElementById('copyFullNameBtn').onclick = () => { copyTextToClipboard(document.getElementById('fullGeneratedNameDisplay').textContent); };
     document.getElementById('transferFullNameToNPCBtn').onclick = () => {
@@ -2081,7 +2081,7 @@
         if (title) { state.nodes.push({ id: 'n-' + Date.now(), title, status: 'planned', description: prompt('Beschreibung:') || '', clues: prompt('Hinweise:') || '', npcs: '' }); saveState(); renderNodesTab(); }
     };
 
-    /* TAB 7: INITIATIVE TRACKER ENGINE & FULL CARD RESTORATION */
+    /* TAB 7: INITIATIVE TRACKER ENGINE & DYNAMIC RESPONSIVE STATBLOCK */
     function adjustSquareSize(val) { document.documentElement.style.setProperty('--square-size', `${val}px`); }
     function sortCombatants() { if (!state.combatants) state.combatants = []; state.combatants.sort((a, b) => b.init - a.init); }
 
@@ -2219,11 +2219,44 @@
 
         if (!state.activeId && state.combatants.length > 0) state.activeId = state.combatants[0].id;
 
+        const activeCombatant = state.combatants.find(x => x.id === state.activeId);
+
+        // Statblock HTML für ausgewählte Kreatur vorbereiten
+        let activeStatHTML = '';
+        if (activeCombatant && activeCombatant.monsterData) {
+            activeStatHTML = buildMonsterCardHTML(activeCombatant.monsterData, { showControls: false });
+        } else if (activeCombatant) {
+            activeStatHTML = `
+                <div class="space-y-3">
+                    <h3 class="font-cinzel text-lg font-bold text-gold-400">${activeCombatant.name}</h3>
+                    <p class="text-xs text-gray-400">Spieler-Charakter / Standard-Kreatur</p>
+                    <div class="bg-forest-950/60 p-3 rounded-lg border border-forest-800 text-xs text-gray-300">
+                        ❤️ HP: ${activeCombatant.hp} / ${activeCombatant.maxHp}<br>
+                        ⚔️ Initiative: ${activeCombatant.init}
+                    </div>
+                </div>
+            `;
+        } else {
+            activeStatHTML = `<div class="text-center py-10 text-gray-400 text-xs italic">⚔️ Klicke links auf eine Kreatur, um ihren Statblock hier anzuzeigen.</div>`;
+        }
+
+        // 1. Rechten Bereich aktualisieren (für Desktop & iPad im Querformat)
+        const rightContainer = document.getElementById('selectedCombatantCardContainer');
+        if (rightContainer) {
+            rightContainer.innerHTML = activeStatHTML;
+        }
+
+        // 2. Liste aller Kreaturen rendern
         state.combatants.forEach((c) => {
             if (!Array.isArray(c.conditions)) c.conditions = [];
             if (!Array.isArray(c.history)) c.history = [];
 
             const isActive = c.id === state.activeId;
+
+            // Wrapper für die Karte + inline Statblock im Hochformat
+            const wrapper = document.createElement('div');
+            wrapper.className = 'combatant-wrapper flex flex-col gap-2';
+
             const card = document.createElement('div');
             card.className = `combatant-card ${isActive ? 'is-active' : ''}`;
             card.onclick = () => setActive(c.id);
@@ -2286,12 +2319,12 @@
                         <div class="history-header">VERLAUF</div>
                         <div class="history-box">
                             ${c.history && c.history.length > 0
-                                ? c.history.map(h => {
-                                    let classType = h.includes('Schdn') ? 'dmg' : h.includes('Heilung') || h.includes('Vollständig') ? 'heal' : 'temp';
-                                    return `<div class="history-entry ${classType}">${h}</div>`;
-                                }).join('')
-                                : `<div class="history-entry empty">Keine Einträge</div>`
-                            }
+                ? c.history.map(h => {
+                    let classType = h.includes('Schdn') ? 'dmg' : h.includes('Heilung') || h.includes('Vollständig') ? 'heal' : 'temp';
+                    return `<div class="history-entry ${classType}">${h}</div>`;
+                }).join('')
+                : `<div class="history-entry empty">Keine Einträge</div>`
+            }
                         </div>
                     </div>
                 </div>
@@ -2310,29 +2343,18 @@
                 </div>
             `;
 
-            listEl.appendChild(card);
+            wrapper.appendChild(card);
+
+            // Falls dies die ausgewählte Kreatur ist: Füge im Hochformat (< lg) den Statblock direkt unter der Kreatur ein
+            if (isActive) {
+                const inlineStat = document.createElement('div');
+                inlineStat.className = 'lg:hidden bg-forest-900/90 border border-gold-500/40 rounded-xl p-4 shadow-lg w-full transition-all';
+                inlineStat.innerHTML = activeStatHTML;
+                wrapper.appendChild(inlineStat);
+            }
+
+            listEl.appendChild(wrapper);
         });
-
-        // Live Monster Stat Card Display on Right Panel
-        const rightContainer = document.getElementById('selectedCombatantCardContainer');
-        const activeCombatant = state.combatants.find(x => x.id === state.activeId);
-
-        if (activeCombatant && activeCombatant.monsterData) {
-            rightContainer.innerHTML = buildMonsterCardHTML(activeCombatant.monsterData, { showControls: false });
-        } else if (activeCombatant) {
-            rightContainer.innerHTML = `
-                <div class="space-y-3">
-                    <h3 class="font-cinzel text-lg font-bold text-gold-400">${activeCombatant.name}</h3>
-                    <p class="text-xs text-gray-400">Spieler-Charakter / Standard-Kreatur</p>
-                    <div class="bg-forest-950/60 p-3 rounded-lg border border-forest-800 text-xs text-gray-300">
-                        ❤️ HP: ${activeCombatant.hp} / ${activeCombatant.maxHp}<br>
-                        ⚔️ Initiative: ${activeCombatant.init}
-                    </div>
-                </div>
-            `;
-        } else {
-            rightContainer.innerHTML = `<div class="text-center py-10 text-gray-400 text-xs italic">⚔️ Klicke links auf eine Kreatur, um ihren Statblock hier anzuzeigen.</div>`;
-        }
 
         const notesArea = document.getElementById('scratchpadNotes');
         if (notesArea) {
@@ -2346,7 +2368,7 @@
     };
 
     document.getElementById('resetDataBtn').onclick = () => {
-        if (confirm('Sämtliche Daten zurücksetzen?')) { localStorage.removeItem('sylvanus_codex_data_v6'); location.reload(); }
+        if (confirm('Sämtliche Daten zurücksetzen?')) { localStorage.removeItem('sylvanus_codex_data_v7'); location.reload(); }
     };
 
     window.onload = function() {
