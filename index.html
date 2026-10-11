@@ -367,13 +367,13 @@
         <!-- Aktive Monster Sektion -->
         <div class="space-y-3">
             <h3 class="font-cinzel text-md font-bold text-gold-400 border-b border-gold-500/20 pb-1">⚡ Aktive Monster & Encounters</h3>
-            <div id="activeMonstersGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6 min-h-[100px] p-2 rounded-xl" ondragover="allowDrop(event)" ondragleave="removeDropStyle(event)" ondrop="dropMonsterToCategory(event, 'active')"></div>
+            <div id="activeMonstersGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6 min-h-[100px] p-2 rounded-xl" ondragover="event.preventDefault()" ondragleave="event.currentTarget.classList.remove('drag-over')" ondrop="dropMonsterToCategory(event, 'active')"></div>
         </div>
 
         <!-- Bibliothek Sektion -->
         <div class="space-y-3 pt-4">
             <h3 class="font-cinzel text-md font-bold text-gray-400 border-b border-gray-700/40 pb-1">📚 Bibliothek (Archiv)</h3>
-            <div id="libraryMonstersGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6 min-h-[100px] p-2 rounded-xl bg-forest-950/30 border border-dashed border-forest-800" ondragover="allowDrop(event)" ondragleave="removeDropStyle(event)" ondrop="dropMonsterToCategory(event, 'library')"></div>
+            <div id="libraryMonstersGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6 min-h-[100px] p-2 rounded-xl bg-forest-950/30 border border-dashed border-forest-800" ondragover="event.preventDefault()" ondragleave="event.currentTarget.classList.remove('drag-over')" ondrop="dropMonsterToCategory(event, 'library')"></div>
         </div>
     </section>
 
@@ -384,7 +384,7 @@
                 <h2 class="font-cinzel text-xl font-bold text-gold-400">Knoten-Ablaufplan (Drag & Drop)</h2>
                 <button id="addNodeBtn" class="px-3 py-1.5 rounded-lg bg-gold-500 text-forest-950 font-semibold text-xs">+ Szene hinzufügen</button>
             </div>
-            <div id="nodesGraphContainer" class="grid grid-cols-1 md:grid-cols-3 gap-4 min-h-[300px]" ondragover="allowDrop(event)" ondragleave="removeDropStyle(event)"></div>
+            <div id="nodesGraphContainer" class="grid grid-cols-1 md:grid-cols-3 gap-4 min-h-[300px]" ondragover="event.preventDefault()" ondragleave="event.currentTarget.classList.remove('drag-over')" ondrop="dropNodeContainer(event)"></div>
         </div>
     </section>
 
@@ -437,15 +437,6 @@
             <div>
                 <label class="block text-xs text-gray-300 mb-1">Titel der Szene</label>
                 <input id="nodeTitleInput" type="text" required class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100">
-            </div>
-            <div>
-                <label class="block text-xs text-gray-300 mb-1">Status</label>
-                <select id="nodeStatusInput" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gold-400">
-                    <option value="planned">Geplant</option>
-                    <option value="active">Aktive Szene</option>
-                    <option value="completed">Abgeschlossen</option>
-                    <option value="bypassed">Übersprungen</option>
-                </select>
             </div>
             <div>
                 <label class="block text-xs text-gray-300 mb-1">Beschreibung / Ablauf</label>
@@ -529,7 +520,33 @@
                 <input id="monsterInitInput" type="text" placeholder="Init" class="bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100">
                 <input id="monsterSpeedInput" type="text" placeholder="Tempo" class="bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100">
             </div>
+
+            <!-- Attribute & Modifikatoren (Stärke, Geschicklichkeit, etc.) -->
+            <div class="grid grid-cols-6 gap-2 bg-forest-950/40 p-2 rounded-lg border border-forest-700/40">
+                <div><label class="text-[10px] text-gray-400 block">STR</label><input id="m-sta-val" type="number" placeholder="10" class="w-full bg-forest-900 text-xs p-1 text-center border border-forest-700 rounded text-gray-100"></div>
+                <div><label class="text-[10px] text-gray-400 block">GES</label><input id="m-ges-val" type="number" placeholder="10" class="w-full bg-forest-900 text-xs p-1 text-center border border-forest-700 rounded text-gray-100"></div>
+                <div><label class="text-[10px] text-gray-400 block">KON</label><input id="m-kon-val" type="number" placeholder="10" class="w-full bg-forest-900 text-xs p-1 text-center border border-forest-700 rounded text-gray-100"></div>
+                <div><label class="text-[10px] text-gray-400 block">INT</label><input id="m-int-val" type="number" placeholder="10" class="w-full bg-forest-900 text-xs p-1 text-center border border-forest-700 rounded text-gray-100"></div>
+                <div><label class="text-[10px] text-gray-400 block">WEI</label><input id="m-wei-val" type="number" placeholder="10" class="w-full bg-forest-900 text-xs p-1 text-center border border-forest-700 rounded text-gray-100"></div>
+                <div><label class="text-[10px] text-gray-400 block">CHA</label><input id="m-cha-val" type="number" placeholder="10" class="w-full bg-forest-900 text-xs p-1 text-center border border-forest-700 rounded text-gray-100"></div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+                <input id="monsterSkillsInput" type="text" placeholder="Fertigkeiten (z.B. Heimlichkeit +6)" class="bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100">
+                <input id="monsterResistancesInput" type="text" placeholder="Resistenzen / Immunitäten" class="bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100">
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+                <input id="monsterSensesInput" type="text" placeholder="Sinne (z.B. Dunkelsicht 18m)" class="bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100">
+                <input id="monsterLanguagesInput" type="text" placeholder="Sprachen" class="bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100">
+            </div>
+
+            <!-- Merkmale, Aktionen, Bonus-Aktionen, Reaktionen, Taktik -->
+            <textarea id="monsterTraitsInput" rows="2" placeholder="Merkmale (Traits) - kommasepariert oder pro Zeile..." class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100"></textarea>
+            <textarea id="monsterActionsInput" rows="2" placeholder="Aktionen (z.B. Klauenangriff +5 Treffer...)" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100"></textarea>
+            <textarea id="monsterBonusActionsInput" rows="2" placeholder="Bonus-Aktionen (optional)..." class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100"></textarea>
+            <textarea id="monsterReactionsInput" rows="2" placeholder="Reaktionen (optional, nur sichtbar falls vorhanden)..." class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100"></textarea>
             <textarea id="monsterTacticsInput" rows="2" placeholder="Kampftaktik..." class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100"></textarea>
+
             <div class="flex justify-end space-x-2 pt-2">
                 <button type="button" class="closeMonsterModalBtn px-4 py-2 bg-forest-800 text-gray-300 text-xs rounded-lg">Abbrechen</button>
                 <button type="submit" class="px-4 py-2 bg-gold-500 text-forest-950 font-bold text-xs rounded-lg">Speichern</button>
@@ -569,9 +586,13 @@
     const DEFAULT_MONSTERS = [
         {
             id: 'm-1', name: 'Schattenpanther', type: 'Bestie (Mittel)', xp: '700 XP', ac: 15, hp: 45, init: '+4', speed: '12m',
-            stats: { sta: { val: 16, mod: '+3', rw: '+3' }, ges: { val: 18, mod: '+4', rw: '+6' }, kon: { val: 14, mod: '+2', rw: '+2' }, int: { val: 3, mod: '-4', rw: '-4' }, wei: { val: 12, mod: '+1', rw: '+3' }, cha: { val: 8, mod: '-1', rw: '-1' } },
-            skills: '', resistances: '', senses: '', languages: '', traits: [], actions: [], bonusActions: [],
-            tactics: 'Nutzt Dämmerung & Hinterhalt.', notes: '',
+            stats: { sta: { val: 16, mod: '+3' }, ges: { val: 18, mod: '+4' }, kon: { val: 14, mod: '+2' }, int: { val: 3, mod: '-4' }, wei: { val: 12, mod: '+1' }, cha: { val: 8, mod: '-1' } },
+            skills: 'Heimlichkeit +6', resistances: 'Kälteresistenz', senses: 'Dunkelsicht 18m', languages: '–',
+            traits: ['Scharfes Gehör: Hat Vorteil auf Weisheitswürfe (Wahrnehmung).'],
+            actions: ['Pratschenangriff: Nahkampf-Waffenangriff, +6 Treffer, Reichweite 1.5m. Treffer: 8 (1d8 + 4) Wuchtschaden.'],
+            bonusActions: [],
+            reactions: ['Geisterhafte Parade: Erhält +2 RK gegen einen Nahkampf-Angriff.'],
+            tactics: 'Nutzt Dämmerung & Hinterhalt.',
             category: 'active', outlines: ['#ef4444', '#3b82f6']
         }
     ];
@@ -605,13 +626,13 @@
 
     function loadState() {
         try {
-            const saved = localStorage.getItem('sylvanus_codex_data_v8');
+            const saved = localStorage.getItem('sylvanus_codex_data_v9');
             if (saved) state = { ...state, ...JSON.parse(saved) };
         } catch (e) { console.error(e); }
     }
 
     function saveState() {
-        try { localStorage.setItem('sylvanus_codex_data_v8', JSON.stringify(state)); } catch (e) { console.error(e); }
+        try { localStorage.setItem('sylvanus_codex_data_v9', JSON.stringify(state)); } catch (e) { console.error(e); }
     }
 
     function exportData() {
@@ -665,10 +686,6 @@
         themeBtn.addEventListener('click', () => applyTheme(htmlEl.classList.contains('dark') ? 'light' : 'dark'));
         applyTheme(state.theme || 'dark');
     }
-
-    /* DRAG & DROP UTILS */
-    function allowDrop(ev) { ev.preventDefault(); ev.currentTarget.classList.add('drag-over'); }
-    function removeDropStyle(ev) { ev.currentTarget.classList.remove('drag-over'); }
 
     /* TAB 1: AUFTAKT */
     function renderAuftaktTab() {
@@ -753,7 +770,12 @@
         saveState(); document.getElementById('npcModal').classList.add('hidden'); renderNPCsTab(); showToast('NPC gespeichert!', 'success');
     };
 
-    /* TAB 5: MONSTER & KAMPF (Outlines, Kategorien, Drag&Drop, Lösch-Warnung) */
+    /* TAB 5: MONSTER & KAMPF */
+    function calcMod(val) {
+        const m = Math.floor((val - 10) / 2);
+        return m >= 0 ? `+${m}` : `${m}`;
+    }
+
     function renderMonstersTab() {
         const activeGrid = document.getElementById('activeMonstersGrid');
         const libraryGrid = document.getElementById('libraryMonstersGrid');
@@ -766,20 +788,40 @@
             card.draggable = true;
             card.dataset.index = index;
 
-            // Multi-Color Outline Glow / Bars
             let outlinesHtml = '';
             if (Array.isArray(m.outlines) && m.outlines.length > 0) {
                 outlinesHtml = `<div class="flex gap-1.5 mb-2">${m.outlines.map(c => `<span class="w-4 h-2 rounded-full inline-block shadow-sm" style="background:${c}"></span>`).join('')}</div>`;
                 card.style.boxShadow = `0 4px 16px rgba(0,0,0,0.25), inset 3px 0 0 ${m.outlines[0]}`;
             }
 
+            // Stats string
+            const s = m.stats || {};
+            const statsLine = `STR: ${s.sta?.val||10}(${calcMod(s.sta?.val||10)}) | GES: ${s.ges?.val||10}(${calcMod(s.ges?.val||10)}) | KON: ${s.kon?.val||10}(${calcMod(s.kon?.val||10)}) | INT: ${s.int?.val||10}(${calcMod(s.int?.val||10)}) | WEI: ${s.wei?.val||10}(${calcMod(s.wei?.val||10)}) | CHA: ${s.cha?.val||10}(${calcMod(s.cha?.val||10)})`;
+
+            // Optional sections
+            const traitsHtml = m.traits && m.traits.length > 0 ? `<div class="mt-2 text-[11px]"><strong>Merkmale:</strong><ul class="list-disc pl-4">${m.traits.map(t=>`<li>${t}</li>`).join('')}</ul></div>` : '';
+            const actionsHtml = m.actions && m.actions.length > 0 ? `<div class="mt-2 text-[11px]"><strong>Aktionen:</strong><ul class="list-disc pl-4">${m.actions.map(a=>`<li>${a}</li>`).join('')}</ul></div>` : '';
+            const bonusActionsHtml = m.bonusActions && m.bonusActions.length > 0 ? `<div class="mt-2 text-[11px]"><strong>Bonus-Aktionen:</strong><ul class="list-disc pl-4">${m.bonusActions.map(ba=>`<li>${ba}</li>`).join('')}</ul></div>` : '';
+            const reactionsHtml = m.reactions && m.reactions.length > 0 ? `<div class="mt-2 text-[11px]"><strong>Reaktionen:</strong><ul class="list-disc pl-4">${m.reactions.map(r=>`<li>${r}</li>`).join('')}</ul></div>` : '';
+
             card.innerHTML = `
                 ${outlinesHtml}
                 <div class="flex justify-between items-start border-b border-forest-700/50 pb-2">
-                    <div><h3 class="font-cinzel text-base font-bold text-gold-400">${m.name}</h3><p class="text-[11px] text-gray-400">${m.type} | RK: ${m.ac} | TP: ${m.hp}</p></div>
+                    <div>
+                        <h3 class="font-cinzel text-base font-bold text-gold-400">${m.name}</h3>
+                        <p class="text-[11px] text-gray-400">${m.type} | RK: ${m.ac} | TP: ${m.hp} | Init: ${m.init} | Tempo: ${m.speed}</p>
+                    </div>
                     <span class="px-2 py-0.5 rounded text-[10px] ${isLib?'bg-gray-800 text-gray-300':'bg-gold-500/20 text-gold-300'}">${isLib?'Bibliothek':'Aktiv'}</span>
                 </div>
-                <p class="text-xs text-gray-300 mt-2">${m.tactics || 'Keine Taktik'}</p>
+                <div class="text-[11px] text-gold-300/80 mt-1 font-mono">${statsLine}</div>
+                ${m.skills?`<p class="text-[11px] mt-1"><strong>Fertigkeiten:</strong> ${m.skills}</p>`:''}
+                ${m.resistances?`<p class="text-[11px]"><strong>Resistenzen:</strong> ${m.resistances}</p>`:''}
+                ${m.senses?`<p class="text-[11px]"><strong>Sinne:</strong> ${m.senses}</p>`:''}
+                ${traitsHtml}
+                ${actionsHtml}
+                ${bonusActionsHtml}
+                ${reactionsHtml}
+                <p class="text-xs text-gray-300 mt-2"><strong>Taktik:</strong> ${m.tactics || 'Keine Angabe'}</p>
                 <div class="flex justify-end gap-2 pt-3 border-t border-forest-800/60 mt-3">
                     <button class="edit-btn text-xs text-gold-400">✏️ Bearbeiten</button>
                     <button class="delete-btn text-xs text-red-400">🗑️ Löschen</button>
@@ -792,9 +834,10 @@
             card.ondragover = (e) => { e.preventDefault(); };
             card.ondrop = (e) => {
                 e.preventDefault();
+                e.stopPropagation();
                 const fromIdx = parseInt(e.dataTransfer.getData('text/plain'));
                 const toIdx = index;
-                if (fromIdx !== toIdx) {
+                if (!isNaN(fromIdx) && fromIdx !== toIdx) {
                     const moved = state.monsters.splice(fromIdx, 1)[0];
                     state.monsters.splice(toIdx, 0, moved);
                     saveState(); renderMonstersTab();
@@ -834,6 +877,23 @@
         document.getElementById('monsterHpInput').value = m ? m.hp : 10;
         document.getElementById('monsterInitInput').value = m ? m.init : '+0';
         document.getElementById('monsterSpeedInput').value = m ? m.speed : '9m';
+
+        const stats = m ? m.stats : {};
+        document.getElementById('m-sta-val').value = stats.sta?.val || 10;
+        document.getElementById('m-ges-val').value = stats.ges?.val || 10;
+        document.getElementById('m-kon-val').value = stats.kon?.val || 10;
+        document.getElementById('m-int-val').value = stats.int?.val || 10;
+        document.getElementById('m-wei-val').value = stats.wei?.val || 10;
+        document.getElementById('m-cha-val').value = stats.cha?.val || 10;
+
+        document.getElementById('monsterSkillsInput').value = m ? (m.skills || '') : '';
+        document.getElementById('monsterResistancesInput').value = m ? (m.resistances || '') : '';
+        document.getElementById('monsterSensesInput').value = m ? (m.senses || '') : '';
+        document.getElementById('monsterLanguagesInput').value = m ? (m.languages || '') : '';
+        document.getElementById('monsterTraitsInput').value = m && m.traits ? m.traits.join('\n') : '';
+        document.getElementById('monsterActionsInput').value = m && m.actions ? m.actions.join('\n') : '';
+        document.getElementById('monsterBonusActionsInput').value = m && m.bonusActions ? m.bonusActions.join('\n') : '';
+        document.getElementById('monsterReactionsInput').value = m && m.reactions ? m.reactions.join('\n') : '';
         document.getElementById('monsterTacticsInput').value = m ? m.tactics : '';
         document.getElementById('monsterCategorySelect').value = m ? (m.category || 'active') : 'active';
 
@@ -853,6 +913,11 @@
         const id = document.getElementById('monsterIdInput').value;
         const selectedColors = Array.from(document.querySelectorAll('#outlineColorCheckboxes input:checked')).map(chk => chk.value);
 
+        const traitsArr = document.getElementById('monsterTraitsInput').value.split('\n').map(x => x.trim()).filter(Boolean);
+        const actionsArr = document.getElementById('monsterActionsInput').value.split('\n').map(x => x.trim()).filter(Boolean);
+        const bonusActionsArr = document.getElementById('monsterBonusActionsInput').value.split('\n').map(x => x.trim()).filter(Boolean);
+        const reactionsArr = document.getElementById('monsterReactionsInput').value.split('\n').map(x => x.trim()).filter(Boolean);
+
         const monsterObj = {
             id: id || 'm-' + Date.now(),
             name: document.getElementById('monsterNameInput').value,
@@ -862,7 +927,22 @@
             hp: parseInt(document.getElementById('monsterHpInput').value) || 10,
             init: document.getElementById('monsterInitInput').value || '+0',
             speed: document.getElementById('monsterSpeedInput').value || '9m',
-            stats: { sta: {val:10, mod:'+0'}, ges: {val:10, mod:'+0'}, kon: {val:10, mod:'+0'}, int: {val:10, mod:'+0'}, wei: {val:10, mod:'+0'}, cha: {val:10, mod:'+0'} },
+            stats: {
+                sta: { val: parseInt(document.getElementById('m-sta-val').value)||10 },
+                ges: { val: parseInt(document.getElementById('m-ges-val').value)||10 },
+                kon: { val: parseInt(document.getElementById('m-kon-val').value)||10 },
+                int: { val: parseInt(document.getElementById('m-int-val').value)||10 },
+                wei: { val: parseInt(document.getElementById('m-wei-val').value)||10 },
+                cha: { val: parseInt(document.getElementById('m-cha-val').value)||10 }
+            },
+            skills: document.getElementById('monsterSkillsInput').value,
+            resistances: document.getElementById('monsterResistancesInput').value,
+            senses: document.getElementById('monsterSensesInput').value,
+            languages: document.getElementById('monsterLanguagesInput').value,
+            traits: traitsArr,
+            actions: actionsArr,
+            bonusActions: bonusActionsArr,
+            reactions: reactionsArr,
             tactics: document.getElementById('monsterTacticsInput').value,
             category: document.getElementById('monsterCategorySelect').value,
             outlines: selectedColors
@@ -877,7 +957,7 @@
         saveState(); document.getElementById('monsterModal').classList.add('hidden'); renderMonstersTab(); showToast('Monster gespeichert!', 'success');
     };
 
-    /* TAB 6: KNOTEN ABLAUFPLAN (Drag & Drop + Modal) */
+    /* TAB 6: KNOTEN ABLAUFPLAN (Drag & Drop + Status Direktwahl) */
     function renderNodesTab() {
         const container = document.getElementById('nodesGraphContainer');
         container.innerHTML = '';
@@ -889,15 +969,21 @@
 
             card.innerHTML = `
                 <div>
-                    <div class="flex justify-between items-center border-b border-forest-800 pb-2">
+                    <div class="flex justify-between items-center border-b border-forest-800 pb-2 mb-2">
                         <h3 class="font-cinzel text-sm font-bold text-gray-100">${node.title}</h3>
-                        <span class="text-[10px] px-2 py-0.5 rounded bg-forest-950 text-gold-400">${node.status}</span>
+                        <select onchange="updateNodeStatus('${node.id}', this.value)" onclick="event.stopPropagation()" class="bg-forest-950 text-gold-400 border border-forest-700 text-[10px] rounded p-1">
+                            <option value="planned" ${node.status==='planned'?'selected':''}>Geplant</option>
+                            <option value="active" ${node.status==='active'?'selected':''}>Aktive Szene</option>
+                            <option value="completed" ${node.status==='completed'?'selected':''}>Abgeschlossen</option>
+                            <option value="bypassed" ${node.status==='bypassed'?'selected':''}>Übersprungen</option>
+                        </select>
                     </div>
-                    <p class="text-xs text-gray-300 mt-2">${node.description}</p>
+                    <p class="text-xs text-gray-300">${node.description}</p>
+                    ${node.clues ? `<p class="text-[11px] text-gold-300 mt-1"><strong>Hinweis:</strong> ${node.clues}</p>` : ''}
                 </div>
                 <div class="flex justify-end gap-2 pt-2 border-t border-forest-800/60">
                     <button class="edit-node text-xs text-gold-400">✏️ Bearbeiten</button>
-                    <button class="delete-node text-xs text-red-400">🗑️</button>
+                    <button class="delete-node text-xs text-red-400">🗑️ Löschen</button>
                 </div>
             `;
 
@@ -907,9 +993,10 @@
             card.ondragover = (e) => { e.preventDefault(); };
             card.ondrop = (e) => {
                 e.preventDefault();
+                e.stopPropagation();
                 const fromIdx = parseInt(e.dataTransfer.getData('text/plain'));
                 const toIdx = index;
-                if (fromIdx !== toIdx) {
+                if (!isNaN(fromIdx) && fromIdx !== toIdx) {
                     const moved = state.nodes.splice(fromIdx, 1)[0];
                     state.nodes.splice(toIdx, 0, moved);
                     saveState(); renderNodesTab();
@@ -917,16 +1004,33 @@
             };
 
             card.querySelector('.edit-node').onclick = () => openNodeModalForEdit(node);
-            card.querySelector('.delete-node').onclick = () => { state.nodes = state.nodes.filter(n => n.id !== node.id); saveState(); renderNodesTab(); };
+            card.querySelector('.delete-node').onclick = () => {
+                if (confirm(`Szene "${node.title}" wirklich löschen?`)) {
+                    state.nodes = state.nodes.filter(n => n.id !== node.id);
+                    saveState(); renderNodesTab();
+                }
+            };
             container.appendChild(card);
         });
+    }
+
+    function updateNodeStatus(id, newStatus) {
+        const node = state.nodes.find(n => n.id === id);
+        if (node) {
+            node.status = newStatus;
+            saveState(); renderNodesTab();
+        }
+    }
+
+    function dropNodeContainer(e) {
+        e.preventDefault();
+        e.currentTarget.classList.remove('drag-over');
     }
 
     function openNodeModalForEdit(n = null) {
         document.getElementById('nodeModalTitle').textContent = n ? 'Szene bearbeiten' : 'Neue Szene hinzufügen';
         document.getElementById('nodeIdInput').value = n ? n.id : '';
         document.getElementById('nodeTitleInput').value = n ? n.title : '';
-        document.getElementById('nodeStatusInput').value = n ? n.status : 'planned';
         document.getElementById('nodeDescInput').value = n ? n.description : '';
         document.getElementById('nodeCluesInput').value = n ? n.clues : '';
         document.getElementById('nodeModal').classList.remove('hidden');
@@ -941,7 +1045,7 @@
         const nodeObj = {
             id: id || 'n-' + Date.now(),
             title: document.getElementById('nodeTitleInput').value,
-            status: document.getElementById('nodeStatusInput').value,
+            status: id ? (state.nodes.find(x => x.id === id)?.status || 'planned') : 'planned',
             description: document.getElementById('nodeDescInput').value,
             clues: document.getElementById('nodeCluesInput').value
         };
