@@ -59,7 +59,6 @@
 
     <style>
         :root {
-            /* Sylvanus Forest & Gold Theme Adjustments */
             --bg-card: #13251e;
             --bg-card-active: #1c382e;
             --bg-input: #0b1814;
@@ -68,10 +67,6 @@
             --text-muted: #97c7b2;
             --accent-gold: #d4af37;
             --accent-gold-glow: rgba(212, 175, 55, 0.3);
-            --accent-blue: #34705d;
-            --accent-green: #22c55e;
-            --accent-red: #ef4444;
-            --accent-purple: #a855f7;
             --square-size: 110px;
         }
 
@@ -80,542 +75,153 @@
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        .font-cinzel {
-            font-family: 'Cinzel', serif;
-        }
+        .font-cinzel { font-family: 'Cinzel', serif; }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: rgba(15, 24, 20, 0.2);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: rgba(212, 175, 55, 0.3);
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(212, 175, 55, 0.6);
-        }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(15, 24, 20, 0.2); }
+        ::-webkit-scrollbar-thumb { background: rgba(212, 175, 55, 0.3); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(212, 175, 55, 0.6); }
 
-        .dark ::-webkit-scrollbar-track {
-            background: rgba(11, 24, 20, 0.6);
-        }
-
+        .dark ::-webkit-scrollbar-track { background: rgba(11, 24, 20, 0.6); }
         .dark .forest-pattern {
             background-color: #0b1814;
             background-image: radial-gradient(#1d3d34 0.8px, transparent 0.8px);
             background-size: 20px 20px;
         }
 
-        /* Initiative Tracker Scoped Styles */
-        .init-tracker-container {
-            width: 100%;
+        /* Drag & Drop Visual Feedback */
+        .draggable-item {
+            cursor: grab;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+        .draggable-item:active { cursor: grabbing; }
+        .draggable-item.dragging {
+            opacity: 0.4;
+            transform: scale(0.98);
+        }
+        .drag-over {
+            border: 2px dashed var(--accent-gold) !important;
+            background: rgba(212, 175, 55, 0.05);
         }
 
+        /* Initiative Tracker Scoped Styles */
+        .init-tracker-container { width: 100%; }
         .init-header {
-            width: 100%;
-            background: #1d3d34;
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            border-radius: 12px;
-            padding: 12px 16px;
-            margin-bottom: 16px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            gap: 12px;
+            width: 100%; background: #1d3d34; border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 12px; padding: 12px 16px; margin-bottom: 16px;
+            display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
         }
-
-        .init-header-title {
-            font-size: 1.1rem;
-            font-weight: 800;
-            color: #eacb67;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .init-header-controls {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
+        .init-header-title { font-size: 1.1rem; font-weight: 800; color: #eacb67; display: flex; align-items: center; gap: 8px; }
+        .init-header-controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 
         .init-tracker-container button {
-            background: #23483d;
-            color: var(--text-main);
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-size: 0.8rem;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
+            background: #23483d; color: var(--text-main); border: 1px solid rgba(212, 175, 55, 0.3);
+            padding: 6px 12px; border-radius: 8px; font-weight: 600; cursor: pointer;
+            transition: all 0.2s ease; font-size: 0.8rem; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
         }
-
-        .init-tracker-container button:hover {
-            background: #34705d;
-            border-color: #d4af37;
-        }
-
-        .init-tracker-container button:active {
-            transform: scale(0.97);
-        }
-
-        .init-tracker-container button.btn-primary {
-            background: #d4af37;
-            border-color: #d4af37;
-            color: #0b1814;
-            font-weight: 800;
-        }
-        .init-tracker-container button.btn-primary:hover {
-            background: #eacb67;
-        }
-
-        .init-tracker-container button.btn-danger-subtle {
-            background: rgba(239, 68, 68, 0.15);
-            border-color: rgba(239, 68, 68, 0.3);
-            color: #fca5a5;
-        }
-        .init-tracker-container button.btn-danger-subtle:hover {
-            background: rgba(239, 68, 68, 0.3);
-            border-color: var(--accent-red);
-            color: #ffffff;
-        }
+        .init-tracker-container button:hover { background: #34705d; border-color: #d4af37; }
+        .init-tracker-container button.btn-primary { background: #d4af37; border-color: #d4af37; color: #0b1814; font-weight: 800; }
+        .init-tracker-container button.btn-primary:hover { background: #eacb67; }
+        .init-tracker-container button.btn-danger-subtle { background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.3); color: #fca5a5; }
+        .init-tracker-container button.btn-danger-subtle:hover { background: rgba(239, 68, 68, 0.3); border-color: #ef4444; color: #ffffff; }
 
         .size-picker {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.78rem;
-            color: var(--text-muted);
-            background: var(--bg-input);
-            padding: 4px 8px;
-            border-radius: 8px;
-            border: 1px solid var(--border-subtle);
+            display: flex; align-items: center; gap: 6px; font-size: 0.78rem; color: var(--text-muted);
+            background: var(--bg-input); padding: 4px 8px; border-radius: 8px; border: 1px solid var(--border-subtle);
         }
+        .size-picker input { width: 60px; accent-color: var(--accent-gold); cursor: pointer; }
 
-        .size-picker input {
-            width: 60px;
-            accent-color: var(--accent-gold);
-            cursor: pointer;
-        }
-
-        #tracker-list {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
+        #tracker-list { width: 100%; display: flex; flex-direction: column; gap: 12px; }
 
         .combatant-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: 12px;
-            padding: 12px 14px;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            gap: 14px;
+            background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 12px;
+            padding: 12px 14px; display: flex; flex-direction: row; align-items: center; gap: 14px;
             transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
-            position: relative;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
-            cursor: pointer;
+            position: relative; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25); cursor: pointer;
         }
-
-        .combatant-card:hover {
-            border-color: #34705d;
-        }
-
-        .combatant-card.is-active {
-            border-color: var(--accent-gold);
-            background: var(--bg-card-active);
-            box-shadow: 0 0 18px var(--accent-gold-glow);
-        }
-
+        .combatant-card:hover { border-color: #34705d; }
+        .combatant-card.is-active { border-color: var(--accent-gold); background: var(--bg-card-active); box-shadow: 0 0 18px var(--accent-gold-glow); }
         .combatant-card.is-active::before {
-            content: 'AM ZUG';
-            position: absolute;
-            top: -9px;
-            right: 20px;
-            background: var(--accent-gold);
-            color: #0b1814;
-            font-size: 0.62rem;
-            font-weight: 900;
-            padding: 2px 8px;
-            border-radius: 4px;
-            letter-spacing: 1px;
+            content: 'AM ZUG'; position: absolute; top: -9px; right: 20px; background: var(--accent-gold);
+            color: #0b1814; font-size: 0.62rem; font-weight: 900; padding: 2px 8px; border-radius: 4px; letter-spacing: 1px;
         }
 
         .init-badge {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background: var(--bg-input);
-            border: 1px solid var(--border-subtle);
-            border-radius: 10px;
-            padding: 6px 4px;
-            min-width: 52px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            background: var(--bg-input); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 6px 4px; min-width: 52px;
         }
+        .init-badge label { font-size: 0.6rem; font-weight: 800; color: var(--accent-gold); letter-spacing: 0.5px; }
+        .init-badge input { width: 40px; background: transparent; border: none; color: var(--text-main); font-size: 1.15rem; font-weight: bold; text-align: center; }
 
-        .init-badge label {
-            font-size: 0.6rem;
-            font-weight: 800;
-            color: var(--accent-gold);
-            letter-spacing: 0.5px;
-        }
-
-        .init-badge input {
-            width: 40px;
-            background: transparent;
-            border: none;
-            color: var(--text-main);
-            font-size: 1.15rem;
-            font-weight: bold;
-            text-align: center;
-        }
-
-        .character-square-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            user-select: none;
-            border-right: 1px solid var(--border-subtle);
-            padding-right: 14px;
-        }
-
+        .character-square-container { display: flex; flex-direction: column; align-items: center; gap: 6px; user-select: none; border-right: 1px solid var(--border-subtle); padding-right: 14px; }
         .character-square {
-            width: var(--square-size);
-            height: var(--square-size);
-            background: var(--bg-input);
-            border: 1px dashed var(--border-subtle);
-            border-radius: 10px;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: width 0.2s, height 0.2s, border-color 0.2s;
+            width: var(--square-size); height: var(--square-size); background: var(--bg-input);
+            border: 1px dashed var(--border-subtle); border-radius: 10px; position: relative; overflow: hidden;
+            display: flex; justify-content: center; align-items: center; transition: width 0.2s, height 0.2s, border-color 0.2s;
         }
-
-        .character-square:hover {
-            border-color: var(--accent-gold);
-        }
-
-        .character-square img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
+        .character-square:hover { border-color: var(--accent-gold); }
+        .character-square img { width: 100%; height: 100%; object-fit: cover; }
         .upload-hint {
-            position: absolute;
-            inset: 0;
-            background: rgba(11, 24, 20, 0.8);
-            color: var(--text-main);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            font-size: 0.68rem;
-            opacity: 0;
-            transition: opacity 0.2s;
-            text-align: center;
-            padding: 4px;
+            position: absolute; inset: 0; background: rgba(11, 24, 20, 0.8); color: var(--text-main);
+            display: flex; flex-direction: column; justify-content: center; align-items: center; font-size: 0.68rem; opacity: 0; transition: opacity 0.2s; text-align: center; padding: 4px;
         }
-
-        .character-square:hover .upload-hint,
-        .character-square.empty .upload-hint {
-            opacity: 1;
-        }
-
-        .character-square input[type="file"] {
-            position: absolute;
-            inset: 0;
-            opacity: 0;
-            cursor: pointer;
-        }
+        .character-square:hover .upload-hint, .character-square.empty .upload-hint { opacity: 1; }
+        .character-square input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
 
         .name-input {
-            width: var(--square-size);
-            background: transparent;
-            border: none;
-            border-bottom: 2px solid transparent;
-            color: var(--text-main);
-            font-weight: 700;
-            text-align: center;
-            font-size: 0.85rem;
-            padding: 2px;
-            transition: border-color 0.2s;
+            width: var(--square-size); background: transparent; border: none; border-bottom: 2px solid transparent;
+            color: var(--text-main); font-weight: 700; text-align: center; font-size: 0.85rem; padding: 2px; transition: border-color 0.2s;
         }
+        .name-input:focus { outline: none; border-bottom-color: var(--accent-gold); }
 
-        .name-input:focus {
-            outline: none;
-            border-bottom-color: var(--accent-gold);
-        }
+        .hp-section { display: flex; flex-direction: column; gap: 6px; width: 230px; max-width: 230px; flex-shrink: 0; border-right: 1px solid var(--border-subtle); padding-right: 14px; }
+        .hp-stats { display: flex; align-items: center; gap: 6px; font-weight: bold; flex-wrap: wrap; }
+        .hp-display { font-size: 1rem; color: #22c55e; display: flex; align-items: center; gap: 4px; }
+        .hp-number-input, .max-hp-input { width: 46px; background: var(--bg-input); border: 1px solid var(--border-subtle); padding: 3px; border-radius: 6px; text-align: center; font-size: 0.9rem; font-weight: bold; }
+        .hp-number-input { color: #22c55e; }
+        .max-hp-input { color: var(--text-main); }
+        .btn-full-hp { padding: 3px 6px; font-size: 0.68rem; background: var(--bg-input); border: 1px solid var(--border-subtle); color: var(--text-muted); border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .btn-full-hp:hover { background: var(--accent-gold); color: #0b1814; border-color: var(--accent-gold); }
+        .temp-hp-display { font-size: 0.78rem; color: #a855f7; font-weight: 700; }
 
-        .hp-section {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            width: 230px;
-            max-width: 230px;
-            flex-shrink: 0;
-            border-right: 1px solid var(--border-subtle);
-            padding-right: 14px;
-        }
+        .hp-inputs { display: flex; gap: 4px; }
+        .hp-inputs input[type="number"] { width: 50px; background: var(--bg-input); border: 1px solid var(--border-subtle); color: var(--text-main); padding: 4px; border-radius: 6px; text-align: center; font-size: 0.82rem; }
+        .hp-buttons { display: flex; gap: 3px; }
+        .hp-buttons button { padding: 4px 6px; font-size: 0.7rem; border: 1px solid transparent; }
+        .btn-dmg { background: rgba(239, 68, 68, 0.15); color: #fca5a5; border-color: rgba(239, 68, 68, 0.3); }
+        .btn-dmg:hover { background: #ef4444; color: #fff; }
+        .btn-heal { background: rgba(34, 197, 94, 0.15); color: #86efac; border-color: rgba(34, 197, 94, 0.3); }
+        .btn-heal:hover { background: #22c55e; color: #fff; }
+        .btn-temp { background: rgba(168, 85, 247, 0.15); color: #d8b4fe; border-color: rgba(168, 85, 247, 0.3); }
+        .btn-temp:hover { background: #a855f7; color: #fff; }
 
-        .hp-stats {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-weight: bold;
-            flex-wrap: wrap;
-        }
-
-        .hp-display {
-            font-size: 1rem;
-            color: var(--accent-green);
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .hp-number-input {
-            width: 46px;
-            background: var(--bg-input);
-            border: 1px solid var(--border-subtle);
-            color: var(--accent-green);
-            padding: 3px;
-            border-radius: 6px;
-            text-align: center;
-            font-size: 0.9rem;
-            font-weight: bold;
-        }
-
-        .max-hp-input {
-            width: 46px;
-            background: var(--bg-input);
-            border: 1px solid var(--border-subtle);
-            color: var(--text-main);
-            padding: 3px;
-            border-radius: 6px;
-            text-align: center;
-            font-size: 0.9rem;
-            font-weight: bold;
-        }
-
-        .btn-full-hp {
-            padding: 3px 6px;
-            font-size: 0.68rem;
-            background: var(--bg-input);
-            border: 1px solid var(--border-subtle);
-            color: var(--text-muted);
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .btn-full-hp:hover {
-            background: var(--accent-gold);
-            color: #0b1814;
-            border-color: var(--accent-gold);
-        }
-
-        .temp-hp-display {
-            font-size: 0.78rem;
-            color: var(--accent-purple);
-            font-weight: 700;
-        }
-
-        .hp-inputs {
-            display: flex;
-            gap: 4px;
-        }
-
-        .hp-inputs input[type="number"] {
-            width: 50px;
-            background: var(--bg-input);
-            border: 1px solid var(--border-subtle);
-            color: var(--text-main);
-            padding: 4px;
-            border-radius: 6px;
-            text-align: center;
-            font-size: 0.82rem;
-        }
-
-        .hp-buttons {
-            display: flex;
-            gap: 3px;
-        }
-
-        .hp-buttons button {
-            padding: 4px 6px;
-            font-size: 0.7rem;
-            border: 1px solid transparent;
-        }
-
-        .btn-dmg {
-            background: rgba(239, 68, 68, 0.15);
-            color: #fca5a5;
-            border-color: rgba(239, 68, 68, 0.3);
-        }
-        .btn-dmg:hover {
-            background: var(--accent-red);
-            color: #fff;
-        }
-
-        .btn-heal {
-            background: rgba(34, 197, 94, 0.15);
-            color: #86efac;
-            border-color: rgba(34, 197, 94, 0.3);
-        }
-        .btn-heal:hover {
-            background: var(--accent-green);
-            color: #fff;
-        }
-
-        .btn-temp {
-            background: rgba(168, 85, 247, 0.15);
-            color: #d8b4fe;
-            border-color: rgba(168, 85, 247, 0.3);
-        }
-        .btn-temp:hover {
-            background: var(--accent-purple);
-            color: #fff;
-        }
-
-        .history-container {
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
-        }
-
-        .history-header {
-            font-size: 0.62rem;
-            font-weight: 700;
-            color: var(--text-muted);
-            letter-spacing: 0.5px;
-        }
-
-        .history-box {
-            background: var(--bg-input);
-            border-radius: 6px;
-            padding: 4px 6px;
-            height: 42px;
-            max-height: 42px;
-            overflow-y: auto;
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            border: 1px solid var(--border-subtle);
-        }
-
-        .history-entry {
-            margin-bottom: 2px;
-            white-space: nowrap;
-        }
-        .history-entry.dmg { color: #fca5a5; }
-        .history-entry.heal { color: #86efac; }
-        .history-entry.temp { color: #d8b4fe; }
+        .history-container { display: flex; flex-direction: column; gap: 3px; }
+        .history-header { font-size: 0.62rem; font-weight: 700; color: var(--text-muted); letter-spacing: 0.5px; }
+        .history-box { background: var(--bg-input); border-radius: 6px; padding: 4px 6px; height: 42px; max-height: 42px; overflow-y: auto; font-size: 0.7rem; color: var(--text-muted); border: 1px solid var(--border-subtle); }
+        .history-entry { margin-bottom: 2px; white-space: nowrap; }
         .history-entry.empty { color: #69a890; font-style: italic; }
 
-        .conditions-section {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-            min-width: 220px;
-        }
-
-        .conditions-header {
-            font-size: 0.62rem;
-            font-weight: 800;
-            color: var(--text-muted);
-            letter-spacing: 0.8px;
-            text-transform: uppercase;
-        }
-
-        .conditions-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 4px;
-            align-content: flex-start;
-        }
-
+        .conditions-section { flex: 1; display: flex; flex-direction: column; gap: 5px; min-width: 220px; }
+        .conditions-header { font-size: 0.62rem; font-weight: 800; color: var(--text-muted); letter-spacing: 0.8px; text-transform: uppercase; }
+        .conditions-grid { display: flex; flex-wrap: wrap; gap: 4px; align-content: flex-start; }
         .condition-btn {
-            background: var(--bg-input);
-            border: 1px solid var(--border-subtle);
-            color: #97c7b2;
-            padding: 3px 6px;
-            border-radius: 6px;
-            font-size: 0.7rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.15s ease;
-            user-select: none;
-            white-space: nowrap;
+            background: var(--bg-input); border: 1px solid var(--border-subtle); color: #97c7b2;
+            padding: 3px 6px; border-radius: 6px; font-size: 0.7rem; font-weight: 500; cursor: pointer; transition: all 0.15s ease; user-select: none; white-space: nowrap;
         }
-
-        .condition-btn:hover {
-            background: #23483d;
-            color: var(--text-main);
-            border-color: #34705d;
-        }
-
+        .condition-btn:hover { background: #23483d; color: var(--text-main); border-color: #34705d; }
         .condition-btn.active {
-            background: var(--cond-color);
-            color: var(--cond-text, #ffffff);
-            border-color: var(--cond-color);
-            font-weight: 700;
-            box-shadow: 0 0 8px var(--cond-color);
-            transform: scale(1.02);
+            background: var(--cond-color); color: var(--cond-text, #ffffff); border-color: var(--cond-color); font-weight: 700; box-shadow: 0 0 8px var(--cond-color); transform: scale(1.02);
         }
 
-        .card-actions button {
-            padding: 5px 8px;
-            font-size: 0.85rem;
-            background: transparent;
-            border: 1px solid var(--border-subtle);
-            color: var(--text-muted);
-            border-radius: 6px;
-        }
-
-        .card-actions button:hover {
-            background: var(--accent-red);
-            border-color: var(--accent-red);
-            color: #fff;
-        }
+        .card-actions button { padding: 5px 8px; font-size: 0.85rem; background: transparent; border: 1px solid var(--border-subtle); color: var(--text-muted); border-radius: 6px; }
+        .card-actions button:hover { background: #ef4444; border-color: #ef4444; color: #fff; }
 
         @media (max-width: 900px) {
-            .combatant-card {
-                flex-wrap: wrap;
-            }
-            .character-square-container {
-                border-right: none;
-                padding-right: 0;
-            }
-            .hp-section {
-                border-right: none;
-                border-bottom: 1px solid var(--border-subtle);
-                padding-right: 0;
-                padding-bottom: 10px;
-                width: 100%;
-                max-width: 100%;
-            }
-            .conditions-section {
-                width: 100%;
-            }
+            .combatant-card { flex-wrap: wrap; }
+            .character-square-container { border-right: none; padding-right: 0; }
+            .hp-section { border-right: none; border-bottom: 1px solid var(--border-subtle); padding-right: 0; padding-bottom: 10px; width: 100%; max-width: 100%; }
+            .conditions-section { width: 100%; }
         }
     </style>
 </head>
@@ -624,8 +230,6 @@
 <!-- Header / Navigation Bar -->
 <header class="sticky top-0 z-40 bg-forest-900/90 dark:bg-forest-950/95 border-b border-gold-500/30 backdrop-blur-md shadow-lg transition-colors">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-
-        <!-- Logo & Title -->
         <div class="flex items-center space-x-3">
             <div class="w-10 h-10 rounded-lg bg-gold-500/10 border border-gold-500/40 flex items-center justify-center text-gold-400 shadow-inner">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -638,23 +242,22 @@
             </div>
         </div>
 
-        <!-- Global Action Controls -->
-        <div class="flex items-center space-x-2 sm:space-x-4">
-            <button id="themeToggleBtn" title="Design umschalten (Dark Forest / Tageslicht)" class="p-2 rounded-lg border border-gold-500/30 bg-forest-800/50 hover:bg-forest-700 text-gold-400 hover:text-gold-300 transition-all flex items-center space-x-1 text-xs">
-                <svg id="sunIcon" class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
-                </svg>
-                <svg id="moonIcon" class="w-4 h-4 block dark:hidden text-parchment-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
-                </svg>
-                <span class="hidden md:inline font-medium text-xs">Design</span>
+        <div class="flex items-center space-x-2 sm:space-x-3">
+            <button onclick="exportData()" title="Backup herunterladen" class="p-2 rounded-lg border border-gold-500/30 bg-forest-800/50 hover:bg-forest-700 text-gold-400 hover:text-gold-300 transition-all flex items-center space-x-1 text-xs">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                <span class="hidden md:inline">Export</span>
             </button>
-
-            <button id="resetDataBtn" title="Daten zurücksetzen" class="p-2 rounded-lg border border-red-500/30 bg-red-950/30 hover:bg-red-900/40 text-red-300 transition-all flex items-center space-x-1 text-xs">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-                </svg>
-                <span class="hidden md:inline">Zurücksetzen</span>
+            <label title="Backup einlesen" class="p-2 rounded-lg border border-gold-500/30 bg-forest-800/50 hover:bg-forest-700 text-gold-400 hover:text-gold-300 transition-all flex items-center space-x-1 text-xs cursor-pointer">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                <span class="hidden md:inline">Import</span>
+                <input type="file" id="importFile" accept=".json" onchange="importData(event)" class="hidden">
+            </label>
+            <button id="themeToggleBtn" title="Design umschalten" class="p-2 rounded-lg border border-gold-500/30 bg-forest-800/50 hover:bg-forest-700 text-gold-400 hover:text-gold-300 transition-all flex items-center space-x-1 text-xs">
+                <svg id="sunIcon" class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                <svg id="moonIcon" class="w-4 h-4 block dark:hidden text-parchment-800" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+            </button>
+            <button id="resetDataBtn" title="Alles zurücksetzen" class="p-2 rounded-lg border border-red-500/30 bg-red-950/30 hover:bg-red-900/40 text-red-300 transition-all flex items-center space-x-1 text-xs">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
             </button>
         </div>
     </div>
@@ -662,284 +265,159 @@
     <!-- Navigation Tabs -->
     <nav class="bg-forest-950/80 border-t border-forest-800/80 px-2 sm:px-6 overflow-x-auto">
         <div class="max-w-7xl mx-auto flex space-x-1 sm:space-x-2 py-2 min-w-max" id="navTabsContainer">
-            <button data-tab="auftakt" class="nav-tab active-tab px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-all flex items-center space-x-2">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A2.5 2.5 0 013 11.2 2.5 2.5 0 015.436 8.717"></path></svg>
-                <span>Auftakt & Rückblick</span>
-            </button>
-            <button data-tab="geheimnisse" class="nav-tab px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-all flex items-center space-x-2">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-                <span>Geheimnisse (10)</span>
-            </button>
-            <button data-tab="namensgen" class="nav-tab px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-all flex items-center space-x-2">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                <span>Namensgenerator</span>
-            </button>
-            <button data-tab="rollendeck" class="nav-tab px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-all flex items-center space-x-2">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                <span>NPC-Rollendeck</span>
-            </button>
-            <button data-tab="monster" class="nav-tab px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-all flex items-center space-x-2">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                <span>Monster & Kampf</span>
-            </button>
-            <button data-tab="knoten" class="nav-tab px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-all flex items-center space-x-2">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
-                <span>Knoten-Ablaufplan</span>
-            </button>
-            <button data-tab="initiative" class="nav-tab px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-all flex items-center space-x-2">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                <span>Initiative</span>
-            </button>
+            <button data-tab="auftakt" class="nav-tab active-tab px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-all flex items-center space-x-2">Auftakt & Rückblick</button>
+            <button data-tab="geheimnisse" class="nav-tab px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-all flex items-center space-x-2">Geheimnisse</button>
+            <button data-tab="namensgen" class="nav-tab px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-all flex items-center space-x-2">Namensgenerator</button>
+            <button data-tab="rollendeck" class="nav-tab px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-all flex items-center space-x-2">NPC-Rollendeck</button>
+            <button data-tab="monster" class="nav-tab px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-all flex items-center space-x-2">Monster & Kampf</button>
+            <button data-tab="knoten" class="nav-tab px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-all flex items-center space-x-2">Knoten-Ablaufplan</button>
+            <button data-tab="initiative" class="nav-tab px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-all flex items-center space-x-2">Initiative</button>
         </div>
     </nav>
 </header>
 
-<!-- Notification Toast Container -->
 <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col space-y-2 pointer-events-none"></div>
 
-<!-- Main Content Viewport -->
 <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
-    <!-- TAB 1: AUFTAKT & RÜCKBLICK -->
+    <!-- TAB 1: AUFTAKT -->
     <section id="tab-auftakt" class="tab-content block space-y-6">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div class="lg:col-span-2 bg-forest-900/60 dark:bg-forest-900/80 bg-white border border-forest-700/40 dark:border-forest-700/60 rounded-xl p-5 shadow-md">
+            <div class="lg:col-span-2 bg-forest-900/60 dark:bg-forest-900/80 bg-white border border-forest-700/40 rounded-xl p-5 shadow-md">
                 <div class="flex items-center justify-between mb-4 border-b border-gold-500/20 pb-3">
-                    <div class="flex items-center space-x-2">
-                        <div class="w-3 h-3 rounded-full bg-gold-500"></div>
-                        <h2 class="font-cinzel text-lg font-bold text-gold-400">Sitzungs-Auftakt (Der Hook)</h2>
-                    </div>
-                    <span class="text-xs text-gray-400">Direkter Einstieg für die heutige Runde</span>
+                    <h2 class="font-cinzel text-lg font-bold text-gold-400">Sitzungs-Auftakt (Der Hook)</h2>
                 </div>
-                <p class="text-xs text-gray-400 dark:text-gray-300 mb-3">Verwende ein klares, dramatisches Ereignis oder eine prägnante Beschreibung, um die Spieler sofort einzusaugen.</p>
-                <textarea id="sessionHookInput" rows="5" class="w-full bg-forest-950/70 dark:bg-forest-950/80 bg-parchment-50 border border-forest-700/50 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-gold-500 text-gray-100 dark:text-gray-100 text-parchment-900" placeholder="z.B. Das Krächzen eines eisigen Rabens zerschneidet die Stille der Taverne. Die Tür fliegt auf, Schnee wirbelt herein, und der Bote bricht mit drei schwarzen Pfeilen im Rücken zusammen..."></textarea>
+                <textarea id="sessionHookInput" rows="5" class="w-full bg-forest-950/70 border border-forest-700/50 rounded-lg p-3 text-sm text-gray-100 focus:ring-2 focus:ring-gold-500" placeholder="Einstieg für heute..."></textarea>
             </div>
-
-            <div class="bg-forest-900/60 dark:bg-forest-900/80 bg-white border border-forest-700/40 dark:border-forest-700/60 rounded-xl p-5 shadow-md">
+            <div class="bg-forest-900/60 dark:bg-forest-900/80 bg-white border border-forest-700/40 rounded-xl p-5 shadow-md">
                 <div class="flex items-center justify-between mb-4 border-b border-gold-500/20 pb-3">
-                    <h2 class="font-cinzel text-lg font-bold text-gold-400">Tages-Meilensteine</h2>
-                    <button id="addChecklistItemBtn" class="p-1 rounded bg-gold-500/20 hover:bg-gold-500/30 text-gold-400 text-xs flex items-center space-x-1 px-2">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                        <span>Neu</span>
-                    </button>
+                    <h2 class="font-cinzel text-lg font-bold text-gold-400">Meilensteine</h2>
+                    <button id="addChecklistItemBtn" class="p-1 rounded bg-gold-500/20 text-gold-400 text-xs px-2">+ Neu</button>
                 </div>
                 <div id="checklistItemsContainer" class="space-y-2.5 max-h-64 overflow-y-auto pr-1"></div>
             </div>
         </div>
-
-        <div class="bg-forest-900/60 dark:bg-forest-900/80 bg-white border border-forest-700/40 dark:border-forest-700/60 rounded-xl p-5 shadow-md">
+        <div class="bg-forest-900/60 dark:bg-forest-900/80 bg-white border border-forest-700/40 rounded-xl p-5 shadow-md">
             <div class="flex items-center justify-between mb-4 border-b border-gold-500/20 pb-3">
-                <div class="flex items-center space-x-2">
-                    <svg class="w-5 h-5 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    <h2 class="font-cinzel text-lg font-bold text-gold-400">Rückblick der letzten Sitzung</h2>
-                </div>
-                <button id="addRecapItemBtn" class="px-3 py-1.5 rounded-lg bg-gold-500/20 hover:bg-gold-500/30 text-gold-400 text-xs font-medium border border-gold-500/30 transition-all flex items-center space-x-1">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                    <span>Stichpunkt hinzufügen</span>
-                </button>
+                <h2 class="font-cinzel text-lg font-bold text-gold-400">Rückblick</h2>
+                <button id="addRecapItemBtn" class="px-3 py-1.5 rounded-lg bg-gold-500/20 text-gold-400 text-xs">+ Stichpunkt</button>
             </div>
             <div id="recapListContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3"></div>
         </div>
     </section>
 
-    <!-- TAB 2: GEHEIMNISSE & HINWEISE -->
+    <!-- TAB 2: GEHEIMNISSE -->
     <section id="tab-geheimnisse" class="tab-content hidden space-y-6">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-forest-900/60 dark:bg-forest-900/80 bg-white p-4 rounded-xl border border-forest-700/40">
-            <div>
-                <h2 class="font-cinzel text-xl font-bold text-gold-400">10 Modulare Geheimnisse & Hinweise</h2>
-                <p class="text-xs text-gray-400 dark:text-gray-300">Ort-unabhängige Hinweise. Markiere enthüllte Geheimnisse direkt während des Spiels.</p>
-            </div>
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-forest-900/60 p-4 rounded-xl border border-forest-700/40">
+            <h2 class="font-cinzel text-xl font-bold text-gold-400">Geheimnisse & Hinweise</h2>
             <div class="flex items-center space-x-2">
-                <div class="inline-flex rounded-lg bg-forest-950 p-1 border border-forest-700/50">
-                    <button data-filter="all" class="secret-filter-btn active-filter px-3 py-1 rounded text-xs font-medium text-gray-300">Alle</button>
-                    <button data-filter="hidden" class="secret-filter-btn px-3 py-1 rounded text-xs font-medium text-gray-400">Verborgen</button>
-                    <button data-filter="revealed" class="secret-filter-btn px-3 py-1 rounded text-xs font-medium text-gray-400">Enthüllt</button>
-                </div>
-                <button id="addSecretBtn" class="px-3 py-1.5 rounded-lg bg-gold-500 text-forest-950 font-semibold text-xs hover:bg-gold-400 transition-all flex items-center space-x-1">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                    <span>Neues Geheimnis</span>
-                </button>
+                <button id="addSecretBtn" class="px-3 py-1.5 rounded-lg bg-gold-500 text-forest-950 font-semibold text-xs">Neues Geheimnis</button>
             </div>
         </div>
-
         <div id="secretsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
     </section>
 
     <!-- TAB 3: NAMENSGENERATOR -->
     <section id="tab-namensgen" class="tab-content hidden space-y-6">
-        <div class="bg-forest-900/60 dark:bg-forest-900/80 bg-white border border-forest-700/40 rounded-xl p-5 shadow-md space-y-5">
+        <div class="bg-forest-900/60 border border-forest-700/40 rounded-xl p-5 space-y-5">
             <div class="flex flex-col md:flex-row md:items-center justify-between border-b border-gold-500/20 pb-4 gap-4">
-                <div>
-                    <h2 class="font-cinzel text-xl font-bold text-gold-400">Sylvanus Namensschmiede</h2>
-                    <p class="text-xs text-gray-400">Klicke jeweils auf einen Vorname & Nachname, um sie frei zu kombinieren.</p>
-                </div>
-
-                <div class="flex flex-wrap items-center gap-3">
-                    <div>
-                        <label class="block text-[10px] text-gray-400 uppercase tracking-wider mb-1">Volk</label>
-                        <select id="nameGenRaceSelect" class="bg-forest-950 text-gold-400 border border-forest-700 text-xs rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-gold-500">
-                            <option value="mensch">Mensch</option>
-                            <option value="elf">Elf</option>
-                            <option value="tiefling">Tiefling</option>
-                            <option value="zwerg">Zwerg</option>
-                            <option value="teufel">Teufel / Infernal</option>
-                            <option value="ork">Ork</option>
-                            <option value="drachenbluetig">Drachenblütig</option>
-                            <option value="halbling">Halbling</option>
-                            <option value="gnom">Gnom</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-[10px] text-gray-400 uppercase tracking-wider mb-1">Geschlecht</label>
-                        <select id="nameGenGenderSelect" class="bg-forest-950 text-gold-400 border border-forest-700 text-xs rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-gold-500">
-                            <option value="maennlich">Männlich</option>
-                            <option value="weiblich">Weiblich</option>
-                            <option value="neutral">Geschlechtsneutral</option>
-                        </select>
-                    </div>
+                <h2 class="font-cinzel text-xl font-bold text-gold-400">Sylvanus Namensschmiede</h2>
+                <div class="flex gap-3">
+                    <select id="nameGenRaceSelect" class="bg-forest-950 text-gold-400 border border-forest-700 text-xs rounded-lg px-3 py-2">
+                        <option value="mensch">Mensch</option><option value="elf">Elf</option><option value="tiefling">Tiefling</option><option value="zwerg">Zwerg</option>
+                    </select>
+                    <select id="nameGenGenderSelect" class="bg-forest-950 text-gold-400 border border-forest-700 text-xs rounded-lg px-3 py-2">
+                        <option value="maennlich">Männlich</option><option value="weiblich">Weiblich</option>
+                    </select>
                 </div>
             </div>
-
-            <!-- Combined Quick Result Banner -->
-            <div class="bg-forest-950/80 border border-gold-500/30 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div>
-                    <span class="text-[10px] text-gold-500 font-semibold uppercase tracking-widest">Ausgewählter Voller Name</span>
-                    <div id="fullGeneratedNameDisplay" class="font-cinzel text-xl text-white font-bold tracking-wide">...</div>
-                </div>
-                <div class="flex items-center space-x-2">
-                    <button id="copyFullNameBtn" class="px-3 py-1.5 rounded bg-forest-800 hover:bg-forest-700 text-gold-300 text-xs border border-forest-600 transition-all flex items-center space-x-1">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-                        <span>Kopieren</span>
-                    </button>
-                    <button id="transferFullNameToNPCBtn" class="px-3 py-1.5 rounded bg-gold-500 hover:bg-gold-400 text-forest-950 font-semibold text-xs transition-all flex items-center space-x-1">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
-                        <span>Als NPC anlegen</span>
-                    </button>
+            <div class="bg-forest-950/80 border border-gold-500/30 rounded-xl p-4 flex justify-between items-center">
+                <div id="fullGeneratedNameDisplay" class="font-cinzel text-xl text-white font-bold">...</div>
+                <div class="flex gap-2">
+                    <button id="copyFullNameBtn" class="px-3 py-1.5 bg-forest-800 text-gold-300 text-xs rounded">Kopieren</button>
+                    <button id="transferFullNameToNPCBtn" class="px-3 py-1.5 bg-gold-500 text-forest-950 text-xs font-semibold rounded">Als NPC</button>
                 </div>
             </div>
-
-            <!-- Two Selectable Columns -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-forest-950/40 rounded-xl p-4 border border-forest-700/50 space-y-4">
-                    <div class="flex items-center justify-between border-b border-forest-700/60 pb-2">
-                        <h3 class="font-cinzel text-md font-bold text-gold-400">Vornamen</h3>
-                        <button id="refreshVornamenBtn" class="px-3 py-1 text-xs rounded bg-forest-800 hover:bg-forest-700 text-gold-400 flex items-center space-x-1">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                            <span>Neu</span>
-                        </button>
-                    </div>
-                    <div id="vornamenListContainer" class="space-y-2"></div>
-                </div>
-
-                <div class="bg-forest-950/40 rounded-xl p-4 border border-forest-700/50 space-y-4">
-                    <div class="flex items-center justify-between border-b border-forest-700/60 pb-2">
-                        <h3 class="font-cinzel text-md font-bold text-gold-400">Nachnamen & Sippen</h3>
-                        <button id="refreshNachnamenBtn" class="px-3 py-1 text-xs rounded bg-forest-800 hover:bg-forest-700 text-gold-400 flex items-center space-x-1">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                            <span>Neu</span>
-                        </button>
-                    </div>
-                    <div id="nachnamenListContainer" class="space-y-2"></div>
-                </div>
+                <div id="vornamenListContainer" class="space-y-2"></div>
+                <div id="nachnamenListContainer" class="space-y-2"></div>
             </div>
         </div>
     </section>
 
     <!-- TAB 4: NPC-ROLLENDECK -->
     <section id="tab-rollendeck" class="tab-content hidden space-y-6">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-forest-900/60 dark:bg-forest-900/80 bg-white p-4 rounded-xl border border-forest-700/40">
-            <div class="flex items-center space-x-3">
-                <input id="npcSearchInput" type="text" placeholder="NPC suchen nach Name, Rolle, Ort..." class="bg-forest-950 text-xs rounded-lg px-3 py-2 border border-forest-700 text-gray-200 focus:outline-none focus:ring-1 focus:ring-gold-500 w-64">
-            </div>
-            <button id="openNewNpcModalBtn" class="px-4 py-2 rounded-lg bg-gold-500 hover:bg-gold-400 text-forest-950 font-semibold text-xs transition-all flex items-center space-x-2 shadow-md">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                <span>Neuen NPC anlegen</span>
-            </button>
+        <div class="flex justify-between bg-forest-900/60 p-4 rounded-xl border border-forest-700/40">
+            <input id="npcSearchInput" type="text" placeholder="NPC suchen..." class="bg-forest-950 text-xs rounded-lg px-3 py-2 border border-forest-700 text-gray-200 w-64">
+            <button id="openNewNpcModalBtn" class="px-4 py-2 bg-gold-500 text-forest-950 font-semibold text-xs rounded-lg">+ Neuer NPC</button>
         </div>
-
         <div id="npcCardsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
     </section>
 
     <!-- TAB 5: MONSTER & KAMPF -->
     <section id="tab-monster" class="tab-content hidden space-y-6">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-forest-900/60 dark:bg-forest-900/80 bg-white p-4 rounded-xl border border-forest-700/40">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-forest-900/60 p-4 rounded-xl border border-forest-700/40">
             <div>
-                <h2 class="font-cinzel text-xl font-bold text-gold-400">Monster & Kampf</h2>
-                <p class="text-xs text-gray-400">Vollständige Statblocks mit Attributen, Merkmalslisten, Aktionen und Taktiken.</p>
+                <h2 class="font-cinzel text-xl font-bold text-gold-400">Monster & Kampf (Aktiv & Bibliothek)</h2>
+                <p class="text-xs text-gray-400">Ordne Kreaturen per Drag & Drop oder Kategorien. Klicke auf Encounter-Farben, um sie zuzuordnen.</p>
             </div>
-            <button id="openNewMonsterModalBtn" class="px-3 py-1.5 rounded-lg bg-gold-500 hover:bg-gold-400 text-forest-950 font-semibold text-xs transition-all flex items-center space-x-1">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                <span>Monster hinzufügen</span>
-            </button>
+            <button id="openNewMonsterModalBtn" class="px-3 py-1.5 rounded-lg bg-gold-500 text-forest-950 font-semibold text-xs">+ Monster hinzufügen</button>
         </div>
 
-        <div id="monstersGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+        <!-- Aktive Monster Sektion -->
+        <div class="space-y-3">
+            <h3 class="font-cinzel text-md font-bold text-gold-400 border-b border-gold-500/20 pb-1">⚡ Aktive Monster & Encounters</h3>
+            <div id="activeMonstersGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6 min-h-[100px] p-2 rounded-xl" ondragover="allowDrop(event)" ondragleave="removeDropStyle(event)" ondrop="dropMonsterToCategory(event, 'active')"></div>
+        </div>
+
+        <!-- Bibliothek Sektion -->
+        <div class="space-y-3 pt-4">
+            <h3 class="font-cinzel text-md font-bold text-gray-400 border-b border-gray-700/40 pb-1">📚 Bibliothek (Archiv)</h3>
+            <div id="libraryMonstersGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6 min-h-[100px] p-2 rounded-xl bg-forest-950/30 border border-dashed border-forest-800" ondragover="allowDrop(event)" ondragleave="removeDropStyle(event)" ondrop="dropMonsterToCategory(event, 'library')"></div>
+        </div>
     </section>
 
     <!-- TAB 6: KNOTEN-ABENTEUER-ABLAUFPLAN -->
     <section id="tab-knoten" class="tab-content hidden space-y-6">
-        <div class="bg-forest-900/60 dark:bg-forest-900/80 bg-white border border-forest-700/40 rounded-xl p-5 space-y-4">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-gold-500/20 pb-3 gap-3">
-                <div>
-                    <h2 class="font-cinzel text-xl font-bold text-gold-400">Knoten-Ablaufplan (Szenen-Graph)</h2>
-                    <p class="text-xs text-gray-400">Strukturierter Szenen-Verlauf. Klicke auf Knoten für Details & Statusänderungen.</p>
-                </div>
-                <button id="addNodeBtn" class="px-3 py-1.5 rounded-lg bg-gold-500 hover:bg-gold-400 text-forest-950 font-semibold text-xs transition-all flex items-center space-x-1">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                    <span>Szene / Knoten hinzufügen</span>
-                </button>
+        <div class="bg-forest-900/60 border border-forest-700/40 rounded-xl p-5 space-y-4">
+            <div class="flex justify-between items-center border-b border-gold-500/20 pb-3">
+                <h2 class="font-cinzel text-xl font-bold text-gold-400">Knoten-Ablaufplan (Drag & Drop)</h2>
+                <button id="addNodeBtn" class="px-3 py-1.5 rounded-lg bg-gold-500 text-forest-950 font-semibold text-xs">+ Szene hinzufügen</button>
             </div>
-
-            <div id="nodesGraphContainer" class="grid grid-cols-1 md:grid-cols-3 gap-4 min-h-[300px]"></div>
+            <div id="nodesGraphContainer" class="grid grid-cols-1 md:grid-cols-3 gap-4 min-h-[300px]" ondragover="allowDrop(event)" ondragleave="removeDropStyle(event)"></div>
         </div>
     </section>
 
     <!-- TAB 7: INITIATIVE -->
     <section id="tab-initiative" class="tab-content hidden space-y-6">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-            <!-- Initiative & HP Tracker Links -->
             <div class="lg:col-span-2 space-y-4">
                 <div class="init-tracker-container">
                     <div class="init-header">
-                        <div class="init-header-title">
-                            <span class="icon">⚔️</span> Initiative Tracker
-                        </div>
-
+                        <div class="init-header-title"><span>⚔️</span> Initiative Tracker</div>
                         <div class="init-header-controls">
                             <div class="size-picker">
                                 <label for="square-slider">Token:</label>
                                 <input type="range" id="square-slider" min="70" max="150" value="110" oninput="adjustSquareSize(this.value)" />
                             </div>
-
                             <button onclick="addCombatant()" class="btn-primary">+ Kreatur</button>
-                            <button onclick="resetAllLogs()" title="Logs für alle Kreaturen leeren">📜 Logs leeren</button>
+                            <button onclick="resetAllLogs()">📜 Logs leeren</button>
                             <button onclick="resetTracker()" class="btn-danger-subtle">Alle Löschen</button>
                         </div>
                     </div>
-
-                    <div id="tracker-list">
-                        <!-- Dynamic Combatant Cards Rendered Here -->
-                    </div>
+                    <div id="tracker-list"></div>
                 </div>
             </div>
-
-            <!-- Rechter Bereich: Ausgewählte Kreatur Statblock (NUR in Horizontaler / Desktop Ansicht) + Schnell-Notizen -->
             <div class="space-y-6">
-                <!-- Selected Combatant Statblock Card (Anzeigen ab lg) -->
                 <div id="selectedCombatantCardContainer" class="hidden lg:block bg-forest-900/80 border border-gold-500/40 rounded-xl p-5 shadow-lg min-h-[300px]">
-                    <div class="text-center py-10 text-gray-400 text-xs italic">
-                        ⚔️ Klicke links auf eine Kreatur, um ihren Statblock hier anzuzeigen.
-                    </div>
+                    <div class="text-center py-10 text-gray-400 text-xs italic">⚔️ Klicke links auf eine Kreatur, um ihren Statblock hier anzuzeigen.</div>
                 </div>
-
-                <!-- Schnell-Notizen Scratchpad (Immer erreichbar) -->
-                <div class="bg-forest-900/60 dark:bg-forest-900/80 bg-white border border-forest-700/40 rounded-xl p-5 flex flex-col shadow-md">
-                    <div class="flex items-center justify-between border-b border-gold-500/20 pb-3 mb-3">
+                <div class="bg-forest-900/60 border border-forest-700/40 rounded-xl p-5 flex flex-col shadow-md">
+                    <div class="flex justify-between border-b border-gold-500/20 pb-3 mb-3">
                         <h2 class="font-cinzel text-md font-bold text-gold-400">Schnell-Notizen</h2>
-                        <button id="clearNotesBtn" class="text-xs text-gray-400 hover:text-red-400 transition-colors">Leeren</button>
+                        <button id="clearNotesBtn" class="text-xs text-gray-400 hover:text-red-400">Leeren</button>
                     </div>
-                    <textarea id="scratchpadNotes" class="w-full h-40 bg-forest-950/80 border border-forest-700/60 rounded-lg p-3 text-xs text-gray-200 focus:outline-none focus:ring-1 focus:ring-gold-500 resize-none font-mono" placeholder="Spontane Notizen während der Sitzung..."></textarea>
+                    <textarea id="scratchpadNotes" class="w-full h-40 bg-forest-950/80 border border-forest-700/60 rounded-lg p-3 text-xs text-gray-200 resize-none font-mono" placeholder="Notizen..."></textarea>
                 </div>
             </div>
         </div>
@@ -947,224 +425,114 @@
 
 </main>
 
-<!-- MODAL: NPC Creator / Editor -->
-<div id="npcModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="bg-forest-900 border border-gold-500/40 rounded-xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
-        <div class="flex items-center justify-between border-b border-gold-500/20 pb-3">
-            <h3 id="npcModalTitle" class="font-cinzel text-lg font-bold text-gold-400">Neuen NPC anlegen</h3>
-            <button class="closeModalBtn text-gray-400 hover:text-white">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-            </button>
+<!-- MODAL: NODE (SZENE) BEARBEITEN / ERSTELLEN -->
+<div id="nodeModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-forest-900 border border-gold-500/40 rounded-xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+        <div class="flex justify-between border-b border-gold-500/20 pb-3">
+            <h3 id="nodeModalTitle" class="font-cinzel text-lg font-bold text-gold-400">Szene bearbeiten</h3>
+            <button class="closeNodeModalBtn text-gray-400 hover:text-white">✕</button>
         </div>
-        <form id="npcForm" class="space-y-3">
-            <input type="hidden" id="npcIdInput">
+        <form id="nodeForm" class="space-y-3">
+            <input type="hidden" id="nodeIdInput">
             <div>
-                <label class="block text-xs text-gray-300 mb-1">Name & Titel</label>
-                <input id="npcNameInput" type="text" required class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100 focus:outline-none focus:ring-1 focus:ring-gold-500" placeholder="z.B. Valeria Frostglut">
-            </div>
-            <div class="grid grid-cols-2 gap-3">
-                <div>
-                    <label class="block text-xs text-gray-300 mb-1">Volk / Profession</label>
-                    <input id="npcRoleInput" type="text" placeholder="z.B. Tiefling Diplomat" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100 focus:outline-none focus:ring-1 focus:ring-gold-500">
-                </div>
-                <div>
-                    <label class="block text-xs text-gray-300 mb-1">Ort / Fraktion</label>
-                    <input id="npcLocationInput" type="text" placeholder="z.B. Nebelhafen" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100 focus:outline-none focus:ring-1 focus:ring-gold-500">
-                </div>
+                <label class="block text-xs text-gray-300 mb-1">Titel der Szene</label>
+                <input id="nodeTitleInput" type="text" required class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100">
             </div>
             <div>
-                <label class="block text-xs text-gold-400 font-semibold mb-1">👁️ Optischer Anker</label>
-                <input id="npcVisualInput" type="text" placeholder="z.B. Silbernes Monokel, riecht nach Nelken" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100 focus:outline-none focus:ring-1 focus:ring-gold-500">
+                <label class="block text-xs text-gray-300 mb-1">Status</label>
+                <select id="nodeStatusInput" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gold-400">
+                    <option value="planned">Geplant</option>
+                    <option value="active">Aktive Szene</option>
+                    <option value="completed">Abgeschlossen</option>
+                    <option value="bypassed">Übersprungen</option>
+                </select>
             </div>
             <div>
-                <label class="block text-xs text-gold-400 font-semibold mb-1">🗣️ Stimme / Eigenheit</label>
-                <input id="npcVoiceInput" type="text" placeholder="z.B. Leise, kratzige Stimme; tippt nervös auf Tische" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100 focus:outline-none focus:ring-1 focus:ring-gold-500">
+                <label class="block text-xs text-gray-300 mb-1">Beschreibung / Ablauf</label>
+                <textarea id="nodeDescInput" rows="3" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100"></textarea>
             </div>
             <div>
-                <label class="block text-xs text-gold-400 font-semibold mb-1">🎯 Hauptmotivation</label>
-                <input id="npcGoalInput" type="text" placeholder="z.B. Suche nach dem verschollenen Pergament" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100 focus:outline-none focus:ring-1 focus:ring-gold-500">
-            </div>
-            <div>
-                <label class="block text-xs text-gold-400 font-semibold mb-1">🗝️ Geheimnis</label>
-                <input id="npcSecretInput" type="text" placeholder="z.B. Besitzt einen gefälschten Adelsbrief" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100 focus:outline-none focus:ring-1 focus:ring-gold-500">
+                <label class="block text-xs text-gray-300 mb-1">Hinweise / Geheimnisse</label>
+                <input id="nodeCluesInput" type="text" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100">
             </div>
             <div class="flex justify-end space-x-2 pt-2">
-                <button type="button" class="closeModalBtn px-4 py-2 rounded-lg bg-forest-800 text-gray-300 text-xs hover:bg-forest-700">Abbrechen</button>
-                <button type="submit" class="px-4 py-2 rounded-lg bg-gold-500 text-forest-950 font-bold text-xs hover:bg-gold-400">Speichern</button>
+                <button type="button" class="closeNodeModalBtn px-4 py-2 bg-forest-800 text-gray-300 text-xs rounded-lg">Abbrechen</button>
+                <button type="submit" class="px-4 py-2 bg-gold-500 text-forest-950 font-bold text-xs rounded-lg">Speichern</button>
             </div>
         </form>
     </div>
 </div>
 
-<!-- MODAL: Monster Creator / Editor -->
+<!-- MODAL: NPC -->
+<div id="npcModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-forest-900 border border-gold-500/40 rounded-xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
+        <div class="flex justify-between border-b border-gold-500/20 pb-3">
+            <h3 id="npcModalTitle" class="font-cinzel text-lg font-bold text-gold-400">NPC anlegen</h3>
+            <button class="closeModalBtn text-gray-400 hover:text-white">✕</button>
+        </div>
+        <form id="npcForm" class="space-y-3">
+            <input type="hidden" id="npcIdInput">
+            <input id="npcNameInput" type="text" required placeholder="Name" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100">
+            <input id="npcRoleInput" type="text" placeholder="Rolle" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100">
+            <input id="npcLocationInput" type="text" placeholder="Ort" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100">
+            <input id="npcVisualInput" type="text" placeholder="Optischer Anker" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100">
+            <input id="npcVoiceInput" type="text" placeholder="Stimme" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100">
+            <input id="npcGoalInput" type="text" placeholder="Motivation" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100">
+            <input id="npcSecretInput" type="text" placeholder="Geheimnis" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100">
+            <div class="flex justify-end space-x-2 pt-2">
+                <button type="button" class="closeModalBtn px-4 py-2 bg-forest-800 text-gray-300 text-xs rounded-lg">Abbrechen</button>
+                <button type="submit" class="px-4 py-2 bg-gold-500 text-forest-950 font-bold text-xs rounded-lg">Speichern</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- MODAL: MONSTER -->
 <div id="monsterModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
     <div class="bg-forest-900 border border-gold-500/40 rounded-xl max-w-2xl w-full p-6 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
-        <div class="flex items-center justify-between border-b border-gold-500/20 pb-3">
-            <h3 id="monsterModalTitle" class="font-cinzel text-lg font-bold text-gold-400">Monster / Gegner bearbeiten</h3>
-            <button class="closeMonsterModalBtn text-gray-400 hover:text-white">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-            </button>
+        <div class="flex justify-between border-b border-gold-500/20 pb-3">
+            <h3 id="monsterModalTitle" class="font-cinzel text-lg font-bold text-gold-400">Monster bearbeiten</h3>
+            <button class="closeMonsterModalBtn text-gray-400 hover:text-white">✕</button>
         </div>
         <form id="monsterForm" class="space-y-4">
             <input type="hidden" id="monsterIdInput">
 
-            <!-- Name, Typ, XP -->
+            <!-- Kategorie & Outline Farben Auswahl -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-forest-950/60 p-3 rounded-lg border border-forest-700/50">
+                <div>
+                    <label class="block text-xs text-gold-400 font-bold mb-1">Kategorie</label>
+                    <select id="monsterCategorySelect" class="w-full bg-forest-900 text-gray-200 border border-forest-700 text-xs rounded p-2">
+                        <option value="active">⚡ Aktiv (Encounter)</option>
+                        <option value="library">📚 Bibliothek (Archiv)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs text-gold-400 font-bold mb-1">Encounter-Farben (Mehrfachwahl)</label>
+                    <div id="outlineColorCheckboxes" class="flex items-center gap-3 pt-1">
+                        <label class="flex items-center space-x-1 cursor-pointer text-xs"><input type="checkbox" value="#ef4444" class="accent-red-500"><span class="w-3 h-3 rounded-full bg-red-500 inline-block"></span></label>
+                        <label class="flex items-center space-x-1 cursor-pointer text-xs"><input type="checkbox" value="#3b82f6" class="accent-blue-500"><span class="w-3 h-3 rounded-full bg-blue-500 inline-block"></span></label>
+                        <label class="flex items-center space-x-1 cursor-pointer text-xs"><input type="checkbox" value="#d4af37" class="accent-gold-500"><span class="w-3 h-3 rounded-full bg-yellow-500 inline-block"></span></label>
+                        <label class="flex items-center space-x-1 cursor-pointer text-xs"><input type="checkbox" value="#a855f7" class="accent-purple-500"><span class="w-3 h-3 rounded-full bg-purple-500 inline-block"></span></label>
+                        <label class="flex items-center space-x-1 cursor-pointer text-xs"><input type="checkbox" value="#22c55e" class="accent-green-500"><span class="w-3 h-3 rounded-full bg-green-500 inline-block"></span></label>
+                    </div>
+                </div>
+            </div>
+
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div class="sm:col-span-1">
-                    <label class="block text-xs text-gray-300 mb-1">Name</label>
-                    <input id="monsterNameInput" type="text" required class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100 focus:outline-none focus:ring-1 focus:ring-gold-500" placeholder="Schattenpanther">
-                </div>
-                <div>
-                    <label class="block text-xs text-gray-300 mb-1">Typ / Kategorie</label>
-                    <input id="monsterTypeInput" type="text" placeholder="Bestie (Mittel)" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100 focus:outline-none focus:ring-1 focus:ring-gold-500">
-                </div>
-                <div>
-                    <label class="block text-xs text-gray-300 mb-1">Erfahrungspunkte (XP)</label>
-                    <input id="monsterXpInput" type="text" placeholder="700 XP" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100 focus:outline-none focus:ring-1 focus:ring-gold-500">
-                </div>
+                <input id="monsterNameInput" type="text" required placeholder="Name" class="bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100">
+                <input id="monsterTypeInput" type="text" placeholder="Typ" class="bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100">
+                <input id="monsterXpInput" type="text" placeholder="XP" class="bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100">
             </div>
-
-            <!-- Basic Combat Stats -->
             <div class="grid grid-cols-4 gap-2">
-                <div>
-                    <label class="block text-[11px] text-gray-300 mb-1">RK (AC)</label>
-                    <input id="monsterAcInput" type="number" required placeholder="15" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100 focus:outline-none focus:ring-1 focus:ring-gold-500">
-                </div>
-                <div>
-                    <label class="block text-[11px] text-gray-300 mb-1">TP (HP)</label>
-                    <input id="monsterHpInput" type="number" required placeholder="45" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100 focus:outline-none focus:ring-1 focus:ring-gold-500">
-                </div>
-                <div>
-                    <label class="block text-[11px] text-gray-300 mb-1">Initiative</label>
-                    <input id="monsterInitInput" type="text" placeholder="+4" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100 focus:outline-none focus:ring-1 focus:ring-gold-500">
-                </div>
-                <div>
-                    <label class="block text-[11px] text-gray-300 mb-1">Tempo</label>
-                    <input id="monsterSpeedInput" type="text" placeholder="9m" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100 focus:outline-none focus:ring-1 focus:ring-gold-500">
-                </div>
+                <input id="monsterAcInput" type="number" required placeholder="RK" class="bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100">
+                <input id="monsterHpInput" type="number" required placeholder="TP" class="bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100">
+                <input id="monsterInitInput" type="text" placeholder="Init" class="bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100">
+                <input id="monsterSpeedInput" type="text" placeholder="Tempo" class="bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100">
             </div>
-
-            <!-- Attribute Input Grid -->
-            <div class="bg-forest-950/60 p-3 rounded-lg border border-forest-700/50 space-y-2">
-                <span class="block text-xs font-bold text-gold-400">Attribute & Modifikatoren (Wert | Mod | RW)</span>
-
-                <!-- Zeile 1: STÄ, GES, KON -->
-                <div class="grid grid-cols-3 gap-2">
-                    <div>
-                        <span class="text-[10px] text-gray-400 block font-bold">STÄRKE (STÄ)</span>
-                        <div class="grid grid-cols-3 gap-1">
-                            <input id="m_sta_val" type="number" placeholder="Wert" class="bg-forest-900 border border-forest-700 text-[11px] rounded p-1 text-center text-gray-100">
-                            <input id="m_sta_mod" type="text" placeholder="Mod" class="bg-forest-900 border border-forest-700 text-[11px] rounded p-1 text-center text-gray-100">
-                            <input id="m_sta_rw" type="text" placeholder="RW" class="bg-forest-900 border border-forest-700 text-[11px] rounded p-1 text-center text-gray-100">
-                        </div>
-                    </div>
-                    <div>
-                        <span class="text-[10px] text-gray-400 block font-bold">GESCHICK (GES)</span>
-                        <div class="grid grid-cols-3 gap-1">
-                            <input id="m_ges_val" type="number" placeholder="Wert" class="bg-forest-900 border border-forest-700 text-[11px] rounded p-1 text-center text-gray-100">
-                            <input id="m_ges_mod" type="text" placeholder="Mod" class="bg-forest-900 border border-forest-700 text-[11px] rounded p-1 text-center text-gray-100">
-                            <input id="m_ges_rw" type="text" placeholder="RW" class="bg-forest-900 border border-forest-700 text-[11px] rounded p-1 text-center text-gray-100">
-                        </div>
-                    </div>
-                    <div>
-                        <span class="text-[10px] text-gray-400 block font-bold">KONSTITUTION (KON)</span>
-                        <div class="grid grid-cols-3 gap-1">
-                            <input id="m_kon_val" type="number" placeholder="Wert" class="bg-forest-900 border border-forest-700 text-[11px] rounded p-1 text-center text-gray-100">
-                            <input id="m_kon_mod" type="text" placeholder="Mod" class="bg-forest-900 border border-forest-700 text-[11px] rounded p-1 text-center text-gray-100">
-                            <input id="m_kon_rw" type="text" placeholder="RW" class="bg-forest-900 border border-forest-700 text-[11px] rounded p-1 text-center text-gray-100">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Zeile 2: INT, WEI, CHA -->
-                <div class="grid grid-cols-3 gap-2 pt-1">
-                    <div>
-                        <span class="text-[10px] text-gray-400 block font-bold">INTELLIGENZ (INT)</span>
-                        <div class="grid grid-cols-3 gap-1">
-                            <input id="m_int_val" type="number" placeholder="Wert" class="bg-forest-900 border border-forest-700 text-[11px] rounded p-1 text-center text-gray-100">
-                            <input id="m_int_mod" type="text" placeholder="Mod" class="bg-forest-900 border border-forest-700 text-[11px] rounded p-1 text-center text-gray-100">
-                            <input id="m_int_rw" type="text" placeholder="RW" class="bg-forest-900 border border-forest-700 text-[11px] rounded p-1 text-center text-gray-100">
-                        </div>
-                    </div>
-                    <div>
-                        <span class="text-[10px] text-gray-400 block font-bold">WEISHEIT (WEI)</span>
-                        <div class="grid grid-cols-3 gap-1">
-                            <input id="m_wei_val" type="number" placeholder="Wert" class="bg-forest-900 border border-forest-700 text-[11px] rounded p-1 text-center text-gray-100">
-                            <input id="m_wei_mod" type="text" placeholder="Mod" class="bg-forest-900 border border-forest-700 text-[11px] rounded p-1 text-center text-gray-100">
-                            <input id="m_wei_rw" type="text" placeholder="RW" class="bg-forest-900 border border-forest-700 text-[11px] rounded p-1 text-center text-gray-100">
-                        </div>
-                    </div>
-                    <div>
-                        <span class="text-[10px] text-gray-400 block font-bold">CHARISMA (CHA)</span>
-                        <div class="grid grid-cols-3 gap-1">
-                            <input id="m_cha_val" type="number" placeholder="Wert" class="bg-forest-900 border border-forest-700 text-[11px] rounded p-1 text-center text-gray-100">
-                            <input id="m_cha_mod" type="text" placeholder="Mod" class="bg-forest-900 border border-forest-700 text-[11px] rounded p-1 text-center text-gray-100">
-                            <input id="m_cha_rw" type="text" placeholder="RW" class="bg-forest-900 border border-forest-700 text-[11px] rounded p-1 text-center text-gray-100">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Details Inputs -->
-            <div class="grid grid-cols-2 gap-3 text-xs">
-                <div>
-                    <label class="block text-gray-300 mb-1">Fähigkeiten:</label>
-                    <input id="monsterSkillsInput" type="text" placeholder="Wahrnehmung +5, Heimlichkeit +8" class="w-full bg-forest-950 border border-forest-700 rounded p-2 text-gray-100">
-                </div>
-                <div>
-                    <label class="block text-gray-300 mb-1">Resistenzen / Immunitäten:</label>
-                    <input id="monsterResistancesInput" type="text" placeholder="Feuer, Gift" class="w-full bg-forest-950 border border-forest-700 rounded p-2 text-gray-100">
-                </div>
-                <div>
-                    <label class="block text-gray-300 mb-1">Sinne:</label>
-                    <input id="monsterSensesInput" type="text" placeholder="Dunkelsicht 18m, Passiv 15" class="w-full bg-forest-950 border border-forest-700 rounded p-2 text-gray-100">
-                </div>
-                <div>
-                    <label class="block text-gray-300 mb-1">Sprachen:</label>
-                    <input id="monsterLanguagesInput" type="text" placeholder="Gemeinsprache, Infernalisch" class="w-full bg-forest-950 border border-forest-700 rounded p-2 text-gray-100">
-                </div>
-            </div>
-
-            <!-- MERKMALE -->
-            <div class="bg-forest-950/40 p-3 rounded-lg border border-forest-700/50 space-y-2">
-                <div class="flex items-center justify-between border-b border-forest-700/60 pb-1">
-                    <span class="text-xs font-bold text-gold-400">MERKMALE</span>
-                    <button type="button" id="addTraitBtn" class="px-2 py-0.5 rounded bg-gold-500/20 text-gold-300 text-xs font-bold hover:bg-gold-500/30">+ Merkmal</button>
-                </div>
-                <div id="traitsModalList" class="space-y-2"></div>
-            </div>
-
-            <!-- AKTIONEN -->
-            <div class="bg-forest-950/40 p-3 rounded-lg border border-forest-700/50 space-y-2">
-                <div class="flex items-center justify-between border-b border-forest-700/60 pb-1">
-                    <span class="text-xs font-bold text-gold-400">AKTIONEN</span>
-                    <button type="button" id="addActionBtn" class="px-2 py-0.5 rounded bg-gold-500/20 text-gold-300 text-xs font-bold hover:bg-gold-500/30">+ Aktion</button>
-                </div>
-                <div id="actionsModalList" class="space-y-2"></div>
-            </div>
-
-            <!-- BONUS-AKTIONEN -->
-            <div class="bg-forest-950/40 p-3 rounded-lg border border-forest-700/50 space-y-2">
-                <div class="flex items-center justify-between border-b border-forest-700/60 pb-1">
-                    <span class="text-xs font-bold text-gold-400">BONUS-AKTIONEN</span>
-                    <button type="button" id="addBonusActionBtn" class="px-2 py-0.5 rounded bg-gold-500/20 text-gold-300 text-xs font-bold hover:bg-gold-500/30">+ Bonus-Aktion</button>
-                </div>
-                <div id="bonusActionsModalList" class="space-y-2"></div>
-            </div>
-
-            <!-- Taktik & Notizen -->
-            <div>
-                <label class="block text-xs text-gold-400 font-semibold mb-1">⚔️ KI-Kampftaktik & Verhalten</label>
-                <textarea id="monsterTacticsInput" rows="2" placeholder="Verhalten im Kampf, Prioritätsziele..." class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100 resize-none"></textarea>
-            </div>
-            <div>
-                <label class="block text-xs text-gray-300 mb-1">📝 Notizen</label>
-                <input id="monsterNotesInput" type="text" placeholder="Besondere Beute, Standorte..." class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100">
-            </div>
-
+            <textarea id="monsterTacticsInput" rows="2" placeholder="Kampftaktik..." class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100"></textarea>
             <div class="flex justify-end space-x-2 pt-2">
-                <button type="button" class="closeMonsterModalBtn px-4 py-2 rounded-lg bg-forest-800 text-gray-300 text-xs hover:bg-forest-700">Abbrechen</button>
-                <button type="submit" class="px-4 py-2 rounded-lg bg-gold-500 text-forest-950 font-bold text-xs hover:bg-gold-400">Speichern</button>
+                <button type="button" class="closeMonsterModalBtn px-4 py-2 bg-forest-800 text-gray-300 text-xs rounded-lg">Abbrechen</button>
+                <button type="submit" class="px-4 py-2 bg-gold-500 text-forest-950 font-bold text-xs rounded-lg">Speichern</button>
             </div>
         </form>
     </div>
@@ -1190,147 +558,34 @@
     ];
 
     const DEFAULT_SECRETS = [
-        { id: '1', text: 'Der Baron steht heimlich unter dem Einfluss einer Erzteufelin und zahlt Tribut in Seelen.', status: 'hidden', tag: 'Politik' },
-        { id: '2', text: 'Im versunkenen Tempel ruht ein Stück des Ur-Smaragds, der Tote reanimieren kann.', status: 'hidden', tag: 'Artefakt' },
-        { id: '3', text: 'Der Schmied Thorin ist in Wahrheit der verbannte Thronfolger des Zwergenreichs.', status: 'hidden', tag: 'NPC' },
-        { id: '4', text: 'Die Waldläufer der Schatteneihe nutzen halluzinogenes Gift für ihre Pfeile.', status: 'revealed', tag: 'Fraktion' },
-        { id: '5', text: 'Unter der Hauptschänke existiert ein verlassener Fluchttunnel aus der Kaiserzeit.', status: 'hidden', tag: 'Ort' }
+        { id: '1', text: 'Der Baron steht heimlich unter dem Einfluss einer Erzteufelin.', status: 'hidden', tag: 'Politik' },
+        { id: '2', text: 'Im versunkenen Tempel ruht ein Stück des Ur-Smaragds.', status: 'hidden', tag: 'Artefakt' }
     ];
 
     const DEFAULT_NPCS = [
-        {
-            id: 'npc-1',
-            name: 'Valeria Frostglut',
-            role: 'Tiefling Diplomat',
-            location: 'Silber-Zitadelle',
-            visual: 'Silbernes Monokel, riecht nach Gewürznelken und Rauch',
-            voice: 'Sehr leise, ruhige Stimme; tippt mit den Ringen auf die Armlehne',
-            goal: 'Möchte den Handelspakt zwischen Zwergen und Menschen erzwingen',
-            secret: 'Verkauft Waffen an die Rebellen auf dem Nordpass'
-        }
+        { id: 'npc-1', name: 'Valeria Frostglut', role: 'Tiefling Diplomat', location: 'Silber-Zitadelle', visual: 'Monokel', voice: 'Leise', goal: 'Handelspakt erzwingen', secret: 'Waffenhandel' }
     ];
 
     const DEFAULT_MONSTERS = [
         {
-            id: 'm-1',
-            name: 'Schattenpanther',
-            type: 'Bestie (Mittel)',
-            xp: '700 XP',
-            ac: 15,
-            hp: 45,
-            init: '+4',
-            speed: '12m / Klettern 9m',
-            stats: {
-                sta: { val: 16, mod: '+3', rw: '+3' },
-                ges: { val: 18, mod: '+4', rw: '+6' },
-                kon: { val: 14, mod: '+2', rw: '+2' },
-                int: { val: 3, mod: '-4', rw: '-4' },
-                wei: { val: 12, mod: '+1', rw: '+3' },
-                cha: { val: 8, mod: '-1', rw: '-1' }
-            },
-            skills: 'Wahrnehmung +5, Heimlichkeit +8',
-            resistances: 'Keine',
-            senses: 'Dunkelsicht 18m, Passiv 15',
-            languages: '—',
-            traits: [
-                { name: 'Schatten-Tarnung', text: 'Hat Vorteil auf Würfe für Heimlichkeit im Dämmerlicht oder in Dunkelheit.' }
-            ],
-            actions: [
-                { name: 'Anspringen', text: 'Wenn der Panther sich 6m geradeaus auf das Ziel zubewegt, muss das Ziel einen Stärke-Rettungswurf (SG 14) bestehen oder liegt hin.' },
-                { name: 'Biss', text: '+6 zum Treffen, Reichweite 1.5m, Schaden: 10 (2d6 + 4) Hieb-Schaden.' }
-            ],
-            bonusActions: [
-                { name: 'Rückzug im Schatten', text: 'Kann im Dämmerlicht als Bonusaktion die Verstecken-Aktion nutzen.' }
-            ],
-            tactics: 'Nutzt Dämmerung & Hinterhalt. Zielt bevorzugt auf isolierte Zauberwirker.',
-            notes: 'Fell schimmert bläulich im Mondlicht.'
+            id: 'm-1', name: 'Schattenpanther', type: 'Bestie (Mittel)', xp: '700 XP', ac: 15, hp: 45, init: '+4', speed: '12m',
+            stats: { sta: { val: 16, mod: '+3', rw: '+3' }, ges: { val: 18, mod: '+4', rw: '+6' }, kon: { val: 14, mod: '+2', rw: '+2' }, int: { val: 3, mod: '-4', rw: '-4' }, wei: { val: 12, mod: '+1', rw: '+3' }, cha: { val: 8, mod: '-1', rw: '-1' } },
+            skills: '', resistances: '', senses: '', languages: '', traits: [], actions: [], bonusActions: [],
+            tactics: 'Nutzt Dämmerung & Hinterhalt.', notes: '',
+            category: 'active', outlines: ['#ef4444', '#3b82f6']
         }
     ];
 
     const DEFAULT_NODES = [
-        {
-            id: 'n-1',
-            title: '1. Das Nebel-Wirtshaus',
-            status: 'completed',
-            description: 'Die Helden treffen sich im Gasthaus "Zum Tanzenden Eber".',
-            clues: 'Blutbeflecktes Siegel',
-            npcs: 'Wirt Barnabas'
-        }
+        { id: 'n-1', title: '1. Das Nebel-Wirtshaus', status: 'completed', description: 'Die Helden treffen sich im Gasthaus.', clues: 'Blutiges Siegel' },
+        { id: 'n-2', title: '2. Der Wald-Hinterhalt', status: 'planned', description: 'Wölfe greifen an.', clues: 'Spuren im Schlamm' }
     ];
 
     const NAME_DATABASE = {
-        mensch: {
-            vornamen: {
-                maennlich: ['Alaric', 'Cedric', 'Gareth', 'Henrik', 'Konrad', 'Leopold', 'Roderick', 'Valentin', 'Wilhelm', 'Kaelen'],
-                weiblich: ['Adelheid', 'Beatrice', 'Clara', 'Eleanor', 'Helena', 'Isolda', 'Johanna', 'Mathilda', 'Rosalie', 'Theresa'],
-                neutral: ['Arian', 'Darian', 'Evelyn', 'Jonas', 'Miran', 'Quinn', 'Rowan', 'Shiloh', 'Taylor', 'Valery']
-            },
-            nachnamen: ['Dornenwall', 'Eichenschild', 'Falkenhorst', 'Greifenfels', 'Holzmann', 'Kranich', 'Mühlenberg', 'Rosenzweig', 'Steinmetz', 'Winterberg']
-        },
-        elf: {
-            vornamen: {
-                maennlich: ['Aerion', 'Caelynn', 'Erevan', 'Fenris', 'Gaelen', 'Lycidas', 'Silas', 'Tharanor', 'Valandil', 'Zethor'],
-                weiblich: ['Alysia', 'Celestia', 'Elenora', 'Faeriel', 'Ilyana', 'Lyra', 'Miriella', 'Saria', 'Theala', 'Xiloscient'],
-                neutral: ['Aelori', 'Corell', 'Faelan', 'Ilonis', 'Lorian', 'Merinn', 'Nael', 'Rion', 'Thael', 'Zephyr']
-            },
-            nachnamen: ['Mondflüstern', 'Schattenlaub', 'Silberzweig', 'Sternentau', 'Windläufer', 'Dämmerlicht', 'Glanzfeder', 'Nebelweber', 'Thronweide', 'Seelenklang']
-        },
-        tiefling: {
-            vornamen: {
-                maennlich: ['Azazel', 'Barakas', 'Damien', 'Kairon', 'Malphas', 'Mephisto', 'Orus', 'Ravus', 'Valafar', 'Zepar'],
-                weiblich: ['Aktaia', 'Bryseis', 'Damaia', 'Kallista', 'Lerissa', 'Nemeia', 'Phaedra', 'Rieta', 'Tenebris', 'Velos'],
-                neutral: ['Anarchie', 'Barmherzigkeit', 'Chaos', 'Hoffnung', 'Kummer', 'Nacht', 'Rache', 'Stille', 'Zorn', 'Zweifel']
-            },
-            nachnamen: ['Aschenbringer', 'Dunkelglut', 'Höllenbrand', 'Nachtschatten', 'Rußherz', 'Schwefelstein', 'Teufelskrone', 'Verderbnis', 'Schattenfunke', 'Glutwind']
-        },
-        zwerg: {
-            vornamen: {
-                maennlich: ['Bared', 'Brokk', 'Dain', 'Durin', 'Gimli', 'Harbek', 'Kazador', 'Thorin', 'Thrain', 'Varok'],
-                weiblich: ['Amber', 'Bardryn', 'Dagnal', 'Eldeth', 'Gurdis', 'Helja', 'Kathra', 'Mardin', 'Torbera', 'Vondra'],
-                neutral: ['Argus', 'Brin', 'Durn', 'Gim', 'Karn', 'Krag', 'Rurik', 'Storn', 'Thor', 'Thrum']
-            },
-            nachnamen: ['Ambossbrecher', 'Erzfelsen', 'Goldader', 'Hammerschlag', 'Kupferschmied', 'Schildspalter', 'Stahlfaust', 'Steinbrecher', 'Tiefengrub', 'Zinnerz']
-        },
-        teufel: {
-            vornamen: {
-                maennlich: ['Astaroth', 'Belial', 'Dispater', 'Mammon', 'Mephistopheles', 'Moloch', 'Satanus', 'Asmodeus', 'Infernus', 'Bael'],
-                weiblich: ['Lilith', 'Fieryna', 'Glasya', 'Naamah', 'Eisheth', 'Agrat', 'Morbus', 'Malice', 'Infernix', 'Hekate'],
-                neutral: ['Abaddon', 'Beelzebub', 'Legion', 'Lucifer', 'Nebel', 'Orcus', 'Pazuzu', 'Schatten', 'Void', 'Gehenna']
-            },
-            nachnamen: ['von der Neunten Hölle', 'vom Flammenthron', 'Gallenblut', 'Seelenfresser', 'Höllenfürst', 'Blutvertrag', 'Schwarzzunge', 'Ketzerbrand', 'Eisfeuer', 'Teufelsgalle']
-        },
-        ork: {
-            vornamen: {
-                maennlich: ['Grommash', 'Guldan', 'Kargath', 'Thok', 'Urgok', 'Varok', 'Zuggar', 'Bresh', 'Drakka', 'Ghar'],
-                weiblich: ['Bagra', 'Draka', 'Gola', 'Kasha', 'Mogra', 'Reka', 'Shautha', 'Ugrash', 'Vola', 'Yash'],
-                neutral: ['Azog', 'Ghor', 'Krag', 'Mogh', 'Ruk', 'Shag', 'Thok', 'Urg', 'Zog', 'Zur']
-            },
-            nachnamen: ['Blutfaust', 'Knochenbrecher', 'Schädelspalter', 'Hauerschlag', 'Kriegsschrei', 'Erzfresser', 'Rottenschild', 'Todeshieb', 'Eisenhaut', 'Wildzahn']
-        },
-        drachenbluetig: {
-            vornamen: {
-                maennlich: ['Arjhan', 'Balasar', 'Dharshan', 'Heskan', 'Medrash', 'Rassimer', 'Shamash', 'Tarhun', 'Torinn', 'Kriv'],
-                weiblich: ['Akra', 'Biri', 'Kava', 'Mishann', 'Nala', 'Perra', 'Raiann', 'Thava', 'Uda', 'Sora'],
-                neutral: ['Bala', 'Dhar', 'Hesk', 'Kriv', 'Med', 'Nal', 'Rass', 'Tar', 'Tor', 'Zor']
-            },
-            nachnamen: ['Drachenschuppe', 'Feueratem', 'Glutkrone', 'Schuppenpanzer', 'Zornklaue', 'Mondschuppe', 'Goldzahn', 'Sturmschwinge', 'Lavaherz', 'Urvater']
-        },
-        halbling: {
-            vornamen: {
-                maennlich: ['Alton', 'Ander', 'Cade', 'Corrin', 'Eldon', 'Finnan', 'Garret', 'Lyle', 'Milo', 'Wellby'],
-                weiblich: ['Bree', 'Callie', 'Cora', 'Euphemia', 'Jillian', 'Lavinia', 'Merla', 'Nedda', 'Seraphina', 'Verna'],
-                neutral: ['Andi', 'Charlie', 'Fin', 'Jori', 'Kip', 'Lorin', 'Pippin', 'Robin', 'Sami', 'Toby']
-            },
-            nachnamen: ['Apfelblüte', 'Beutlin', 'Grünberg', 'Kleeblatt', 'Mühlenrad', 'Teichrose', 'Unterberg', 'Wiesenreich', 'Zuckerbrot', 'Sommerfeld']
-        },
-        gnom: {
-            vornamen: {
-                maennlich: ['Boddynock', 'Dimble', 'Fonkin', 'Gimpten', 'Kribben', 'Nobil', 'Orryn', 'Roondar', 'Seebo', 'Zook'],
-                weiblich: ['Bimpnottin', 'Caramip', 'Ellywick', 'Loopmottin', 'Mardnab', 'Nissa', 'Roywyn', 'Shamil', 'Tana', 'Zanna'],
-                neutral: ['Bip', 'Fizz', 'Gim', 'Krip', 'Nip', 'Pox', 'Rink', 'Tink', 'Zeb', 'Zip']
-            },
-            nachnamen: ['Funkenflug', 'Kupferzahn', 'Zahnrad', 'Tüftelwerk', 'Dampfkessel', 'Schraubenschlüssel', 'Blitzdraht', 'Uhrwerk', 'Federleicht', 'Quarzfunke']
-        }
+        mensch: { vornamen: { maennlich: ['Alaric', 'Cedric'], weiblich: ['Clara', 'Helena'] }, nachnamen: ['Dornenwall', 'Eichenschild'] },
+        elf: { vornamen: { maennlich: ['Aerion', 'Fenris'], weiblich: ['Alysia', 'Lyra'] }, nachnamen: ['Mondflüstern', 'Silberzweig'] },
+        tiefling: { vornamen: { maennlich: ['Azazel', 'Damien'], weiblich: ['Aktaia', 'Damaia'] }, nachnamen: ['Aschenbringer', 'Glutwind'] },
+        zwerg: { vornamen: { maennlich: ['Dain', 'Thorin'], weiblich: ['Amber', 'Helja'] }, nachnamen: ['Ambossbrecher', 'Goldader'] }
     };
 
     let state = {
@@ -1341,76 +596,60 @@
         monsters: DEFAULT_MONSTERS,
         nodes: DEFAULT_NODES,
         sessionHook: '',
-        checklist: [
-            { id: '1', text: 'Spionage-Hinweis im Wirtshaus auflösen', done: true },
-            { id: '2', text: 'Hinterhalt am Wachturm ausspielen', done: false }
-        ],
-        recap: [
-            'Die Helden entkamen knapp der brennenden Scheune.',
-            'Kleriker Gabriel fand eine verzauberte Münze.'
-        ],
-        combatants: [
-            { id: '1', name: 'Held Paladin', init: 20, hp: 50, maxHp: 50, tempHp: 0, img: '', conditions: [], history: ['Erstellt mit 50 HP'] },
-            { id: '2', name: 'Schattenpanther', init: 18, hp: 45, maxHp: 45, tempHp: 0, img: '', conditions: [], history: ['Aus Bestiarium hinzugefügt (45 HP)'], monsterData: DEFAULT_MONSTERS[0] }
-        ],
+        checklist: [{ id: '1', text: 'Spionage-Hinweis auflösen', done: true }],
+        recap: ['Die Helden entkamen knapp.'],
+        combatants: [{ id: '1', name: 'Held Paladin', init: 20, hp: 50, maxHp: 50, tempHp: 0, img: '', conditions: [], history: ['Start'] }],
         activeId: '1',
         notes: ''
     };
 
     function loadState() {
         try {
-            const saved = localStorage.getItem('sylvanus_codex_data_v7');
-            if (saved) {
-                const parsed = JSON.parse(saved);
-                state = { ...state, ...parsed };
-            }
-        } catch (e) {
-            console.error("Fehler beim Laden:", e);
-        }
+            const saved = localStorage.getItem('sylvanus_codex_data_v8');
+            if (saved) state = { ...state, ...JSON.parse(saved) };
+        } catch (e) { console.error(e); }
     }
 
     function saveState() {
-        try {
-            localStorage.setItem('sylvanus_codex_data_v7', JSON.stringify(state));
-        } catch (e) {
-            console.error("Fehler beim Speichern:", e);
+        try { localStorage.setItem('sylvanus_codex_data_v8', JSON.stringify(state)); } catch (e) { console.error(e); }
+    }
+
+    function exportData() {
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 2));
+        const a = document.createElement('a'); a.href = dataStr; a.download = `sylvanus_backup.json`;
+        document.body.appendChild(a); a.click(); a.remove(); showToast("Backup exportiert!", "success");
+    }
+
+    function importData(event) {
+        const reader = new FileReader();
+        if (event.target.files[0]) {
+            reader.readAsText(event.target.files[0], "UTF-8");
+            reader.onload = function(e) {
+                try { state = { ...state, ...JSON.parse(e.target.result) }; saveState(); location.reload(); }
+                catch (err) { showToast("Import-Fehler!", "error"); }
+            };
         }
     }
 
     function showToast(message, type = 'info') {
         const container = document.getElementById('toastContainer');
         const toast = document.createElement('div');
-        toast.className = `pointer-events-auto px-4 py-2.5 rounded-lg text-xs font-semibold shadow-xl border flex items-center space-x-2 transition-all transform translate-y-2 opacity-0 duration-200 ${
-            type === 'success' ? 'bg-forest-900 border-gold-500 text-gold-300' : 'bg-forest-900 border-forest-600 text-gray-200'
-        }`;
+        toast.className = `pointer-events-auto px-4 py-2.5 rounded-lg text-xs font-semibold shadow-xl border flex items-center space-x-2 transition-all transform translate-y-2 opacity-0 duration-200 ${type === 'success' ? 'bg-forest-900 border-gold-500 text-gold-300' : 'bg-forest-900 border-forest-600 text-gray-200'}`;
         toast.innerHTML = `<span>${message}</span>`;
         container.appendChild(toast);
         setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 10);
-        setTimeout(() => {
-            toast.classList.add('opacity-0', 'translate-y-2');
-            setTimeout(() => toast.remove(), 200);
-        }, 3000);
+        setTimeout(() => { toast.classList.add('opacity-0', 'translate-y-2'); setTimeout(() => toast.remove(), 200); }, 3000);
     }
 
     function initTabs() {
-        const tabs = document.querySelectorAll('.nav-tab');
-        tabs.forEach(tab => {
+        document.querySelectorAll('.nav-tab').forEach(tab => {
             tab.addEventListener('click', () => {
                 const target = tab.getAttribute('data-tab');
                 state.activeTab = target;
-
-                tabs.forEach(t => {
-                    t.classList.remove('active-tab', 'bg-gold-500/20', 'text-gold-400', 'border', 'border-gold-500/40');
-                    t.classList.add('text-gray-400', 'hover:text-gray-200');
-                });
-
+                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active-tab', 'bg-gold-500/20', 'text-gold-400', 'border', 'border-gold-500/40'));
                 tab.classList.add('active-tab', 'bg-gold-500/20', 'text-gold-400', 'border', 'border-gold-500/40');
-                tab.classList.remove('text-gray-400');
-
-                document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
-                const activeContent = document.getElementById(`tab-${target}`);
-                if (activeContent) activeContent.classList.remove('hidden');
-
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+                document.getElementById(`tab-${target}`).classList.remove('hidden');
                 saveState();
             });
         });
@@ -1419,576 +658,200 @@
     function initTheme() {
         const themeBtn = document.getElementById('themeToggleBtn');
         const htmlEl = document.documentElement;
-
-        function applyTheme(theme) {
-            if (theme === 'dark') {
-                htmlEl.classList.add('dark');
-            } else {
-                htmlEl.classList.remove('dark');
-            }
-            state.theme = theme;
-            saveState();
+        function applyTheme(t) {
+            if (t === 'dark') htmlEl.classList.add('dark'); else htmlEl.classList.remove('dark');
+            state.theme = t; saveState();
         }
-
-        themeBtn.addEventListener('click', () => {
-            const newTheme = htmlEl.classList.contains('dark') ? 'light' : 'dark';
-            applyTheme(newTheme);
-        });
-
+        themeBtn.addEventListener('click', () => applyTheme(htmlEl.classList.contains('dark') ? 'light' : 'dark'));
         applyTheme(state.theme || 'dark');
     }
 
-    /* NORMALIZER FOR MONSTER STATS */
-    function normalizeMonster(m) {
-        return {
-            id: m.id || 'm-' + Date.now(),
-            name: m.name || 'Unbekanntes Monster',
-            type: m.type || 'Kreatur',
-            xp: m.xp || '0 XP',
-            ac: m.ac || 10,
-            hp: m.hp || 10,
-            init: m.init || '+0',
-            speed: m.speed || '9m',
-            stats: m.stats || {
-                sta: { val: 10, mod: '+0', rw: '+0' },
-                ges: { val: 10, mod: '+0', rw: '+0' },
-                kon: { val: 10, mod: '+0', rw: '+0' },
-                int: { val: 10, mod: '+0', rw: '+0' },
-                wei: { val: 10, mod: '+0', rw: '+0' },
-                cha: { val: 10, mod: '+0', rw: '+0' }
-            },
-            skills: m.skills || '',
-            resistances: m.resistances || '',
-            senses: m.senses || '',
-            languages: m.languages || '',
-            traits: Array.isArray(m.traits) ? m.traits : [],
-            actions: Array.isArray(m.actions) ? m.actions : (typeof m.actions === 'string' && m.actions ? [{ name: 'Angriff', text: m.actions }] : []),
-            bonusActions: Array.isArray(m.bonusActions) ? m.bonusActions : [],
-            tactics: m.tactics || '',
-            notes: m.notes || ''
-        };
-    }
+    /* DRAG & DROP UTILS */
+    function allowDrop(ev) { ev.preventDefault(); ev.currentTarget.classList.add('drag-over'); }
+    function removeDropStyle(ev) { ev.currentTarget.classList.remove('drag-over'); }
 
-    /* MONSTER CARD HTML GENERATOR */
-    function buildMonsterCardHTML(m, options = { showControls: true }) {
-        const monster = normalizeMonster(m);
-        const stats = monster.stats;
-
-        const traitsHtml = monster.traits.map(t => `<p class="text-xs text-gray-200"><strong class="text-gold-400 font-semibold">${t.name}:</strong> ${t.text}</p>`).join('');
-        const actionsHtml = monster.actions.map(a => `<p class="text-xs text-gray-200"><strong class="text-gold-400 font-semibold">${a.name}:</strong> ${a.text}</p>`).join('');
-        const bonusActionsHtml = monster.bonusActions.map(ba => `<p class="text-xs text-gray-200"><strong class="text-gold-400 font-semibold">${ba.name}:</strong> ${ba.text}</p>`).join('');
-
-        return `
-            <div class="space-y-3">
-                <div class="flex items-start justify-between border-b border-gold-500/30 pb-2">
-                    <div>
-                        <h3 class="font-cinzel text-lg font-bold text-gold-400">${monster.name}</h3>
-                        <p class="text-xs text-gray-400">${monster.type}</p>
-                    </div>
-                    <span class="px-2.5 py-1 rounded bg-gold-500/20 border border-gold-500/30 text-gold-300 font-bold text-xs">${monster.xp}</span>
-                </div>
-
-                <div class="grid grid-cols-4 gap-2 bg-forest-950/70 p-2 rounded-lg border border-forest-800 text-center text-xs">
-                    <div><span class="block text-[10px] text-gray-400">RK (AC)</span><strong class="text-gold-400">${monster.ac}</strong></div>
-                    <div><span class="block text-[10px] text-gray-400">TP (HP)</span><strong class="text-green-400">${monster.hp}</strong></div>
-                    <div><span class="block text-[10px] text-gray-400">Initiative</span><strong class="text-gray-200">${monster.init}</strong></div>
-                    <div><span class="block text-[10px] text-gray-400">Tempo</span><strong class="text-gray-200">${monster.speed}</strong></div>
-                </div>
-
-                <div class="overflow-x-auto">
-                    <table class="w-full text-center text-xs border border-forest-700/60 bg-forest-950/80 rounded-lg">
-                        <tbody>
-                            <tr class="border-b border-forest-800">
-                                <td class="p-1.5 border-r border-forest-800"><span class="font-bold text-gold-400">STÄ</span> ${stats.sta.val || 10} (${stats.sta.mod || '+0'}) <span class="text-[10px] text-gray-400">RW:${stats.sta.rw || '+0'}</span></td>
-                                <td class="p-1.5 border-r border-forest-800"><span class="font-bold text-gold-400">GES</span> ${stats.ges.val || 10} (${stats.ges.mod || '+0'}) <span class="text-[10px] text-gray-400">RW:${stats.ges.rw || '+0'}</span></td>
-                                <td class="p-1.5"><span class="font-bold text-gold-400">KON</span> ${stats.kon.val || 10} (${stats.kon.mod || '+0'}) <span class="text-[10px] text-gray-400">RW:${stats.kon.rw || '+0'}</span></td>
-                            </tr>
-                            <tr>
-                                <td class="p-1.5 border-r border-forest-800"><span class="font-bold text-gold-400">INT</span> ${stats.int.val || 10} (${stats.int.mod || '+0'}) <span class="text-[10px] text-gray-400">RW:${stats.int.rw || '+0'}</span></td>
-                                <td class="p-1.5 border-r border-forest-800"><span class="font-bold text-gold-400">WEI</span> ${stats.wei.val || 10} (${stats.wei.mod || '+0'}) <span class="text-[10px] text-gray-400">RW:${stats.wei.rw || '+0'}</span></td>
-                                <td class="p-1.5"><span class="font-bold text-gold-400">CHA</span> ${stats.cha.val || 10} (${stats.cha.mod || '+0'}) <span class="text-[10px] text-gray-400">RW:${stats.cha.rw || '+0'}</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="text-[11px] space-y-1 text-gray-300 border-b border-forest-800/60 pb-2">
-                    ${monster.skills ? `<p><strong class="text-gold-500">Fähigkeiten:</strong> ${monster.skills}</p>` : ''}
-                    ${monster.resistances ? `<p><strong class="text-gold-500">Resistenzen:</strong> ${monster.resistances}</p>` : ''}
-                    ${monster.senses ? `<p><strong class="text-gold-500">Sinne:</strong> ${monster.senses}</p>` : ''}
-                    ${monster.languages ? `<p><strong class="text-gold-500">Sprachen:</strong> ${monster.languages}</p>` : ''}
-                </div>
-
-                ${monster.traits.length > 0 ? `
-                    <div class="space-y-1">
-                        <span class="text-[10px] font-bold text-gold-500 tracking-wider uppercase">MERKMALE:</span>
-                        <div class="space-y-1 pl-1">${traitsHtml}</div>
-                    </div>
-                ` : ''}
-
-                ${monster.actions.length > 0 ? `
-                    <div class="space-y-1">
-                        <span class="text-[10px] font-bold text-gold-500 tracking-wider uppercase">AKTIONEN:</span>
-                        <div class="space-y-1 pl-1">${actionsHtml}</div>
-                    </div>
-                ` : ''}
-
-                ${monster.bonusActions.length > 0 ? `
-                    <div class="space-y-1">
-                        <span class="text-[10px] font-bold text-gold-500 tracking-wider uppercase">BONUS-AKTIONEN:</span>
-                        <div class="space-y-1 pl-1">${bonusActionsHtml}</div>
-                    </div>
-                ` : ''}
-
-                ${monster.tactics ? `
-                    <div class="bg-forest-950/50 p-2.5 rounded-lg border border-forest-800 space-y-1">
-                        <span class="text-[10px] font-bold text-gold-400 tracking-wider uppercase">⚔️ KI-Kampftaktik:</span>
-                        <p class="text-xs text-gray-300 leading-relaxed">${monster.tactics}</p>
-                    </div>
-                ` : ''}
-
-                ${options.showControls ? `
-                    <div class="flex items-center justify-end space-x-2 pt-2 border-t border-forest-800/60">
-                        <button class="add-to-init-btn px-2.5 py-1 bg-gold-500/20 hover:bg-gold-500/30 text-gold-300 border border-gold-500/30 rounded text-xs font-semibold flex items-center space-x-1">
-                            <span>+ Initiative</span>
-                        </button>
-                        <button class="duplicate-monster-btn px-2.5 py-1 bg-forest-800 hover:bg-forest-700 text-gray-300 border border-forest-600 rounded text-xs" title="Monster duplizieren">
-                            📋 Duplizieren
-                        </button>
-                        <button class="edit-monster-btn px-2.5 py-1 bg-forest-800 hover:bg-forest-700 text-gold-400 border border-forest-600 rounded text-xs" title="Monster bearbeiten">
-                            ✏️ Bearbeiten
-                        </button>
-                        <button class="delete-monster-btn text-gray-500 hover:text-red-400 p-1" title="Löschen">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                        </button>
-                    </div>
-                ` : ''}
-            </div>
-        `;
-    }
-
-    /* TAB 1: AUFTAKT & RÜCKBLICK */
+    /* TAB 1: AUFTAKT */
     function renderAuftaktTab() {
-        const hookInput = document.getElementById('sessionHookInput');
-        hookInput.value = state.sessionHook || '';
-        hookInput.oninput = (e) => { state.sessionHook = e.target.value; saveState(); };
+        const hook = document.getElementById('sessionHookInput');
+        hook.value = state.sessionHook || '';
+        hook.oninput = (e) => { state.sessionHook = e.target.value; saveState(); };
 
-        const checklistContainer = document.getElementById('checklistItemsContainer');
-        checklistContainer.innerHTML = '';
+        const checkContainer = document.getElementById('checklistItemsContainer');
+        checkContainer.innerHTML = '';
         state.checklist.forEach(item => {
             const row = document.createElement('div');
             row.className = 'flex items-center justify-between p-2 rounded bg-forest-950/50 border border-forest-700/40 text-xs';
-            row.innerHTML = `
-                <label class="flex items-center space-x-2 cursor-pointer flex-grow">
-                    <input type="checkbox" ${item.done ? 'checked' : ''} class="checklist-check rounded bg-forest-900 border-forest-600 text-gold-500 focus:ring-0">
-                    <span class="${item.done ? 'line-through text-gray-500' : 'text-gray-200'}">${item.text}</span>
-                </label>
-                <button class="delete-checklist-btn text-gray-500 hover:text-red-400 p-1">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                </button>
-            `;
-            row.querySelector('.checklist-check').onchange = (e) => { item.done = e.target.checked; saveState(); renderAuftaktTab(); };
-            row.querySelector('.delete-checklist-btn').onclick = () => { state.checklist = state.checklist.filter(c => c.id !== item.id); saveState(); renderAuftaktTab(); };
-            checklistContainer.appendChild(row);
+            row.innerHTML = `<label class="flex items-center space-x-2 cursor-pointer flex-grow"><input type="checkbox" ${item.done ? 'checked' : ''} class="rounded bg-forest-900 border-forest-600 text-gold-500"><span class="${item.done ? 'line-through text-gray-500' : 'text-gray-200'}">${item.text}</span></label><button class="text-gray-500 hover:text-red-400 p-1">✕</button>`;
+            row.querySelector('input').onchange = (e) => { item.done = e.target.checked; saveState(); renderAuftaktTab(); };
+            row.querySelector('button').onclick = () => { state.checklist = state.checklist.filter(c => c.id !== item.id); saveState(); renderAuftaktTab(); };
+            checkContainer.appendChild(row);
         });
 
         const recapContainer = document.getElementById('recapListContainer');
         recapContainer.innerHTML = '';
         state.recap.forEach((pt, index) => {
             const card = document.createElement('div');
-            card.className = 'bg-forest-950/60 p-3 rounded-lg border border-forest-700/50 flex justify-between items-start space-x-2 text-xs text-gray-200';
-            card.innerHTML = `
-                <div class="flex items-start space-x-2">
-                    <span class="text-gold-400 font-bold">•</span>
-                    <span>${pt}</span>
-                </div>
-                <button class="delete-recap-btn text-gray-500 hover:text-red-400 p-0.5">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
-            `;
-            card.querySelector('.delete-recap-btn').onclick = () => { state.recap.splice(index, 1); saveState(); renderAuftaktTab(); };
+            card.className = 'bg-forest-950/60 p-3 rounded-lg border border-forest-700/50 flex justify-between items-start text-xs text-gray-200';
+            card.innerHTML = `<span>• ${pt}</span><button class="text-gray-500 hover:text-red-400">✕</button>`;
+            card.querySelector('button').onclick = () => { state.recap.splice(index, 1); saveState(); renderAuftaktTab(); };
             recapContainer.appendChild(card);
         });
     }
-
-    document.getElementById('addChecklistItemBtn').onclick = () => {
-        const text = prompt('Neues Meilenstein-Ziel:');
-        if (text) { state.checklist.push({ id: Date.now().toString(), text: text, done: false }); saveState(); renderAuftaktTab(); }
-    };
-
-    document.getElementById('addRecapItemBtn').onclick = () => {
-        const text = prompt('Neuer Stichpunkt für den Rückblick:');
-        if (text) { state.recap.push(text); saveState(); renderAuftaktTab(); }
-    };
+    document.getElementById('addChecklistItemBtn').onclick = () => { const t = prompt('Ziel:'); if(t){ state.checklist.push({id:Date.now().toString(), text:t, done:false}); saveState(); renderAuftaktTab(); } };
+    document.getElementById('addRecapItemBtn').onclick = () => { const t = prompt('Stichpunkt:'); if(t){ state.recap.push(t); saveState(); renderAuftaktTab(); } };
 
     /* TAB 2: GEHEIMNISSE */
-    let currentSecretFilter = 'all';
     function renderSecretsTab() {
-        const secretsContainer = document.getElementById('secretsGrid');
-        secretsContainer.innerHTML = '';
-
-        const filtered = state.secrets.filter(s => {
-            if (currentSecretFilter === 'hidden') return s.status === 'hidden';
-            if (currentSecretFilter === 'revealed') return s.status === 'revealed';
-            return true;
-        });
-
-        filtered.forEach(secret => {
-            const isRevealed = secret.status === 'revealed';
+        const grid = document.getElementById('secretsGrid');
+        grid.innerHTML = '';
+        state.secrets.forEach(s => {
             const card = document.createElement('div');
-            card.className = `p-4 rounded-xl border transition-all shadow-md flex flex-col justify-between ${
-                isRevealed ? 'bg-forest-950/40 border-forest-800 text-gray-400' : 'bg-forest-900/80 border-forest-700/60 text-gray-100'
-            }`;
-            card.innerHTML = `
-                <div class="space-y-2">
-                    <div class="flex items-center justify-between">
-                        <span class="px-2 py-0.5 rounded text-[10px] font-semibold tracking-wider uppercase ${
-                isRevealed ? 'bg-forest-900 text-forest-400 border border-forest-800' : 'bg-gold-500/20 text-gold-400 border border-gold-500/30'
-            }">${secret.tag || 'Geheimnis'}</span>
-                        <span class="text-[10px] font-semibold ${isRevealed ? 'text-forest-400' : 'text-gold-500'}">
-                            ${isRevealed ? '✓ Enthüllt' : '🔒 Verborgen'}
-                        </span>
-                    </div>
-                    <p class="text-xs leading-relaxed ${isRevealed ? 'line-through opacity-75' : 'font-medium'}">${secret.text}</p>
-                </div>
-                <div class="flex items-center justify-end space-x-2 pt-3 border-t border-forest-800/40 mt-3">
-                    <button class="toggle-secret-btn px-2.5 py-1 rounded text-xs font-semibold border transition-all ${
-                isRevealed ? 'border-forest-700 bg-forest-900 hover:bg-forest-800 text-gray-300' : 'border-gold-500/50 bg-gold-500/20 hover:bg-gold-500/30 text-gold-300'
-            }">
-                        ${isRevealed ? 'Verbergen' : 'Als Enthüllt markieren'}
-                    </button>
-                    <button class="delete-secret-btn p-1 text-gray-500 hover:text-red-400">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                    </button>
-                </div>
-            `;
-            card.querySelector('.toggle-secret-btn').onclick = () => { secret.status = isRevealed ? 'hidden' : 'revealed'; saveState(); renderSecretsTab(); };
-            card.querySelector('.delete-secret-btn').onclick = () => { state.secrets = state.secrets.filter(s => s.id !== secret.id); saveState(); renderSecretsTab(); };
-            secretsContainer.appendChild(card);
+            card.className = `p-4 rounded-xl border shadow-md flex flex-col justify-between ${s.status === 'revealed' ? 'bg-forest-950/40 border-forest-800 text-gray-400' : 'bg-forest-900/80 border-forest-700/60 text-gray-100'}`;
+            card.innerHTML = `<div><span class="px-2 py-0.5 rounded text-[10px] font-semibold uppercase bg-gold-500/20 text-gold-400">${s.tag}</span><p class="text-xs mt-2 ${s.status==='revealed'?'line-through':''}">${s.text}</p></div><div class="flex justify-end gap-2 pt-2"><button class="text-xs text-gold-300 px-2 py-1 bg-gold-500/20 rounded">${s.status==='revealed'?'Verbergen':'Enthüllen'}</button><button class="text-xs text-red-400">🗑️</button></div>`;
+            card.querySelector('button').onclick = () => { s.status = s.status==='revealed'?'hidden':'revealed'; saveState(); renderSecretsTab(); };
+            card.querySelectorAll('button')[1].onclick = () => { state.secrets = state.secrets.filter(x => x.id !== s.id); saveState(); renderSecretsTab(); };
+            grid.appendChild(card);
         });
     }
-
-    document.querySelectorAll('.secret-filter-btn').forEach(btn => {
-        btn.onclick = () => {
-            document.querySelectorAll('.secret-filter-btn').forEach(b => { b.classList.remove('active-filter', 'bg-gold-500', 'text-forest-950'); b.classList.add('text-gray-400'); });
-            btn.classList.add('active-filter', 'bg-gold-500', 'text-forest-950'); btn.classList.remove('text-gray-400');
-            currentSecretFilter = btn.getAttribute('data-filter'); renderSecretsTab();
-        };
-    });
-
-    document.getElementById('addSecretBtn').onclick = () => {
-        const text = prompt('Geheimnis / Hinweis eingeben:');
-        if (text) {
-            const tag = prompt('Kategorie / Tag (z.B. Ort, NPC, Magie):', 'Geheimnis') || 'Geheimnis';
-            state.secrets.unshift({ id: Date.now().toString(), text, status: 'hidden', tag });
-            saveState(); renderSecretsTab();
-        }
-    };
+    document.getElementById('addSecretBtn').onclick = () => { const t = prompt('Geheimnis:'); if(t){ state.secrets.unshift({id:Date.now().toString(), text:t, status:'hidden', tag:'Geheimnis'}); saveState(); renderSecretsTab(); } };
 
     /* TAB 3: NAMENSGENERATOR */
-    let generatedVornamen = [];
-    let generatedNachnamen = [];
-    let selectedVornameIndex = 0;
-    let selectedNachnameIndex = 0;
-
     function generateNames() {
         const race = document.getElementById('nameGenRaceSelect').value;
         const gender = document.getElementById('nameGenGenderSelect').value;
-        const raceData = NAME_DATABASE[race] || NAME_DATABASE.mensch;
-        const vornamenPool = raceData.vornamen[gender] || raceData.vornamen.maennlich;
-        const nachnamenPool = raceData.nachnamen;
-
-        generatedVornamen = [...vornamenPool].sort(() => 0.5 - Math.random()).slice(0, 5);
-        generatedNachnamen = [...nachnamenPool].sort(() => 0.5 - Math.random()).slice(0, 5);
-        selectedVornameIndex = 0; selectedNachnameIndex = 0;
-        renderNameGenTab();
+        const rData = NAME_DATABASE[race] || NAME_DATABASE.mensch;
+        const vs = rData.vornamen[gender] || rData.vornamen.maennlich;
+        const ns = rData.nachnamen;
+        document.getElementById('vornamenListContainer').innerHTML = vs.map(v => `<div class="p-2 bg-forest-950/60 border border-forest-700/40 rounded text-xs text-gray-200">${v}</div>`).join('');
+        document.getElementById('nachnamenListContainer').innerHTML = ns.map(n => `<div class="p-2 bg-forest-950/60 border border-forest-700/40 rounded text-xs text-gray-200">${n}</div>`).join('');
+        document.getElementById('fullGeneratedNameDisplay').textContent = `${vs[0]} ${ns[0]}`;
     }
-
-    function renderNameGenTab() {
-        const vorContainer = document.getElementById('vornamenListContainer');
-        const nachContainer = document.getElementById('nachnamenListContainer');
-        vorContainer.innerHTML = ''; nachContainer.innerHTML = '';
-
-        generatedVornamen.forEach((vn, idx) => {
-            const isSelected = idx === selectedVornameIndex;
-            const row = document.createElement('div');
-            row.className = `flex items-center justify-between p-2.5 rounded-lg border text-xs cursor-pointer transition-all ${isSelected ? 'bg-gold-500/20 border-gold-500 text-gold-300 font-bold shadow-md' : 'bg-forest-900/60 border-forest-700/40 text-gray-200 hover:border-gold-500/50'}`;
-            row.onclick = () => { selectedVornameIndex = idx; renderNameGenTab(); };
-            row.innerHTML = `
-                <div class="flex items-center space-x-2">
-                    <span class="${isSelected ? 'text-gold-400 font-bold' : 'text-gray-500'}">${isSelected ? '●' : '○'}</span>
-                    <span>${vn}</span>
-                </div>
-                <button class="p-1 text-gray-400 hover:text-gold-400" onclick="event.stopPropagation(); copyTextToClipboard('${vn}')">📋</button>
-            `;
-            vorContainer.appendChild(row);
-        });
-
-        generatedNachnamen.forEach((nn, idx) => {
-            const isSelected = idx === selectedNachnameIndex;
-            const row = document.createElement('div');
-            row.className = `flex items-center justify-between p-2.5 rounded-lg border text-xs cursor-pointer transition-all ${isSelected ? 'bg-gold-500/20 border-gold-500 text-gold-300 font-bold shadow-md' : 'bg-forest-900/60 border-forest-700/40 text-gray-200 hover:border-gold-500/50'}`;
-            row.onclick = () => { selectedNachnameIndex = idx; renderNameGenTab(); };
-            row.innerHTML = `
-                <div class="flex items-center space-x-2">
-                    <span class="${isSelected ? 'text-gold-400 font-bold' : 'text-gray-500'}">${isSelected ? '●' : '○'}</span>
-                    <span>${nn}</span>
-                </div>
-                <button class="p-1 text-gray-400 hover:text-gold-400" onclick="event.stopPropagation(); copyTextToClipboard('${nn}')">📋</button>
-            `;
-            nachContainer.appendChild(row);
-        });
-
-        const combined = `${generatedVornamen[selectedVornameIndex] || ''} ${generatedNachnamen[selectedNachnameIndex] || ''}`.trim();
-        document.getElementById('fullGeneratedNameDisplay').textContent = combined || '...';
-    }
-
-    function copyTextToClipboard(text) {
-        navigator.clipboard.writeText(text).then(() => showToast(`"${text}" kopiert!`, 'success')).catch(() => showToast('Kopierfehler', 'error'));
-    }
-
     document.getElementById('nameGenRaceSelect').onchange = generateNames;
     document.getElementById('nameGenGenderSelect').onchange = generateNames;
-    document.getElementById('refreshVornamenBtn').onclick = () => {
-        const pool = NAME_DATABASE[document.getElementById('nameGenRaceSelect').value].vornamen[document.getElementById('nameGenGenderSelect').value];
-        generatedVornamen = [...pool].sort(() => 0.5 - Math.random()).slice(0, 5); selectedVornameIndex = 0; renderNameGenTab();
-    };
-    document.getElementById('refreshNachnamenBtn').onclick = () => {
-        const pool = NAME_DATABASE[document.getElementById('nameGenRaceSelect').value].nachnamen;
-        generatedNachnamen = [...pool].sort(() => 0.5 - Math.random()).slice(0, 5); selectedVornameIndex = 0; renderNameGenTab();
-    };
-    document.getElementById('copyFullNameBtn').onclick = () => { copyTextToClipboard(document.getElementById('fullGeneratedNameDisplay').textContent); };
-    document.getElementById('transferFullNameToNPCBtn').onclick = () => {
-        const full = document.getElementById('fullGeneratedNameDisplay').textContent;
-        const race = document.getElementById('nameGenRaceSelect').selectedOptions[0].text;
-        if (full && full !== '...') openNPCModalWithData(full, race);
-    };
 
-    /* TAB 4: NPC ROLLENDECK */
+    /* TAB 4: NPC */
     function renderNPCsTab() {
         const grid = document.getElementById('npcCardsGrid');
-        const searchQuery = (document.getElementById('npcSearchInput').value || '').toLowerCase();
         grid.innerHTML = '';
-
-        const filtered = state.npcs.filter(npc => {
-            return npc.name.toLowerCase().includes(searchQuery) ||
-                (npc.role && npc.role.toLowerCase().includes(searchQuery)) ||
-                (npc.location && npc.location.toLowerCase().includes(searchQuery));
-        });
-
-        filtered.forEach(npc => {
+        state.npcs.forEach(n => {
             const card = document.createElement('div');
-            card.className = 'bg-forest-900/80 border border-forest-700/60 rounded-xl p-4 shadow-md flex flex-col justify-between space-y-3';
-            card.innerHTML = `
-                <div class="space-y-2">
-                    <div class="flex items-start justify-between border-b border-forest-700/50 pb-2">
-                        <div>
-                            <h3 class="font-cinzel text-base font-bold text-gold-400">${npc.name}</h3>
-                            <p class="text-[11px] text-gray-400">${npc.role || 'Unbekannte Rolle'}</p>
-                        </div>
-                        ${npc.location ? `<span class="px-2 py-0.5 rounded bg-forest-950 border border-forest-700 text-[10px] text-gray-300 font-medium">${npc.location}</span>` : ''}
-                    </div>
-
-                    <div class="space-y-1.5 text-xs pt-1">
-                        <p><strong class="text-gold-500 font-medium">👁️ Optischer Anker:</strong> <span class="text-gray-200">${npc.visual || '-'}</span></p>
-                        <p><strong class="text-gold-500 font-medium">🗣️ Stimme / Eigenheit:</strong> <span class="text-gray-200">${npc.voice || '-'}</span></p>
-                        <p><strong class="text-gold-500 font-medium">🎯 Hauptmotivation:</strong> <span class="text-gray-200">${npc.goal || '-'}</span></p>
-                        <p><strong class="text-gold-500 font-medium">🗝️ Geheimnis:</strong> <span class="text-gray-200">${npc.secret || '-'}</span></p>
-                    </div>
-                </div>
-
-                <div class="flex items-center justify-end space-x-2 pt-2 border-t border-forest-800/60">
-                    <button class="edit-npc-btn p-1.5 text-gray-400 hover:text-gold-400 text-xs flex items-center space-x-1">✏️ <span>Bearbeiten</span></button>
-                    <button class="delete-npc-btn p-1.5 text-gray-400 hover:text-red-400 text-xs">🗑️</button>
-                </div>
-            `;
-            card.querySelector('.edit-npc-btn').onclick = () => openNPCModalForEdit(npc);
-            card.querySelector('.delete-npc-btn').onclick = () => { state.npcs = state.npcs.filter(n => n.id !== npc.id); saveState(); renderNPCsTab(); };
+            card.className = 'bg-forest-900/80 border border-forest-700/60 rounded-xl p-4 shadow-md text-xs space-y-2';
+            card.innerHTML = `<h3 class="font-cinzel text-base font-bold text-gold-400">${n.name}</h3><p class="text-gray-400">${n.role}</p><p><strong>Ziel:</strong> ${n.goal}</p><button class="text-red-400">Löschen</button>`;
+            card.querySelector('button').onclick = () => { state.npcs = state.npcs.filter(x => x.id !== n.id); saveState(); renderNPCsTab(); };
             grid.appendChild(card);
         });
     }
-
-    document.getElementById('npcSearchInput').oninput = renderNPCsTab;
-
-    function openNPCModalWithData(name = '', role = '') {
-        document.getElementById('npcModalTitle').textContent = 'Neuen NPC anlegen';
-        document.getElementById('npcIdInput').value = '';
-        document.getElementById('npcNameInput').value = name;
-        document.getElementById('npcRoleInput').value = role;
-        document.getElementById('npcLocationInput').value = '';
-        document.getElementById('npcVisualInput').value = '';
-        document.getElementById('npcVoiceInput').value = '';
-        document.getElementById('npcGoalInput').value = '';
-        document.getElementById('npcSecretInput').value = '';
-        document.getElementById('npcModal').classList.remove('hidden');
-    }
-
-    function openNPCModalForEdit(npc) {
-        document.getElementById('npcModalTitle').textContent = 'NPC bearbeiten';
-        document.getElementById('npcIdInput').value = npc.id;
-        document.getElementById('npcNameInput').value = npc.name;
-        document.getElementById('npcRoleInput').value = npc.role || '';
-        document.getElementById('npcLocationInput').value = npc.location || '';
-        document.getElementById('npcVisualInput').value = npc.visual || '';
-        document.getElementById('npcVoiceInput').value = npc.voice || '';
-        document.getElementById('npcGoalInput').value = npc.goal || '';
-        document.getElementById('npcSecretInput').value = npc.secret || '';
-        document.getElementById('npcModal').classList.remove('hidden');
-    }
-
-    document.getElementById('openNewNpcModalBtn').onclick = () => openNPCModalWithData();
-    document.querySelectorAll('.closeModalBtn').forEach(btn => btn.onclick = () => document.getElementById('npcModal').classList.add('hidden'));
-
+    document.getElementById('openNewNpcModalBtn').onclick = () => document.getElementById('npcModal').classList.remove('hidden');
+    document.querySelectorAll('.closeModalBtn').forEach(b => b.onclick = () => document.getElementById('npcModal').classList.add('hidden'));
     document.getElementById('npcForm').onsubmit = (e) => {
         e.preventDefault();
-        const id = document.getElementById('npcIdInput').value;
-        const npcData = {
-            id: id || 'npc-' + Date.now(),
-            name: document.getElementById('npcNameInput').value,
-            role: document.getElementById('npcRoleInput').value,
-            location: document.getElementById('npcLocationInput').value,
-            visual: document.getElementById('npcVisualInput').value,
-            voice: document.getElementById('npcVoiceInput').value,
-            goal: document.getElementById('npcGoalInput').value,
-            secret: document.getElementById('npcSecretInput').value
-        };
-
-        if (id) {
-            const idx = state.npcs.findIndex(n => n.id === id);
-            if (idx !== -1) state.npcs[idx] = npcData;
-        } else {
-            state.npcs.unshift(npcData);
-        }
-
-        saveState();
-        document.getElementById('npcModal').classList.add('hidden');
-        renderNPCsTab();
-        showToast('NPC erfolgreich gespeichert!', 'success');
+        state.npcs.unshift({
+            id: 'npc-'+Date.now(), name: document.getElementById('npcNameInput').value, role: document.getElementById('npcRoleInput').value,
+            location: document.getElementById('npcLocationInput').value, visual: document.getElementById('npcVisualInput').value,
+            voice: document.getElementById('npcVoiceInput').value, goal: document.getElementById('npcGoalInput').value, secret: document.getElementById('npcSecretInput').value
+        });
+        saveState(); document.getElementById('npcModal').classList.add('hidden'); renderNPCsTab(); showToast('NPC gespeichert!', 'success');
     };
 
-    /* TAB 5: MONSTER & KAMPF */
-    let currentModalTraits = [];
-    let currentModalActions = [];
-    let currentModalBonusActions = [];
-
-    function renderDynamicModalList(containerId, items, typeName) {
-        const container = document.getElementById(containerId);
-        container.innerHTML = '';
-        items.forEach((item, index) => {
-            const row = document.createElement('div');
-            row.className = 'grid grid-cols-12 gap-2 items-center';
-            row.innerHTML = `
-                <input type="text" value="${item.name || ''}" placeholder="Name (z.B. ${typeName})" class="col-span-4 bg-forest-950 border border-forest-700 text-xs rounded p-1.5 text-gold-400 font-bold">
-                <input type="text" value="${item.text || ''}" placeholder="Beschreibung / Fließtext" class="col-span-7 bg-forest-950 border border-forest-700 text-xs rounded p-1.5 text-gray-100">
-                <button type="button" class="col-span-1 text-gray-500 hover:text-red-400 font-bold text-sm">✕</button>
-            `;
-            const inputs = row.querySelectorAll('input');
-            inputs[0].oninput = (e) => items[index].name = e.target.value;
-            inputs[1].oninput = (e) => items[index].text = e.target.value;
-            row.querySelector('button').onclick = () => { items.splice(index, 1); renderDynamicModalList(containerId, items, typeName); };
-            container.appendChild(row);
-        });
-    }
-
-    document.getElementById('addTraitBtn').onclick = () => { currentModalTraits.push({ name: '', text: '' }); renderDynamicModalList('traitsModalList', currentModalTraits, 'Merkmal'); };
-    document.getElementById('addActionBtn').onclick = () => { currentModalActions.push({ name: '', text: '' }); renderDynamicModalList('actionsModalList', currentModalActions, 'Aktion'); };
-    document.getElementById('addBonusActionBtn').onclick = () => { currentModalBonusActions.push({ name: '', text: '' }); renderDynamicModalList('bonusActionsModalList', currentModalBonusActions, 'Bonus-Aktion'); };
-
+    /* TAB 5: MONSTER & KAMPF (Outlines, Kategorien, Drag&Drop, Lösch-Warnung) */
     function renderMonstersTab() {
-        const grid = document.getElementById('monstersGrid');
-        grid.innerHTML = '';
+        const activeGrid = document.getElementById('activeMonstersGrid');
+        const libraryGrid = document.getElementById('libraryMonstersGrid');
+        activeGrid.innerHTML = ''; libraryGrid.innerHTML = '';
 
-        state.monsters.forEach(m => {
+        state.monsters.forEach((m, index) => {
+            const isLib = m.category === 'library';
             const card = document.createElement('div');
-            card.className = 'bg-forest-900/80 border border-forest-700/60 rounded-xl p-5 shadow-md';
-            card.innerHTML = buildMonsterCardHTML(m, { showControls: true });
+            card.className = `draggable-item rounded-xl p-4 shadow-md border transition-all ${isLib ? 'bg-forest-950/40 border-gray-700/40 text-gray-400' : 'bg-forest-900/80 border-forest-700/60 text-gray-100'}`;
+            card.draggable = true;
+            card.dataset.index = index;
 
-            card.querySelector('.add-to-init-btn').onclick = () => {
-                const norm = normalizeMonster(m);
-                const initVal = Math.floor(Math.random() * 20) + 1 + (parseInt(norm.init) || 0);
-                const id = Date.now().toString() + Math.random().toString(36).substr(2, 4);
+            // Multi-Color Outline Glow / Bars
+            let outlinesHtml = '';
+            if (Array.isArray(m.outlines) && m.outlines.length > 0) {
+                outlinesHtml = `<div class="flex gap-1.5 mb-2">${m.outlines.map(c => `<span class="w-4 h-2 rounded-full inline-block shadow-sm" style="background:${c}"></span>`).join('')}</div>`;
+                card.style.boxShadow = `0 4px 16px rgba(0,0,0,0.25), inset 3px 0 0 ${m.outlines[0]}`;
+            }
 
-                if (!state.combatants) state.combatants = [];
-                state.combatants.push({
-                    id: id,
-                    name: norm.name,
-                    init: initVal,
-                    hp: norm.hp,
-                    maxHp: norm.hp,
-                    tempHp: 0,
-                    img: '',
-                    conditions: [],
-                    history: [`Aus Bestiarium hinzugefügt (${norm.hp} HP)`],
-                    monsterData: norm
-                });
+            card.innerHTML = `
+                ${outlinesHtml}
+                <div class="flex justify-between items-start border-b border-forest-700/50 pb-2">
+                    <div><h3 class="font-cinzel text-base font-bold text-gold-400">${m.name}</h3><p class="text-[11px] text-gray-400">${m.type} | RK: ${m.ac} | TP: ${m.hp}</p></div>
+                    <span class="px-2 py-0.5 rounded text-[10px] ${isLib?'bg-gray-800 text-gray-300':'bg-gold-500/20 text-gold-300'}">${isLib?'Bibliothek':'Aktiv'}</span>
+                </div>
+                <p class="text-xs text-gray-300 mt-2">${m.tactics || 'Keine Taktik'}</p>
+                <div class="flex justify-end gap-2 pt-3 border-t border-forest-800/60 mt-3">
+                    <button class="edit-btn text-xs text-gold-400">✏️ Bearbeiten</button>
+                    <button class="delete-btn text-xs text-red-400">🗑️ Löschen</button>
+                </div>
+            `;
 
-                sortCombatants();
-                state.activeId = id;
-                saveState();
-                renderInitiativeTab();
-                showToast(`${norm.name} zur Initiative hinzugefügt (Init: ${initVal})`, 'success');
+            // Drag Events
+            card.ondragstart = (e) => { e.dataTransfer.setData('text/plain', index); card.classList.add('dragging'); };
+            card.ondragend = () => { card.classList.remove('dragging'); };
+            card.ondragover = (e) => { e.preventDefault(); };
+            card.ondrop = (e) => {
+                e.preventDefault();
+                const fromIdx = parseInt(e.dataTransfer.getData('text/plain'));
+                const toIdx = index;
+                if (fromIdx !== toIdx) {
+                    const moved = state.monsters.splice(fromIdx, 1)[0];
+                    state.monsters.splice(toIdx, 0, moved);
+                    saveState(); renderMonstersTab();
+                }
             };
 
-            card.querySelector('.duplicate-monster-btn').onclick = () => {
-                const clone = JSON.parse(JSON.stringify(m));
-                clone.id = 'm-' + Date.now();
-                clone.name += ' (Kopie)';
-                state.monsters.push(clone);
-                saveState();
-                renderMonstersTab();
-                showToast('Monster dupliziert!', 'success');
+            card.querySelector('.edit-btn').onclick = () => openMonsterModalForEdit(m);
+            card.querySelector('.delete-btn').onclick = () => {
+                if (confirm(`Möchtest du das Monster "${m.name}" wirklich unwiderruflich löschen?`)) {
+                    state.monsters = state.monsters.filter(x => x.id !== m.id);
+                    saveState(); renderMonstersTab(); showToast('Monster gelöscht', 'info');
+                }
             };
 
-            card.querySelector('.edit-monster-btn').onclick = () => openMonsterModalWithData(m);
-            card.querySelector('.delete-monster-btn').onclick = () => { state.monsters = state.monsters.filter(x => x.id !== m.id); saveState(); renderMonstersTab(); };
-
-            grid.appendChild(card);
+            if (isLib) libraryGrid.appendChild(card);
+            else activeGrid.appendChild(card);
         });
     }
 
-    function openMonsterModalWithData(m = null) {
-        const norm = m ? normalizeMonster(m) : normalizeMonster({});
+    function dropMonsterToCategory(e, category) {
+        e.preventDefault();
+        e.currentTarget.classList.remove('drag-over');
+        const idx = e.dataTransfer.getData('text/plain');
+        if (idx !== '') {
+            state.monsters[idx].category = category;
+            saveState(); renderMonstersTab();
+        }
+    }
+
+    function openMonsterModalForEdit(m = null) {
         document.getElementById('monsterModalTitle').textContent = m ? 'Monster bearbeiten' : 'Neues Monster anlegen';
-        document.getElementById('monsterIdInput').value = m ? norm.id : '';
-        document.getElementById('monsterNameInput').value = m ? norm.name : '';
-        document.getElementById('monsterTypeInput').value = norm.type;
-        document.getElementById('monsterXpInput').value = norm.xp;
-        document.getElementById('monsterAcInput').value = norm.ac;
-        document.getElementById('monsterHpInput').value = norm.hp;
-        document.getElementById('monsterInitInput').value = norm.init;
-        document.getElementById('monsterSpeedInput').value = norm.speed;
+        document.getElementById('monsterIdInput').value = m ? m.id : '';
+        document.getElementById('monsterNameInput').value = m ? m.name : '';
+        document.getElementById('monsterTypeInput').value = m ? m.type : '';
+        document.getElementById('monsterXpInput').value = m ? m.xp : '';
+        document.getElementById('monsterAcInput').value = m ? m.ac : 10;
+        document.getElementById('monsterHpInput').value = m ? m.hp : 10;
+        document.getElementById('monsterInitInput').value = m ? m.init : '+0';
+        document.getElementById('monsterSpeedInput').value = m ? m.speed : '9m';
+        document.getElementById('monsterTacticsInput').value = m ? m.tactics : '';
+        document.getElementById('monsterCategorySelect').value = m ? (m.category || 'active') : 'active';
 
-        const s = norm.stats;
-        ['sta', 'ges', 'kon', 'int', 'wei', 'cha'].forEach(attr => {
-            document.getElementById(`m_${attr}_val`).value = s[attr].val || 10;
-            document.getElementById(`m_${attr}_mod`).value = s[attr].mod || '+0';
-            document.getElementById(`m_${attr}_rw`).value = s[attr].rw || '+0';
+        const outlines = m ? (m.outlines || []) : [];
+        document.querySelectorAll('#outlineColorCheckboxes input').forEach(chk => {
+            chk.checked = outlines.includes(chk.value);
         });
-
-        document.getElementById('monsterSkillsInput').value = norm.skills;
-        document.getElementById('monsterResistancesInput').value = norm.resistances;
-        document.getElementById('monsterSensesInput').value = norm.senses;
-        document.getElementById('monsterLanguagesInput').value = norm.languages;
-        document.getElementById('monsterTacticsInput').value = norm.tactics;
-        document.getElementById('monsterNotesInput').value = norm.notes;
-
-        currentModalTraits = JSON.parse(JSON.stringify(norm.traits));
-        currentModalActions = JSON.parse(JSON.stringify(norm.actions));
-        currentModalBonusActions = JSON.parse(JSON.stringify(norm.bonusActions));
-
-        renderDynamicModalList('traitsModalList', currentModalTraits, 'Merkmal');
-        renderDynamicModalList('actionsModalList', currentModalActions, 'Aktion');
-        renderDynamicModalList('bonusActionsModalList', currentModalBonusActions, 'Bonus-Aktion');
 
         document.getElementById('monsterModal').classList.remove('hidden');
     }
 
-    document.getElementById('openNewMonsterModalBtn').onclick = () => openMonsterModalWithData(null);
+    document.getElementById('openNewMonsterModalBtn').onclick = () => openMonsterModalForEdit(null);
     document.querySelectorAll('.closeMonsterModalBtn').forEach(b => b.onclick = () => document.getElementById('monsterModal').classList.add('hidden'));
 
     document.getElementById('monsterForm').onsubmit = (e) => {
         e.preventDefault();
         const id = document.getElementById('monsterIdInput').value;
+        const selectedColors = Array.from(document.querySelectorAll('#outlineColorCheckboxes input:checked')).map(chk => chk.value);
 
         const monsterObj = {
             id: id || 'm-' + Date.now(),
@@ -1999,383 +862,191 @@
             hp: parseInt(document.getElementById('monsterHpInput').value) || 10,
             init: document.getElementById('monsterInitInput').value || '+0',
             speed: document.getElementById('monsterSpeedInput').value || '9m',
-            stats: {
-                sta: { val: parseInt(document.getElementById('m_sta_val').value)||10, mod: document.getElementById('m_sta_mod').value||'+0', rw: document.getElementById('m_sta_rw').value||'+0' },
-                ges: { val: parseInt(document.getElementById('m_ges_val').value)||10, mod: document.getElementById('m_ges_mod').value||'+0', rw: document.getElementById('m_ges_rw').value||'+0' },
-                kon: { val: parseInt(document.getElementById('m_kon_val').value)||10, mod: document.getElementById('m_kon_mod').value||'+0', rw: document.getElementById('m_kon_rw').value||'+0' },
-                int: { val: parseInt(document.getElementById('m_int_val').value)||10, mod: document.getElementById('m_int_mod').value||'+0', rw: document.getElementById('m_int_rw').value||'+0' },
-                wei: { val: parseInt(document.getElementById('m_wei_val').value)||10, mod: document.getElementById('m_wei_mod').value||'+0', rw: document.getElementById('m_wei_rw').value||'+0' },
-                cha: { val: parseInt(document.getElementById('m_cha_val').value)||10, mod: document.getElementById('m_cha_mod').value||'+0', rw: document.getElementById('m_cha_rw').value||'+0' }
-            },
-            skills: document.getElementById('monsterSkillsInput').value,
-            resistances: document.getElementById('monsterResistancesInput').value,
-            senses: document.getElementById('monsterSensesInput').value,
-            languages: document.getElementById('monsterLanguagesInput').value,
-            traits: currentModalTraits.filter(t => t.name.trim() !== ''),
-            actions: currentModalActions.filter(a => a.name.trim() !== ''),
-            bonusActions: currentModalBonusActions.filter(ba => ba.name.trim() !== ''),
+            stats: { sta: {val:10, mod:'+0'}, ges: {val:10, mod:'+0'}, kon: {val:10, mod:'+0'}, int: {val:10, mod:'+0'}, wei: {val:10, mod:'+0'}, cha: {val:10, mod:'+0'} },
             tactics: document.getElementById('monsterTacticsInput').value,
-            notes: document.getElementById('monsterNotesInput').value
+            category: document.getElementById('monsterCategorySelect').value,
+            outlines: selectedColors
         };
 
         if (id) {
-            const idx = state.monsters.findIndex(m => m.id === id);
+            const idx = state.monsters.findIndex(x => x.id === id);
             if (idx !== -1) state.monsters[idx] = monsterObj;
         } else {
             state.monsters.unshift(monsterObj);
         }
-
-        saveState();
-        document.getElementById('monsterModal').classList.add('hidden');
-        renderMonstersTab();
-        showToast('Monster erfolgreich gespeichert!', 'success');
+        saveState(); document.getElementById('monsterModal').classList.add('hidden'); renderMonstersTab(); showToast('Monster gespeichert!', 'success');
     };
 
-    /* TAB 6: KNOTEN ABLAUFPLAN */
+    /* TAB 6: KNOTEN ABLAUFPLAN (Drag & Drop + Modal) */
     function renderNodesTab() {
         const container = document.getElementById('nodesGraphContainer');
         container.innerHTML = '';
-        state.nodes.forEach((node) => {
-            let statusColor = 'border-forest-700 bg-forest-900/60';
-            let statusBadge = '<span class="px-2 py-0.5 rounded text-[10px] bg-gray-800 text-gray-400">Geplant</span>';
-            if (node.status === 'active') {
-                statusColor = 'border-gold-500 bg-forest-900 shadow-lg shadow-gold-500/10';
-                statusBadge = '<span class="px-2 py-0.5 rounded text-[10px] bg-gold-500 text-forest-950 font-bold">AKTIVE SZENE</span>';
-            } else if (node.status === 'completed') {
-                statusColor = 'border-green-800/80 bg-forest-950/60 opacity-80';
-                statusBadge = '<span class="px-2 py-0.5 rounded text-[10px] bg-green-900/60 text-green-300">Abgeschlossen</span>';
-            } else if (node.status === 'bypassed') {
-                statusColor = 'border-red-900/50 bg-forest-950/40 opacity-60';
-                statusBadge = '<span class="px-2 py-0.5 rounded text-[10px] bg-red-950 text-red-400">Übersprungen</span>';
-            }
-
+        state.nodes.forEach((node, index) => {
             const card = document.createElement('div');
-            card.className = `p-4 rounded-xl border flex flex-col justify-between space-y-3 relative ${statusColor}`;
+            card.className = `draggable-item p-4 rounded-xl border flex flex-col justify-between space-y-3 ${node.status==='active'?'border-gold-500 bg-forest-900 shadow-lg':node.status==='completed'?'border-green-800/80 bg-forest-950/60 opacity-80':'border-forest-700 bg-forest-900/60'}`;
+            card.draggable = true;
+            card.dataset.index = index;
+
             card.innerHTML = `
-                <div class="space-y-2">
-                    <div class="flex items-center justify-between border-b border-forest-800 pb-2">
+                <div>
+                    <div class="flex justify-between items-center border-b border-forest-800 pb-2">
                         <h3 class="font-cinzel text-sm font-bold text-gray-100">${node.title}</h3>
-                        ${statusBadge}
+                        <span class="text-[10px] px-2 py-0.5 rounded bg-forest-950 text-gold-400">${node.status}</span>
                     </div>
-                    <p class="text-xs text-gray-300 leading-relaxed">${node.description}</p>
-                    ${node.clues ? `<div class="text-[11px]"><strong class="text-gold-400">Hinweise:</strong> <span class="text-gray-300">${node.clues}</span></div>` : ''}
+                    <p class="text-xs text-gray-300 mt-2">${node.description}</p>
                 </div>
-                <div class="flex items-center justify-between pt-2 border-t border-forest-800/60">
-                    <select class="node-status-select bg-forest-950 border border-forest-700 text-[10px] rounded px-2 py-1 text-gold-400">
-                        <option value="planned" ${node.status === 'planned' ? 'selected' : ''}>Geplant</option>
-                        <option value="active" ${node.status === 'active' ? 'selected' : ''}>Aktive Szene</option>
-                        <option value="completed" ${node.status === 'completed' ? 'selected' : ''}>Abgeschlossen</option>
-                        <option value="bypassed" ${node.status === 'bypassed' ? 'selected' : ''}>Übersprungen</option>
-                    </select>
-                    <button class="delete-node-btn text-gray-500 hover:text-red-400 p-1">🗑️</button>
+                <div class="flex justify-end gap-2 pt-2 border-t border-forest-800/60">
+                    <button class="edit-node text-xs text-gold-400">✏️ Bearbeiten</button>
+                    <button class="delete-node text-xs text-red-400">🗑️</button>
                 </div>
             `;
-            card.querySelector('.node-status-select').onchange = (e) => { node.status = e.target.value; saveState(); renderNodesTab(); };
-            card.querySelector('.delete-node-btn').onclick = () => { state.nodes = state.nodes.filter(n => n.id !== node.id); saveState(); renderNodesTab(); };
+
+            // Drag Events
+            card.ondragstart = (e) => { e.dataTransfer.setData('text/plain', index); card.classList.add('dragging'); };
+            card.ondragend = () => { card.classList.remove('dragging'); };
+            card.ondragover = (e) => { e.preventDefault(); };
+            card.ondrop = (e) => {
+                e.preventDefault();
+                const fromIdx = parseInt(e.dataTransfer.getData('text/plain'));
+                const toIdx = index;
+                if (fromIdx !== toIdx) {
+                    const moved = state.nodes.splice(fromIdx, 1)[0];
+                    state.nodes.splice(toIdx, 0, moved);
+                    saveState(); renderNodesTab();
+                }
+            };
+
+            card.querySelector('.edit-node').onclick = () => openNodeModalForEdit(node);
+            card.querySelector('.delete-node').onclick = () => { state.nodes = state.nodes.filter(n => n.id !== node.id); saveState(); renderNodesTab(); };
             container.appendChild(card);
         });
     }
 
-    document.getElementById('addNodeBtn').onclick = () => {
-        const title = prompt('Szenentitel / Knoten-Bezeichnung:');
-        if (title) { state.nodes.push({ id: 'n-' + Date.now(), title, status: 'planned', description: prompt('Beschreibung:') || '', clues: prompt('Hinweise:') || '', npcs: '' }); saveState(); renderNodesTab(); }
+    function openNodeModalForEdit(n = null) {
+        document.getElementById('nodeModalTitle').textContent = n ? 'Szene bearbeiten' : 'Neue Szene hinzufügen';
+        document.getElementById('nodeIdInput').value = n ? n.id : '';
+        document.getElementById('nodeTitleInput').value = n ? n.title : '';
+        document.getElementById('nodeStatusInput').value = n ? n.status : 'planned';
+        document.getElementById('nodeDescInput').value = n ? n.description : '';
+        document.getElementById('nodeCluesInput').value = n ? n.clues : '';
+        document.getElementById('nodeModal').classList.remove('hidden');
+    }
+
+    document.getElementById('addNodeBtn').onclick = () => openNodeModalForEdit(null);
+    document.querySelectorAll('.closeNodeModalBtn').forEach(b => b.onclick = () => document.getElementById('nodeModal').classList.add('hidden'));
+
+    document.getElementById('nodeForm').onsubmit = (e) => {
+        e.preventDefault();
+        const id = document.getElementById('nodeIdInput').value;
+        const nodeObj = {
+            id: id || 'n-' + Date.now(),
+            title: document.getElementById('nodeTitleInput').value,
+            status: document.getElementById('nodeStatusInput').value,
+            description: document.getElementById('nodeDescInput').value,
+            clues: document.getElementById('nodeCluesInput').value
+        };
+        if (id) {
+            const idx = state.nodes.findIndex(x => x.id === id);
+            if (idx !== -1) state.nodes[idx] = nodeObj;
+        } else {
+            state.nodes.push(nodeObj);
+        }
+        saveState(); document.getElementById('nodeModal').classList.add('hidden'); renderNodesTab(); showToast('Szene gespeichert!', 'success');
     };
 
-    /* TAB 7: INITIATIVE TRACKER ENGINE & DYNAMIC RESPONSIVE STATBLOCK */
+    /* TAB 7: INITIATIVE TRACKER */
     function adjustSquareSize(val) { document.documentElement.style.setProperty('--square-size', `${val}px`); }
     function sortCombatants() { if (!state.combatants) state.combatants = []; state.combatants.sort((a, b) => b.init - a.init); }
-
-    function addCombatant(name = 'Neue Kreatur', init = 10, maxHp = 30) {
+    function addCombatant(name = 'Neuer Held', init = 10, maxHp = 30) {
         if (!state.combatants) state.combatants = [];
-        const id = Date.now() + Math.random().toString(36).substr(2, 4);
-        state.combatants.push({ id, name, init: Number(init), hp: Number(maxHp), maxHp: Number(maxHp), tempHp: 0, img: '', conditions: [], history: [`Erstellt mit ${maxHp} HP`] });
+        const id = Date.now().toString();
+        state.combatants.push({ id, name, init: Number(init), hp: Number(maxHp), maxHp: Number(maxHp), tempHp: 0, img: '', conditions: [], history: ['Erstellt'] });
         sortCombatants(); state.activeId = id; saveState(); renderInitiativeTab();
     }
-
-    function removeCombatant(id, e) {
-        if (e) e.stopPropagation();
-        state.combatants = state.combatants.filter(c => c.id !== id);
-        if (state.activeId === id) state.activeId = state.combatants.length > 0 ? state.combatants[0].id : null;
-        saveState(); renderInitiativeTab();
-    }
-
+    function removeCombatant(id, e) { if(e) e.stopPropagation(); state.combatants = state.combatants.filter(c => c.id !== id); saveState(); renderInitiativeTab(); }
     function setActive(id) { state.activeId = id; saveState(); renderInitiativeTab(); }
-
-    function handleMaxHpInput(id, val) {
-        const c = state.combatants.find(x => x.id === id);
-        if (c) { c.maxHp = Math.max(0, parseInt(val) || 0); c.hp = c.maxHp; saveState(); renderInitiativeTab(); }
-    }
-
-    function handleCurrentHpInput(id, val) {
-        const c = state.combatants.find(x => x.id === id);
-        if (c) { c.hp = Math.max(0, parseInt(val) || 0); saveState(); }
-    }
-
-    function handleInitInput(id, val) {
-        const c = state.combatants.find(x => x.id === id);
-        if (c) { c.init = parseInt(val) || 0; saveState(); }
-    }
-
+    function handleMaxHpInput(id, val) { const c = state.combatants.find(x => x.id === id); if(c){ c.maxHp = Math.max(0, parseInt(val)||0); c.hp = c.maxHp; saveState(); renderInitiativeTab(); } }
+    function handleCurrentHpInput(id, val) { const c = state.combatants.find(x => x.id === id); if(c){ c.hp = Math.max(0, parseInt(val)||0); saveState(); } }
+    function handleInitInput(id, val) { const c = state.combatants.find(x => x.id === id); if(c){ c.init = parseInt(val)||0; saveState(); } }
     function finalizeInitChange() { sortCombatants(); saveState(); renderInitiativeTab(); }
-
-    function resetToFullHp(id) {
-        const c = state.combatants.find(x => x.id === id);
-        if (c) { c.hp = c.maxHp; c.history.unshift(`Vollständig geheilt (${c.maxHp} HP)`); saveState(); renderInitiativeTab(); }
-    }
-
-    function applyDamage(id) {
-        const c = state.combatants.find(x => x.id === id);
-        const valInput = document.getElementById(`val-${id}`);
-        if (!valInput) return;
-        let amount = parseInt(valInput.value) || 0;
-        if (amount <= 0) return;
-
-        let dmgRemaining = amount;
-        let tempAbsorbed = 0;
-
-        if (c.tempHp > 0) {
-            if (c.tempHp >= dmgRemaining) { c.tempHp -= dmgRemaining; tempAbsorbed = dmgRemaining; dmgRemaining = 0; }
-            else { tempAbsorbed = c.tempHp; dmgRemaining -= c.tempHp; c.tempHp = 0; }
-        }
-
-        c.hp = Math.max(0, c.hp - dmgRemaining);
-        let logMsg = `-${amount} Schdn`;
-        if (tempAbsorbed > 0) logMsg += ` (${tempAbsorbed} Temp HP)`;
-        c.history.unshift(logMsg);
-        valInput.value = ''; saveState(); renderInitiativeTab();
-    }
-
-    function applyHeal(id) {
-        const c = state.combatants.find(x => x.id === id);
-        const valInput = document.getElementById(`val-${id}`);
-        if (!valInput) return;
-        let amount = parseInt(valInput.value) || 0;
-        if (amount <= 0) return;
-
-        c.hp = Math.min(c.maxHp, c.hp + amount);
-        c.history.unshift(`+${amount} Heilung`);
-        valInput.value = ''; saveState(); renderInitiativeTab();
-    }
-
-    function addTempHp(id) {
-        const c = state.combatants.find(x => x.id === id);
-        const valInput = document.getElementById(`val-${id}`);
-        if (!valInput) return;
-        let amount = parseInt(valInput.value) || 0;
-        if (amount <= 0) return;
-
-        c.tempHp = amount;
-        c.history.unshift(`+${amount} Temp HP`);
-        valInput.value = ''; saveState(); renderInitiativeTab();
-    }
-
-    function toggleCondition(combatantId, conditionId) {
-        const c = state.combatants.find(x => x.id === combatantId);
-        if (!c) return;
-        if (!Array.isArray(c.conditions)) c.conditions = [];
-
-        const index = c.conditions.indexOf(conditionId);
-        if (index > -1) c.conditions.splice(index, 1);
-        else c.conditions.push(conditionId);
-
-        saveState(); renderInitiativeTab();
-    }
-
-    function resetAllLogs() {
-        if (!state.combatants) return;
-        state.combatants.forEach(c => c.history = []);
-        saveState(); renderInitiativeTab(); showToast("📜 Logs zurückgesetzt!", "success");
-    }
-
-    function handleImageUpload(id, input) {
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const c = state.combatants.find(x => x.id === id);
-                if (c) { c.img = e.target.result; saveState(); renderInitiativeTab(); }
-            };
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-
-    function updateName(id, newName) {
-        const c = state.combatants.find(x => x.id === id);
-        if (c) { c.name = newName; saveState(); }
-    }
-
-    function resetTracker() {
-        if (confirm('Sämtliche Kreaturen aus der Initiative löschen?')) {
-            state.combatants = []; state.activeId = null; saveState(); renderInitiativeTab(); showToast("Alle Kreaturen gelöscht!", "info");
-        }
-    }
+    function resetToFullHp(id) { const c = state.combatants.find(x => x.id === id); if(c){ c.hp = c.maxHp; saveState(); renderInitiativeTab(); } }
+    function applyDamage(id) { const c = state.combatants.find(x => x.id === id); const v = parseInt(document.getElementById(`val-${id}`).value)||0; if(v>0){ c.hp = Math.max(0, c.hp - v); c.history.unshift(`-${v}`); saveState(); renderInitiativeTab(); } }
+    function applyHeal(id) { const c = state.combatants.find(x => x.id === id); const v = parseInt(document.getElementById(`val-${id}`).value)||0; if(v>0){ c.hp = Math.min(c.maxHp, c.hp + v); c.history.unshift(`+${v}`); saveState(); renderInitiativeTab(); } }
+    function addTempHp(id) { const c = state.combatants.find(x => x.id === id); const v = parseInt(document.getElementById(`val-${id}`).value)||0; if(v>0){ c.tempHp = v; c.history.unshift(`+${v} Temp`); saveState(); renderInitiativeTab(); } }
+    function toggleCondition(cid, condId) { const c = state.combatants.find(x => x.id === cid); if(!c) return; if(!c.conditions) c.conditions=[]; const idx = c.conditions.indexOf(condId); if(idx>-1) c.conditions.splice(idx,1); else c.conditions.push(condId); saveState(); renderInitiativeTab(); }
+    function resetAllLogs() { state.combatants.forEach(c => c.history = []); saveState(); renderInitiativeTab(); }
+    function handleImageUpload(id, input) { if (input.files && input.files[0]) { const reader = new FileReader(); reader.onload = (e) => { const c = state.combatants.find(x => x.id === id); if(c){ c.img = e.target.result; saveState(); renderInitiativeTab(); } }; reader.readAsDataURL(input.files[0]); } }
+    function updateName(id, val) { const c = state.combatants.find(x => x.id === id); if(c){ c.name = val; saveState(); } }
+    function resetTracker() { if(confirm('Alles löschen?')){ state.combatants = []; state.activeId = null; saveState(); renderInitiativeTab(); } }
 
     function renderInitiativeTab() {
         const listEl = document.getElementById('tracker-list');
         if (!listEl) return;
-        listEl.innerHTML = '';
-
-        if (!Array.isArray(state.combatants)) state.combatants = [];
-        sortCombatants();
-
+        listEl.innerHTML = ''; sortCombatants();
         if (!state.activeId && state.combatants.length > 0) state.activeId = state.combatants[0].id;
 
         const activeCombatant = state.combatants.find(x => x.id === state.activeId);
+        let activeStatHTML = activeCombatant ? `<div class="space-y-3"><h3 class="font-cinzel text-lg font-bold text-gold-400">${activeCombatant.name}</h3><p class="text-xs text-gray-400">Initiative: ${activeCombatant.init} | HP: ${activeCombatant.hp}/${activeCombatant.maxHp}</p></div>` : `<div class="text-center py-10 text-gray-400 text-xs italic">Klicke links auf eine Kreatur.</div>`;
+        document.getElementById('selectedCombatantCardContainer').innerHTML = activeStatHTML;
 
-        // Statblock HTML für ausgewählte Kreatur vorbereiten
-        let activeStatHTML = '';
-        if (activeCombatant && activeCombatant.monsterData) {
-            activeStatHTML = buildMonsterCardHTML(activeCombatant.monsterData, { showControls: false });
-        } else if (activeCombatant) {
-            activeStatHTML = `
-                <div class="space-y-3">
-                    <h3 class="font-cinzel text-lg font-bold text-gold-400">${activeCombatant.name}</h3>
-                    <p class="text-xs text-gray-400">Spieler-Charakter / Standard-Kreatur</p>
-                    <div class="bg-forest-950/60 p-3 rounded-lg border border-forest-800 text-xs text-gray-300">
-                        ❤️ HP: ${activeCombatant.hp} / ${activeCombatant.maxHp}<br>
-                        ⚔️ Initiative: ${activeCombatant.init}
-                    </div>
-                </div>
-            `;
-        } else {
-            activeStatHTML = `<div class="text-center py-10 text-gray-400 text-xs italic">⚔️ Klicke links auf eine Kreatur, um ihren Statblock hier anzuzeigen.</div>`;
-        }
-
-        // 1. Rechten Bereich aktualisieren (für Desktop & iPad im Querformat)
-        const rightContainer = document.getElementById('selectedCombatantCardContainer');
-        if (rightContainer) {
-            rightContainer.innerHTML = activeStatHTML;
-        }
-
-        // 2. Liste aller Kreaturen rendern
-        state.combatants.forEach((c) => {
-            if (!Array.isArray(c.conditions)) c.conditions = [];
-            if (!Array.isArray(c.history)) c.history = [];
-
+        state.combatants.forEach(c => {
+            if(!c.conditions) c.conditions=[]; if(!c.history) c.history=[];
             const isActive = c.id === state.activeId;
-
-            // Wrapper für die Karte + inline Statblock im Hochformat
             const wrapper = document.createElement('div');
-            wrapper.className = 'combatant-wrapper flex flex-col gap-2';
+            wrapper.className = 'flex flex-col gap-2';
 
             const card = document.createElement('div');
             card.className = `combatant-card ${isActive ? 'is-active' : ''}`;
             card.onclick = () => setActive(c.id);
 
-            const conditionsHtml = CONDITIONS.map(cond => {
-                const isCondActive = c.conditions.includes(cond.id);
-                return `
-                    <button
-                        id="cond-${c.id}-${cond.id}"
-                        class="condition-btn ${isCondActive ? 'active' : ''}"
-                        style="--cond-color: ${cond.color}; --cond-text: ${cond.textOnActive};"
-                        onclick="event.stopPropagation(); toggleCondition('${c.id}', '${cond.id}')"
-                        title="${cond.name}"
-                    >
-                        ${cond.name}
-                    </button>
-                `;
-            }).join('');
+            const conditionsHtml = CONDITIONS.map(cond => `<button class="condition-btn ${c.conditions.includes(cond.id)?'active':''}" style="--cond-color:${cond.color}; --cond-text:${cond.textOnActive};" onclick="event.stopPropagation(); toggleCondition('${c.id}','${cond.id}')">${cond.name}</button>`).join('');
 
             card.innerHTML = `
-                <!-- 1. INITIATIVE INPUT -->
-                <div class="init-badge" onclick="event.stopPropagation()">
-                    <label>INIT</label>
-                    <input type="number" value="${c.init}" oninput="handleInitInput('${c.id}', this.value)" onchange="finalizeInitChange()" />
-                </div>
-
-                <!-- 2. TOKEN IMAGE & NAME -->
+                <div class="init-badge" onclick="event.stopPropagation()"><label>INIT</label><input type="number" value="${c.init}" oninput="handleInitInput('${c.id}', this.value)" onchange="finalizeInitChange()" /></div>
                 <div class="character-square-container" onclick="event.stopPropagation()">
-                    <div class="character-square ${!c.img ? 'empty' : ''}">
-                        ${c.img ? `<img src="${c.img}" alt="Token" />` : `<span style="font-size:1.8rem; color:var(--text-muted);">👤</span>`}
-                        <div class="upload-hint">📷 Ändern</div>
-                        <input type="file" accept="image/*" onchange="handleImageUpload('${c.id}', this)" onclick="event.stopPropagation()" />
-                    </div>
-                    <input type="text" class="name-input" value="${c.name}" oninput="updateName('${c.id}', this.value)" onclick="event.stopPropagation()" />
+                    <div class="character-square ${!c.img?'empty':''}">${c.img?`<img src="${c.img}"/>`:'<span>👤</span>'}<div class="upload-hint">📷 Bild</div><input type="file" accept="image/*" onchange="handleImageUpload('${c.id}', this)" onclick="event.stopPropagation()"/></div>
+                    <input type="text" class="name-input" value="${c.name}" oninput="updateName('${c.id}', this.value)" onclick="event.stopPropagation()"/>
                 </div>
-
-                <!-- 3. HP & CALCULATOR SECTION -->
                 <div class="hp-section" onclick="event.stopPropagation()">
                     <div class="hp-stats">
-                        <span class="hp-display">
-                            ❤️
-                            <input type="number" id="curr-hp-${c.id}" class="hp-number-input" value="${c.hp}" title="Aktuelle HP" oninput="handleCurrentHpInput('${c.id}', this.value)" />
-                            /
-                            <input type="number" id="max-hp-${c.id}" class="max-hp-input" value="${c.maxHp}" title="Maximale HP" oninput="handleMaxHpInput('${c.id}', this.value)" />
-                        </span>
-                        <button class="btn-full-hp" onclick="resetToFullHp('${c.id}')" title="HP auf Max zurücksetzen">Full</button>
-                        ${c.tempHp > 0 ? `<span class="temp-hp-display">🛡️ +${c.tempHp}</span>` : ''}
+                        <span class="hp-display">❤️ <input type="number" class="hp-number-input" value="${c.hp}" oninput="handleCurrentHpInput('${c.id}', this.value)"/> / <input type="number" class="max-hp-input" value="${c.maxHp}" oninput="handleMaxHpInput('${c.id}', this.value)"/></span>
+                        <button class="btn-full-hp" onclick="resetToFullHp('${c.id}')">Full</button>
                     </div>
-
                     <div class="hp-inputs">
-                        <input type="number" id="val-${c.id}" placeholder="Wert" min="1" />
+                        <input type="number" id="val-${c.id}" placeholder="Wert" min="1"/>
                         <div class="hp-buttons">
                             <button onclick="applyDamage('${c.id}')" class="btn-dmg">- Dmg</button>
                             <button onclick="applyHeal('${c.id}')" class="btn-heal">+ Heal</button>
                             <button onclick="addTempHp('${c.id}')" class="btn-temp">+ Temp</button>
                         </div>
                     </div>
-
-                    <div class="history-container">
-                        <div class="history-header">VERLAUF</div>
-                        <div class="history-box">
-                            ${c.history && c.history.length > 0
-                ? c.history.map(h => {
-                    let classType = h.includes('Schdn') ? 'dmg' : h.includes('Heilung') || h.includes('Vollständig') ? 'heal' : 'temp';
-                    return `<div class="history-entry ${classType}">${h}</div>`;
-                }).join('')
-                : `<div class="history-entry empty">Keine Einträge</div>`
-            }
-                        </div>
-                    </div>
+                    <div class="history-container"><div class="history-header">VERLAUF</div><div class="history-box">${c.history.map(h=>`<div class="history-entry">${h}</div>`).join('')}</div></div>
                 </div>
-
-                <!-- 4. GERMAN CONDITIONS SECTION -->
-                <div class="conditions-section" onclick="event.stopPropagation()">
-                    <div class="conditions-header">Zustände</div>
-                    <div class="conditions-grid">
-                        ${conditionsHtml}
-                    </div>
-                </div>
-
-                <!-- 5. DELETE BUTTON -->
-                <div class="card-actions">
-                    <button onclick="removeCombatant('${c.id}', event)" title="Kreatur Entfernen">✕</button>
-                </div>
+                <div class="conditions-section" onclick="event.stopPropagation()"><div class="conditions-header">Zustände</div><div class="conditions-grid">${conditionsHtml}</div></div>
+                <div class="card-actions"><button onclick="removeCombatant('${c.id}', event)">✕</button></div>
             `;
-
             wrapper.appendChild(card);
 
-            // Falls dies die ausgewählte Kreatur ist: Füge im Hochformat (< lg) den Statblock direkt unter der Kreatur ein
-            if (isActive) {
-                const inlineStat = document.createElement('div');
-                inlineStat.className = 'lg:hidden bg-forest-900/90 border border-gold-500/40 rounded-xl p-4 shadow-lg w-full transition-all';
-                inlineStat.innerHTML = activeStatHTML;
-                wrapper.appendChild(inlineStat);
+            if(isActive) {
+                const inline = document.createElement('div');
+                inline.className = 'lg:hidden bg-forest-900/90 border border-gold-500/40 rounded-xl p-4 shadow-lg w-full';
+                inline.innerHTML = activeStatHTML;
+                wrapper.appendChild(inline);
             }
-
             listEl.appendChild(wrapper);
         });
 
-        const notesArea = document.getElementById('scratchpadNotes');
-        if (notesArea) {
-            notesArea.value = state.notes || '';
-            notesArea.oninput = (e) => { state.notes = e.target.value; saveState(); };
-        }
+        const notes = document.getElementById('scratchpadNotes');
+        if(notes) { notes.value = state.notes || ''; notes.oninput = (e) => { state.notes = e.target.value; saveState(); }; }
     }
 
-    document.getElementById('clearNotesBtn').onclick = () => {
-        if (confirm('Schnellnotizen löschen?')) { state.notes = ''; document.getElementById('scratchpadNotes').value = ''; saveState(); }
-    };
-
-    document.getElementById('resetDataBtn').onclick = () => {
-        if (confirm('Sämtliche Daten zurücksetzen?')) { localStorage.removeItem('sylvanus_codex_data_v7'); location.reload(); }
-    };
+    document.getElementById('clearNotesBtn').onclick = () => { state.notes = ''; document.getElementById('scratchpadNotes').value = ''; saveState(); };
+    document.getElementById('resetDataBtn').onclick = () => { if(confirm('Alles zurücksetzen?')){ localStorage.clear(); location.reload(); } };
 
     window.onload = function() {
         loadState();
         initTheme();
         initTabs();
-
         renderAuftaktTab();
         renderSecretsTab();
         generateNames();
@@ -2383,7 +1054,6 @@
         renderMonstersTab();
         renderNodesTab();
         renderInitiativeTab();
-
         showToast('Sylvanus Spielleiter-Codex bereit.', 'success');
     };
 </script>
