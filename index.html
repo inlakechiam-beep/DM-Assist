@@ -104,7 +104,7 @@
             background: rgba(212, 175, 55, 0.05);
         }
 
-        /* Initiative Tracker Scoped Styles & Responsive Layout */
+        /* Initiative Tracker Scoped Styles */
         .init-tracker-container { width: 100%; }
         .init-header {
             width: 100%; background: #1d3d34; border: 1px solid rgba(212, 175, 55, 0.3);
@@ -215,7 +215,6 @@
         .card-actions button { padding: 5px 8px; font-size: 0.85rem; background: transparent; border: 1px solid var(--border-subtle); color: var(--text-muted); border-radius: 6px; }
         .card-actions button:hover { background: #ef4444; border-color: #ef4444; color: #fff; }
 
-        /* Responsive Breakpoint for Initiative Tracker layout (Landscape vs Portrait iPad) */
         @media (max-width: 1024px) {
             .combatant-card { flex-wrap: wrap; }
             .character-square-container { border-right: none; padding-right: 0; }
@@ -321,25 +320,38 @@
         <div class="bg-forest-900/60 border border-forest-700/40 rounded-xl p-5 space-y-5">
             <div class="flex flex-col md:flex-row md:items-center justify-between border-b border-gold-500/20 pb-4 gap-4">
                 <h2 class="font-cinzel text-xl font-bold text-gold-400">Sylvanus Namensschmiede</h2>
-                <div class="flex gap-3">
+                <div class="flex gap-3 items-center">
                     <select id="nameGenRaceSelect" class="bg-forest-950 text-gold-400 border border-forest-700 text-xs rounded-lg px-3 py-2">
-                        <option value="mensch">Mensch</option><option value="elf">Elf</option><option value="tiefling">Tiefling</option><option value="zwerg">Zwerg</option>
+                        <option value="mensch">Mensch</option>
+                        <option value="elf">Elf</option>
+                        <option value="tiefling">Tiefling</option>
+                        <option value="zwerg">Zwerg</option>
+                        <option value="ork">Ork</option>
+                        <option value="halbling">Halbling</option>
                     </select>
                     <select id="nameGenGenderSelect" class="bg-forest-950 text-gold-400 border border-forest-700 text-xs rounded-lg px-3 py-2">
-                        <option value="maennlich">Männlich</option><option value="weiblich">Weiblich</option>
+                        <option value="maennlich">Männlich</option>
+                        <option value="weiblich">Weiblich</option>
                     </select>
+                    <button onclick="generateNames()" class="px-3 py-2 bg-gold-500 text-forest-950 font-bold text-xs rounded-lg">🔄 Neue Namen</button>
                 </div>
             </div>
             <div class="bg-forest-950/80 border border-gold-500/30 rounded-xl p-4 flex justify-between items-center">
                 <div id="fullGeneratedNameDisplay" class="font-cinzel text-xl text-white font-bold">...</div>
                 <div class="flex gap-2">
-                    <button id="copyFullNameBtn" class="px-3 py-1.5 bg-forest-800 text-gold-300 text-xs rounded">Kopieren</button>
-                    <button id="transferFullNameToNPCBtn" class="px-3 py-1.5 bg-gold-500 text-forest-950 text-xs font-semibold rounded">Als NPC</button>
+                    <button id="copyFullNameBtn" onclick="copyActiveGeneratedName()" class="px-3 py-1.5 bg-forest-800 text-gold-300 text-xs rounded">Kopieren</button>
+                    <button id="transferFullNameToNPCBtn" onclick="transferNameToNPC()" class="px-3 py-1.5 bg-gold-500 text-forest-950 text-xs font-semibold rounded">Als NPC anlegen</button>
                 </div>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div id="vornamenListContainer" class="space-y-2"></div>
-                <div id="nachnamenListContainer" class="space-y-2"></div>
+                <div>
+                    <h3 class="text-xs font-bold text-gold-400 mb-2 uppercase">Vornamen</h3>
+                    <div id="vornamenListContainer" class="space-y-1.5 max-h-48 overflow-y-auto pr-1"></div>
+                </div>
+                <div>
+                    <h3 class="text-xs font-bold text-gold-400 mb-2 uppercase">Nachnamen</h3>
+                    <div id="nachnamenListContainer" class="space-y-1.5 max-h-48 overflow-y-auto pr-1"></div>
+                </div>
             </div>
         </div>
     </section>
@@ -410,7 +422,7 @@
             <div class="space-y-6">
                 <!-- Statblock Container: Rechts bei Querformat (horizontal) / Untereinander bei Hochformat via CSS Grid -->
                 <div id="selectedCombatantCardContainer" class="bg-forest-900/80 border border-gold-500/40 rounded-xl p-5 shadow-lg min-h-[300px]">
-                    <div class="text-center py-10 text-gray-400 text-xs italic">⚔️ Klicke links auf eine Kreatur, um ihren Statblock hier anzuzeigen.</div>
+                    <div class="text-center py-10 text-gray-400 text-xs italic">⚔️ Klicke links auf eine Kreatur, um ihren vollständigen Statblock hier anzuzeigen.</div>
                 </div>
                 <div class="bg-forest-900/60 border border-forest-700/40 rounded-xl p-5 flex flex-col shadow-md">
                     <div class="flex justify-between border-b border-gold-500/20 pb-3 mb-3">
@@ -509,11 +521,11 @@
                 </div>
             </div>
 
-            <!-- Allgemeine Infos mit Labels -->
+            <!-- Allgemeine Infos -->
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div><label class="block text-[11px] text-gray-400 mb-1">Name</label><input id="monsterNameInput" type="text" required class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100"></div>
                 <div><label class="block text-[11px] text-gray-400 mb-1">Kreaturentyp</label><input id="monsterTypeInput" type="text" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100"></div>
-                <div><label class="block text-[11px] text-gray-400 mb-1">Erfahrungspunkte (XP)</label><input id="monsterXpInput" type="text" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100"></div>
+                <div><label class="block text-[11px] text-gray-400 mb-1">Erfahrungspunkte (XP)</label><input id="monsterXpInput" type="number" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100" placeholder="z.B. 700"></div>
             </div>
 
             <div class="grid grid-cols-4 gap-2">
@@ -523,22 +535,70 @@
                 <div><label class="block text-[11px] text-gray-400 mb-1">Bewegungsrate</label><input id="monsterSpeedInput" type="text" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100"></div>
             </div>
 
-            <!-- Attribute -->
-            <div class="bg-forest-950/40 p-2.5 rounded-lg border border-forest-700/40 space-y-2">
-                <label class="block text-xs text-gold-400 font-bold">Attribute</label>
-                <div class="grid grid-cols-6 gap-2">
-                    <div><label class="text-[10px] text-gray-400 block">STR</label><input id="m-sta-val" type="number" value="10" class="w-full bg-forest-900 text-xs p-1 text-center border border-forest-700 rounded text-gray-100"></div>
-                    <div><label class="text-[10px] text-gray-400 block">GES</label><input id="m-ges-val" type="number" value="10" class="w-full bg-forest-900 text-xs p-1 text-center border border-forest-700 rounded text-gray-100"></div>
-                    <div><label class="text-[10px] text-gray-400 block">KON</label><input id="m-kon-val" type="number" value="10" class="w-full bg-forest-900 text-xs p-1 text-center border border-forest-700 rounded text-gray-100"></div>
-                    <div><label class="text-[10px] text-gray-400 block">INT</label><input id="m-int-val" type="number" value="10" class="w-full bg-forest-900 text-xs p-1 text-center border border-forest-700 rounded text-gray-100"></div>
-                    <div><label class="text-[10px] text-gray-400 block">WEI</label><input id="m-wei-val" type="number" value="10" class="w-full bg-forest-900 text-xs p-1 text-center border border-forest-700 rounded text-gray-100"></div>
-                    <div><label class="text-[10px] text-gray-400 block">CHA</label><input id="m-cha-val" type="number" value="10" class="w-full bg-forest-900 text-xs p-1 text-center border border-forest-700 rounded text-gray-100"></div>
+            <!-- Attribute, Modifikatoren & Rettungswürfe (Manuell anpassbar) -->
+            <div class="bg-forest-950/40 p-3 rounded-lg border border-forest-700/40 space-y-3">
+                <label class="block text-xs text-gold-400 font-bold">Attribute, Modifikatoren & Rettungswürfe (Wert / Mod / RW)</label>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <!-- STR -->
+                    <div class="bg-forest-900 p-2 rounded border border-forest-800">
+                        <span class="text-[10px] text-gold-300 font-bold block mb-1">STRÄRKE (STR)</span>
+                        <div class="grid grid-cols-3 gap-1">
+                            <div><label class="text-[9px] text-gray-400 block">Wert</label><input id="m-sta-val" type="number" value="10" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-150"></div>
+                            <div><label class="text-[9px] text-gray-400 block">Mod</label><input id="m-sta-mod" type="text" value="+0" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-150"></div>
+                            <div><label class="text-[9px] text-gray-400 block">RW</label><input id="m-sta-rw" type="text" value="+0" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-150"></div>
+                        </div>
+                    </div>
+                    <!-- GES -->
+                    <div class="bg-forest-900 p-2 rounded border border-forest-800">
+                        <span class="text-[10px] text-gold-300 font-bold block mb-1">GESCHICKLICHKEIT (GES)</span>
+                        <div class="grid grid-cols-3 gap-1">
+                            <div><label class="text-[9px] text-gray-400 block">Wert</label><input id="m-ges-val" type="number" value="10" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-150"></div>
+                            <div><label class="text-[9px] text-gray-400 block">Mod</label><input id="m-ges-mod" type="text" value="+0" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-150"></div>
+                            <div><label class="text-[9px] text-gray-400 block">RW</label><input id="m-ges-rw" type="text" value="+0" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-150"></div>
+                        </div>
+                    </div>
+                    <!-- KON -->
+                    <div class="bg-forest-900 p-2 rounded border border-forest-800">
+                        <span class="text-[10px] text-gold-300 font-bold block mb-1">KONSTITUTION (KON)</span>
+                        <div class="grid grid-cols-3 gap-1">
+                            <div><label class="text-[9px] text-gray-400 block">Wert</label><input id="m-kon-val" type="number" value="10" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-150"></div>
+                            <div><label class="text-[9px] text-gray-400 block">Mod</label><input id="m-kon-mod" type="text" value="+0" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-150"></div>
+                            <div><label class="text-[9px] text-gray-400 block">RW</label><input id="m-kon-rw" type="text" value="+0" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-150"></div>
+                        </div>
+                    </div>
+                    <!-- INT -->
+                    <div class="bg-forest-900 p-2 rounded border border-forest-800">
+                        <span class="text-[10px] text-gold-300 font-bold block mb-1">INTELLIGENZ (INT)</span>
+                        <div class="grid grid-cols-3 gap-1">
+                            <div><label class="text-[9px] text-gray-400 block">Wert</label><input id="m-int-val" type="number" value="10" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-150"></div>
+                            <div><label class="text-[9px] text-gray-400 block">Mod</label><input id="m-int-mod" type="text" value="+0" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-150"></div>
+                            <div><label class="text-[9px] text-gray-400 block">RW</label><input id="m-int-rw" type="text" value="+0" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-150"></div>
+                        </div>
+                    </div>
+                    <!-- WEI -->
+                    <div class="bg-forest-900 p-2 rounded border border-forest-800">
+                        <span class="text-[10px] text-gold-300 font-bold block mb-1">WEISHEIT (WEI)</span>
+                        <div class="grid grid-cols-3 gap-1">
+                            <div><label class="text-[9px] text-gray-400 block">Wert</label><input id="m-wei-val" type="number" value="10" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-150"></div>
+                            <div><label class="text-[9px] text-gray-400 block">Mod</label><input id="m-wei-mod" type="text" value="+0" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-150"></div>
+                            <div><label class="text-[9px] text-gray-400 block">RW</label><input id="m-wei-rw" type="text" value="+0" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-150"></div>
+                        </div>
+                    </div>
+                    <!-- CHA -->
+                    <div class="bg-forest-900 p-2 rounded border border-forest-800">
+                        <span class="text-[10px] text-gold-300 font-bold block mb-1">CHARISMA (CHA)</span>
+                        <div class="grid grid-cols-3 gap-1">
+                            <div><label class="text-[9px] text-gray-400 block">Wert</label><input id="m-cha-val" type="number" value="10" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-150"></div>
+                            <div><label class="text-[9px] text-gray-400 block">Mod</label><input id="m-cha-mod" type="text" value="+0" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-150"></div>
+                            <div><label class="text-[9px] text-gray-400 block">RW</label><input id="m-cha-rw" type="text" value="+0" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-150"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                <div><label class="block text-[11px] text-gray-400 mb-1">Rettungswürfe (z.B. GES +5)</label><input id="monsterSavesInput" type="text" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100"></div>
                 <div><label class="block text-[11px] text-gray-400 mb-1">Fertigkeiten</label><input id="monsterSkillsInput" type="text" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100"></div>
+                <div><label class="block text-[11px] text-gray-400 mb-1">Ausrüstung</label><input id="monsterEquipmentInput" type="text" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100" placeholder="z.B. Kettenhemd, Langschwert"></div>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
                 <div><label class="block text-[11px] text-gray-400 mb-1">Resistenzen / Immunitäten</label><input id="monsterResistancesInput" type="text" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100"></div>
@@ -611,9 +671,16 @@
 
     const DEFAULT_MONSTERS = [
         {
-            id: 'm-1', name: 'Schattenpanther', type: 'Bestie (Mittel)', xp: '700 XP', ac: 15, hp: 45, init: '+4', speed: '12m',
-            stats: { sta: { val: 16 }, ges: { val: 18 }, kon: { val: 14 }, int: { val: 3 }, wei: { val: 12 }, cha: { val: 8 } },
-            saves: 'GES +6, WEI +3', skills: 'Heimlichkeit +6', resistances: 'Kälteresistenz', senses: 'Dunkelsicht 18m', languages: '–',
+            id: 'm-1', name: 'Schattenpanther', type: 'Bestie (Mittel)', xp: '700', ac: 15, hp: 45, init: '+4', speed: '12m',
+            stats: {
+                sta: { val: 16, mod: '+3', rw: '+3' },
+                ges: { val: 18, mod: '+4', rw: '+6' },
+                kon: { val: 14, mod: '+2', rw: '+2' },
+                int: { val: 3, mod: '-4', rw: '-4' },
+                wei: { val: 12, mod: '+1', rw: '+3' },
+                cha: { val: 8, mod: '-1', rw: '-1' }
+            },
+            equipment: 'Klauen & Zähne', skills: 'Heimlichkeit +6', resistances: 'Kälteresistenz', senses: 'Dunkelsicht 18m', languages: '–',
             traits: ['Scharfes Gehör: Hat Vorteil auf Weisheitswürfe (Wahrnehmung).'],
             actions: [{ name: 'Pratschenangriff', desc: 'Nahkampf-Waffenangriff, +6 Treffer, Reichweite 1.5m. Treffer: 8 (1d8 + 4) Wuchtschaden.' }],
             bonusActions: [],
@@ -628,11 +695,50 @@
         { id: 'n-2', title: '2. Der Wald-Hinterhalt', status: 'planned', description: 'Wölfe greifen an.', clues: 'Spuren im Schlamm' }
     ];
 
+    /* Erweiterter Namensgenerator mit vielen Optionen & sprachlichen Nachnamen */
     const NAME_DATABASE = {
-        mensch: { vornamen: { maennlich: ['Alaric', 'Cedric'], weiblich: ['Clara', 'Helena'] }, nachnamen: ['Dornenwall', 'Eichenschild'] },
-        elf: { vornamen: { maennlich: ['Aerion', 'Fenris'], weiblich: ['Alysia', 'Lyra'] }, nachnamen: ['Mondflüstern', 'Silberzweig'] },
-        tiefling: { vornamen: { maennlich: ['Azazel', 'Damien'], weiblich: ['Aktaia', 'Damaia'] }, nachnamen: ['Aschenbringer', 'Glutwind'] },
-        zwerg: { vornamen: { maennlich: ['Dain', 'Thorin'], weiblich: ['Amber', 'Helja'] }, nachnamen: ['Ambossbrecher', 'Goldader'] }
+        mensch: {
+            vornamen: {
+                maennlich: ['Alaric', 'Cedric', 'Gideon', 'Roland', 'Valerian', 'Wulfric', 'Bastian', 'Cassian'],
+                weiblich: ['Clara', 'Helena', 'Isolde', 'Rowena', 'Thalia', 'Valeria', 'Beatrix', 'Rosalind']
+            },
+            nachnamen: ['Dornenwall', 'Eichenschild', 'Adlerstein', 'Brandt', 'Winterborn', 'Schwarzweber']
+        },
+        elf: {
+            vornamen: {
+                maennlich: ['Aerion', 'Fenris', 'Elion', 'Thalion', 'Valandil', 'Kaelen', 'Sylas'],
+                weiblich: ['Alysia', 'Lyra', 'Aelin', 'Calanthe', 'Nymue', 'Ilmarien', 'Vespera']
+            },
+            nachnamen: ['Mondflüstern', 'Silberzweig', 'Sternenweber', 'Sommerwind', 'Nachtschatten', 'Schattenlauf']
+        },
+        tiefling: {
+            vornamen: {
+                maennlich: ['Azazel', 'Damien', 'Malakai', 'Malthus', 'Xavier', 'Zephyrus'],
+                weiblich: ['Aktaia', 'Damaia', 'Kallista', 'Lilith', 'Miri', 'Nox', 'Ravana']
+            },
+            nachnamen: ['Aschenbringer', 'Glutwind', 'Seelenbann', 'Höllenbrand', 'Rabenkralle', 'Dornherz']
+        },
+        zwerg: {
+            vornamen: {
+                maennlich: ['Dain', 'Thorin', 'Brom', 'Grumgar', 'Thrain', 'Balin', 'Farin'],
+                weiblich: ['Amber', 'Helja', 'Dagna', 'Freya', 'Thora', 'Gisela', 'Yvaine']
+            },
+            nachnamen: ['Ambossbrecher', 'Goldader', 'Eisenfaust', 'Steinbarts', 'Kupferkessel', 'Runenschmied']
+        },
+        ork: {
+            vornamen: {
+                maennlich: ['Grommash', 'Kargath', 'Thok', 'Muzgob', 'Durok', 'Krag'],
+                weiblich: ['Gorgona', 'Zulka', 'Borka', 'Shagra', 'Urzula']
+            },
+            nachnamen: ['Schädelspalter', 'Blutauge', 'Eisenkiefer', 'Kriegsschrei', 'Knochenbrecher']
+        },
+        halbling: {
+            vornamen: {
+                maennlich: ['Frodo', 'Milo', 'Finn', 'Pippin', 'Barnaby', 'Jasper'],
+                weiblich: ['Rosie', 'Poppy', 'Daisy', 'Clover', 'Marigold', 'Pansy']
+            },
+            nachnamen: ['Grünflanke', 'Schnellfuss', 'Trommelstock', 'Fassbinder', 'Bauchklang']
+        }
     };
 
     let state = {
@@ -652,13 +758,13 @@
 
     function loadState() {
         try {
-            const saved = localStorage.getItem('sylvanus_codex_data_v10');
+            const saved = localStorage.getItem('sylvanus_codex_data_v11');
             if (saved) state = { ...state, ...JSON.parse(saved) };
         } catch (e) { console.error(e); }
     }
 
     function saveState() {
-        try { localStorage.setItem('sylvanus_codex_data_v10', JSON.stringify(state)); } catch (e) { console.error(e); }
+        try { localStorage.setItem('sylvanus_codex_data_v11', JSON.stringify(state)); } catch (e) { console.error(e); }
     }
 
     function exportData() {
@@ -759,16 +865,41 @@
     document.getElementById('addSecretBtn').onclick = () => { const t = prompt('Geheimnis:'); if(t){ state.secrets.unshift({id:Date.now().toString(), text:t, status:'hidden', tag:'Geheimnis'}); saveState(); renderSecretsTab(); } };
 
     /* TAB 3: NAMENSGENERATOR */
+    let currentActiveGeneratedName = "";
     function generateNames() {
         const race = document.getElementById('nameGenRaceSelect').value;
         const gender = document.getElementById('nameGenGenderSelect').value;
         const rData = NAME_DATABASE[race] || NAME_DATABASE.mensch;
         const vs = rData.vornamen[gender] || rData.vornamen.maennlich;
         const ns = rData.nachnamen;
-        document.getElementById('vornamenListContainer').innerHTML = vs.map(v => `<div class="p-2 bg-forest-950/60 border border-forest-700/40 rounded text-xs text-gray-200">${v}</div>`).join('');
-        document.getElementById('nachnamenListContainer').innerHTML = ns.map(n => `<div class="p-2 bg-forest-950/60 border border-forest-700/40 rounded text-xs text-gray-200">${n}</div>`).join('');
-        document.getElementById('fullGeneratedNameDisplay').textContent = `${vs[0]} ${ns[0]}`;
+
+        // Shuffle arrays for variety
+        const shuffledVs = [...vs].sort(() => 0.5 - Math.random());
+        const shuffledNs = [...ns].sort(() => 0.5 - Math.random());
+
+        document.getElementById('vornamenListContainer').innerHTML = shuffledVs.map(v => `<div class="p-2 bg-forest-950/60 border border-forest-700/40 rounded text-xs text-gray-200 cursor-pointer hover:border-gold-500" onclick="selectGeneratedName('${v} ${shuffledNs[0]}')">${v}</div>`).join('');
+        document.getElementById('nachnamenListContainer').innerHTML = shuffledNs.map(n => `<div class="p-2 bg-forest-950/60 border border-forest-700/40 rounded text-xs text-gray-200 cursor-pointer hover:border-gold-500" onclick="selectGeneratedName('${shuffledVs[0]} ${n}')">${n}</div>`).join('');
+        
+        currentActiveGeneratedName = `${shuffledVs[0]} ${shuffledNs[0]}`;
+        document.getElementById('fullGeneratedNameDisplay').textContent = currentActiveGeneratedName;
     }
+
+    function selectGeneratedName(fullName) {
+        currentActiveGeneratedName = fullName;
+        document.getElementById('fullGeneratedNameDisplay').textContent = fullName;
+    }
+
+    function copyActiveGeneratedName() {
+        navigator.clipboard.writeText(currentActiveGeneratedName);
+        showToast("Name in die Zwischenablage kopiert!", "success");
+    }
+
+    function transferNameToNPC() {
+        document.getElementById('npcNameInput').value = currentActiveGeneratedName;
+        document.getElementById('npcModal').classList.remove('hidden');
+        // Switch to NPC tab if desired or just open modal
+    }
+
     document.getElementById('nameGenRaceSelect').onchange = generateNames;
     document.getElementById('nameGenGenderSelect').onchange = generateNames;
 
@@ -797,11 +928,6 @@
     };
 
     /* TAB 5: MONSTER & KAMPF */
-    function calcMod(val) {
-        const m = Math.floor((val - 10) / 2);
-        return m >= 0 ? `+${m}` : `${m}`;
-    }
-
     function addDynamicField(containerId, nameVal = '', descVal = '') {
         const container = document.getElementById(containerId);
         const row = document.createElement('div');
@@ -833,7 +959,9 @@
             }
 
             const s = m.stats || {};
-            const statsLine = `STR: ${s.sta?.val||10}(${calcMod(s.sta?.val||10)}) | GES: ${s.ges?.val||10}(${calcMod(s.ges?.val||10)}) | KON: ${s.kon?.val||10}(${calcMod(s.kon?.val||10)}) | INT: ${s.int?.val||10}(${calcMod(s.int?.val||10)}) | WEI: ${s.wei?.val||10}(${calcMod(s.wei?.val||10)}) | CHA: ${s.cha?.val||10}(${calcMod(s.cha?.val||10)})`;
+            // Two-row layout for attributes
+            const row1 = `STR ${s.sta?.val||10} (${s.sta?.mod||'+0'}) [${s.sta?.rw||'+0'}] | GES ${s.ges?.val||10} (${s.ges?.mod||'+0'}) [${s.ges?.rw||'+0'}] | KON ${s.kon?.val||10} (${s.kon?.mod||'+0'}) [${s.kon?.rw||'+0'}]`;
+            const row2 = `INT ${s.int?.val||10} (${s.int?.mod||'+0'}) [${s.int?.rw||'+0'}] | WEI ${s.wei?.val||10} (${s.wei?.mod||'+0'}) [${s.wei?.rw||'+0'}] | CHA ${s.cha?.val||10} (${s.cha?.mod||'+0'}) [${s.cha?.rw||'+0'}]`;
 
             const traitsHtml = m.traits && m.traits.length > 0 ? `<div class="mt-2 text-[11px]"><strong>Merkmale:</strong><ul class="list-disc pl-4">${m.traits.map(t=>`<li>${t}</li>`).join('')}</ul></div>` : '';
             const actionsHtml = m.actions && m.actions.length > 0 ? `<div class="mt-2 text-[11px]"><strong>Aktionen:</strong><ul class="list-disc pl-4">${m.actions.map(a=>`<li><strong>${a.name}:</strong>${a.desc}</li>`).join('')}</ul></div>` : '';
@@ -845,13 +973,16 @@
                 <div class="flex justify-between items-start border-b border-forest-700/50 pb-2">
                     <div>
                         <h3 class="font-cinzel text-base font-bold text-gold-400">${m.name}</h3>
-                        <p class="text-[11px] text-gray-400">${m.type} | RK: ${m.ac} | TP: ${m.hp} | Init: ${m.init} | Tempo: ${m.speed}</p>
+                        <p class="text-[11px] text-gray-400">${m.type} | RK: ${m.ac} | TP: ${m.hp} | Init: ${m.init} | Tempo: ${m.speed} | XP: ${m.xp ? m.xp + ' XP' : '0 XP'}</p>
                     </div>
                     <span class="px-2 py-0.5 rounded text-[10px] ${isLib?'bg-gray-800 text-gray-300':'bg-gold-500/20 text-gold-300'}">${isLib?'Bibliothek':'Aktiv'}</span>
                 </div>
-                <div class="text-[11px] text-gold-300/80 mt-1 font-mono">${statsLine}</div>
-                ${m.saves?`<p class="text-[11px] mt-1"><strong>Rettungswürfe:</strong> ${m.saves}</p>`:''}
-                ${m.skills?`<p class="text-[11px]"><strong>Fertigkeiten:</strong> ${m.skills}</p>`:''}
+                <div class="text-[11px] text-gold-300/80 mt-1.5 font-mono space-y-0.5 bg-forest-950/60 p-2 rounded border border-forest-700/40">
+                    <div>${row1}</div>
+                    <div>${row2}</div>
+                </div>
+                ${m.skills?`<p class="text-[11px] mt-1"><strong>Fertigkeiten:</strong> ${m.skills}</p>`:''}
+                ${m.equipment?`<p class="text-[11px]"><strong>Ausrüstung:</strong> ${m.equipment}</p>`:''}
                 ${m.resistances?`<p class="text-[11px]"><strong>Resistenzen:</strong> ${m.resistances}</p>`:''}
                 ${m.senses?`<p class="text-[11px]"><strong>Sinne:</strong> ${m.senses}</p>`:''}
                 ${traitsHtml}
@@ -885,7 +1016,7 @@
             };
 
             card.querySelector('.add-to-init-btn').onclick = () => {
-                addCombatant(m.name, parseInt(m.init) || 10, m.hp);
+                addCombatantFromMonster(m);
                 showToast(`${m.name} zur Initiative hinzugefügt!`, 'success');
             };
             card.querySelector('.edit-btn').onclick = () => openMonsterModalForEdit(m);
@@ -916,22 +1047,21 @@
         document.getElementById('monsterIdInput').value = m ? m.id : '';
         document.getElementById('monsterNameInput').value = m ? m.name : '';
         document.getElementById('monsterTypeInput').value = m ? m.type : '';
-        document.getElementById('monsterXpInput').value = m ? m.xp : '';
+        document.getElementById('monsterXpInput').value = m ? (m.xp || '') : '';
         document.getElementById('monsterAcInput').value = m ? m.ac : 10;
         document.getElementById('monsterHpInput').value = m ? m.hp : 10;
         document.getElementById('monsterInitInput').value = m ? m.init : '+0';
         document.getElementById('monsterSpeedInput').value = m ? m.speed : '9m';
 
         const stats = m ? m.stats : {};
-        document.getElementById('m-sta-val').value = stats.sta?.val || 10;
-        document.getElementById('m-ges-val').value = stats.ges?.val || 10;
-        document.getElementById('m-kon-val').value = stats.kon?.val || 10;
-        document.getElementById('m-int-val').value = stats.int?.val || 10;
-        document.getElementById('m-wei-val').value = stats.wei?.val || 10;
-        document.getElementById('m-cha-val').value = stats.cha?.val || 10;
+        ['sta', 'ges', 'kon', 'int', 'wei', 'cha'].forEach(attr => {
+            document.getElementById(`m-${attr}-val`).value = stats[attr]?.val || 10;
+            document.getElementById(`m-${attr}-mod`).value = stats[attr]?.mod || '+0';
+            document.getElementById(`m-${attr}-rw`).value = stats[attr]?.rw || '+0';
+        });
 
-        document.getElementById('monsterSavesInput').value = m ? (m.saves || '') : '';
         document.getElementById('monsterSkillsInput').value = m ? (m.skills || '') : '';
+        document.getElementById('monsterEquipmentInput').value = m ? (m.equipment || '') : '';
         document.getElementById('monsterResistancesInput').value = m ? (m.resistances || '') : '';
         document.getElementById('monsterSensesInput').value = m ? (m.senses || '') : '';
         document.getElementById('monsterLanguagesInput').value = m ? (m.languages || '') : '';
@@ -941,19 +1071,13 @@
 
         // Populate dynamic containers
         document.getElementById('actionsContainer').innerHTML = '';
-        if (m && m.actions) {
-            m.actions.forEach(a => addDynamicField('actionsContainer', a.name, a.desc));
-        }
+        if (m && m.actions) m.actions.forEach(a => addDynamicField('actionsContainer', a.name, a.desc));
 
         document.getElementById('bonusActionsContainer').innerHTML = '';
-        if (m && m.bonusActions) {
-            m.bonusActions.forEach(ba => addDynamicField('bonusActionsContainer', ba.name, ba.desc));
-        }
+        if (m && m.bonusActions) m.bonusActions.forEach(ba => addDynamicField('bonusActionsContainer', ba.name, ba.desc));
 
         document.getElementById('reactionsContainer').innerHTML = '';
-        if (m && m.reactions) {
-            m.reactions.forEach(r => addDynamicField('reactionsContainer', r.name, r.desc));
-        }
+        if (m && m.reactions) m.reactions.forEach(r => addDynamicField('reactionsContainer', r.name, r.desc));
 
         const outlines = m ? (m.outlines || []) : [];
         document.querySelectorAll('#outlineColorCheckboxes input').forEach(chk => {
@@ -973,7 +1097,6 @@
 
         const traitsArr = document.getElementById('monsterTraitsInput').value.split('\n').map(x => x.trim()).filter(Boolean);
 
-        // Gather dynamic actions
         const actionsArr = [];
         document.querySelectorAll('#actionsContainer > div').forEach(row => {
             const name = row.querySelector('.dyn-name').value.trim();
@@ -999,21 +1122,21 @@
             id: id || 'm-' + Date.now(),
             name: document.getElementById('monsterNameInput').value,
             type: document.getElementById('monsterTypeInput').value || 'Kreatur',
-            xp: document.getElementById('monsterXpInput').value || '0 XP',
+            xp: document.getElementById('monsterXpInput').value || '0',
             ac: parseInt(document.getElementById('monsterAcInput').value) || 10,
             hp: parseInt(document.getElementById('monsterHpInput').value) || 10,
             init: document.getElementById('monsterInitInput').value || '+0',
             speed: document.getElementById('monsterSpeedInput').value || '9m',
             stats: {
-                sta: { val: parseInt(document.getElementById('m-sta-val').value)||10 },
-                ges: { val: parseInt(document.getElementById('m-ges-val').value)||10 },
-                kon: { val: parseInt(document.getElementById('m-kon-val').value)||10 },
-                int: { val: parseInt(document.getElementById('m-int-val').value)||10 },
-                wei: { val: parseInt(document.getElementById('m-wei-val').value)||10 },
-                cha: { val: parseInt(document.getElementById('m-cha-val').value)||10 }
+                sta: { val: parseInt(document.getElementById('m-sta-val').value)||10, mod: document.getElementById('m-sta-mod').value||'+0', rw: document.getElementById('m-sta-rw').value||'+0' },
+                ges: { val: parseInt(document.getElementById('m-ges-val').value)||10, mod: document.getElementById('m-ges-mod').value||'+0', rw: document.getElementById('m-ges-rw').value||'+0' },
+                kon: { val: parseInt(document.getElementById('m-kon-val').value)||10, mod: document.getElementById('m-kon-mod').value||'+0', rw: document.getElementById('m-kon-rw').value||'+0' },
+                int: { val: parseInt(document.getElementById('m-int-val').value)||10, mod: document.getElementById('m-int-mod').value||'+0', rw: document.getElementById('m-int-rw').value||'+0' },
+                wei: { val: parseInt(document.getElementById('m-wei-val').value)||10, mod: document.getElementById('m-wei-mod').value||'+0', rw: document.getElementById('m-wei-rw').value||'+0' },
+                cha: { val: parseInt(document.getElementById('m-cha-val').value)||10, mod: document.getElementById('m-cha-mod').value||'+0', rw: document.getElementById('m-cha-rw').value||'+0' }
             },
-            saves: document.getElementById('monsterSavesInput').value,
             skills: document.getElementById('monsterSkillsInput').value,
+            equipment: document.getElementById('monsterEquipmentInput').value,
             resistances: document.getElementById('monsterResistancesInput').value,
             senses: document.getElementById('monsterSensesInput').value,
             languages: document.getElementById('monsterLanguagesInput').value,
@@ -1135,12 +1258,18 @@
     /* TAB 7: INITIATIVE TRACKER */
     function adjustSquareSize(val) { document.documentElement.style.setProperty('--square-size', `${val}px`); }
     function sortCombatants() { if (!state.combatants) state.combatants = []; state.combatants.sort((a, b) => b.init - a.init); }
-    function addCombatant(name = 'Neuer Held', init = 10, maxHp = 30) {
+    
+    function addCombatant(name = 'Neuer Held', init = 10, maxHp = 30, fullMonsterData = null) {
         if (!state.combatants) state.combatants = [];
         const id = Date.now().toString();
-        state.combatants.push({ id, name, init: Number(init), hp: Number(maxHp), maxHp: Number(maxHp), tempHp: 0, img: '', conditions: [], history: ['Erstellt'] });
+        state.combatants.push({ id, name, init: Number(init), hp: Number(maxHp), maxHp: Number(maxHp), tempHp: 0, img: '', conditions: [], history: ['Erstellt'], monsterData: fullMonsterData });
         sortCombatants(); state.activeId = id; saveState(); renderInitiativeTab();
     }
+
+    function addCombatantFromMonster(m) {
+        addCombatant(m.name, parseInt(m.init) || 10, m.hp, m);
+    }
+
     function removeCombatant(id, e) { if(e) e.stopPropagation(); state.combatants = state.combatants.filter(c => c.id !== id); saveState(); renderInitiativeTab(); }
     function setActive(id) { state.activeId = id; saveState(); renderInitiativeTab(); }
     function handleMaxHpInput(id, val) { const c = state.combatants.find(x => x.id === id); if(c){ c.maxHp = Math.max(0, parseInt(val)||0); c.hp = c.maxHp; saveState(); renderInitiativeTab(); } }
@@ -1164,7 +1293,51 @@
         if (!state.activeId && state.combatants.length > 0) state.activeId = state.combatants[0].id;
 
         const activeCombatant = state.combatants.find(x => x.id === state.activeId);
-        let activeStatHTML = activeCombatant ? `<div class="space-y-3"><h3 class="font-cinzel text-lg font-bold text-gold-400">${activeCombatant.name}</h3><p class="text-xs text-gray-400">Initiative: ${activeCombatant.init} | TP: ${activeCombatant.hp}/${activeCombatant.maxHp}</p></div>` : `<div class="text-center py-10 text-gray-400 text-xs italic">Klicke links auf eine Kreatur.</div>`;
+        let activeStatHTML = `<div class="text-center py-10 text-gray-400 text-xs italic">Klicke links auf eine Kreatur, um ihren Statblock hier anzuzeigen.</div>`;
+        
+        if (activeCombatant) {
+            if (activeCombatant.monsterData) {
+                const m = activeCombatant.monsterData;
+                const s = m.stats || {};
+                const row1 = `STR ${s.sta?.val||10} (${s.sta?.mod||'+0'}) [${s.sta?.rw||'+0'}] | GES ${s.ges?.val||10} (${s.ges?.mod||'+0'}) [${s.ges?.rw||'+0'}] | KON ${s.kon?.val||10} (${s.kon?.mod||'+0'}) [${s.kon?.rw||'+0'}]`;
+                const row2 = `INT ${s.int?.val||10} (${s.int?.mod||'+0'}) [${s.int?.rw||'+0'}] | WEI ${s.wei?.val||10} (${s.wei?.mod||'+0'}) [${s.wei?.rw||'+0'}] | CHA ${s.cha?.val||10} (${s.cha?.mod||'+0'}) [${s.cha?.rw||'+0'}]`;
+
+                const traitsHtml = m.traits && m.traits.length > 0 ? `<div class="mt-2 text-[11px]"><strong>Merkmale:</strong><ul class="list-disc pl-4">${m.traits.map(t=>`<li>${t}</li>`).join('')}</ul></div>` : '';
+                const actionsHtml = m.actions && m.actions.length > 0 ? `<div class="mt-2 text-[11px]"><strong>Aktionen:</strong><ul class="list-disc pl-4">${m.actions.map(a=>`<li><strong>${a.name}:</strong>${a.desc}</li>`).join('')}</ul></div>` : '';
+                const bonusActionsHtml = m.bonusActions && m.bonusActions.length > 0 ? `<div class="mt-2 text-[11px]"><strong>Bonus-Aktionen:</strong><ul class="list-disc pl-4">${m.bonusActions.map(ba=>`<li><strong>${ba.name}:</strong>${ba.desc}</li>`).join('')}</ul></div>` : '';
+                const reactionsHtml = m.reactions && m.reactions.length > 0 ? `<div class="mt-2 text-[11px]"><strong>Reaktionen:</strong><ul class="list-disc pl-4">${m.reactions.map(r=>`<li><strong>${r.name}:</strong>${r.desc}</li>`).join('')}</ul></div>` : '';
+
+                activeStatHTML = `
+                    <div class="space-y-3">
+                        <div class="border-b border-gold-500/20 pb-2">
+                            <h3 class="font-cinzel text-lg font-bold text-gold-400">${activeCombatant.name}</h3>
+                            <p class="text-xs text-gray-300">${m.type} | RK: ${m.ac} | TP: ${activeCombatant.hp}/${activeCombatant.maxHp} | Init: ${activeCombatant.init}</p>
+                        </div>
+                        <div class="text-[11px] text-gold-300/80 font-mono bg-forest-950/60 p-2 rounded border border-forest-700/40 space-y-0.5">
+                            <div>${row1}</div>
+                            <div>${row2}</div>
+                        </div>
+                        ${m.skills?`<p class="text-[11px]"><strong>Fertigkeiten:</strong> ${m.skills}</p>`:''}
+                        ${m.equipment?`<p class="text-[11px]"><strong>Ausrüstung:</strong> ${m.equipment}</p>`:''}
+                        ${m.resistances?`<p class="text-[11px]"><strong>Resistenzen:</strong> ${m.resistances}</p>`:''}
+                        ${m.senses?`<p class="text-[11px]"><strong>Sinne:</strong> ${m.senses}</p>`:''}
+                        ${traitsHtml}
+                        ${actionsHtml}
+                        ${bonusActionsHtml}
+                        ${reactionsHtml}
+                        ${m.tactics?`<p class="text-xs text-gray-300"><strong>Taktik:</strong> ${m.tactics}</p>`:''}
+                    </div>
+                `;
+            } else {
+                activeStatHTML = `
+                    <div class="space-y-3">
+                        <h3 class="font-cinzel text-lg font-bold text-gold-400">${activeCombatant.name}</h3>
+                        <p class="text-xs text-gray-400">Initiative: ${activeCombatant.init} | TP: ${activeCombatant.hp}/${activeCombatant.maxHp}</p>
+                        <p class="text-xs text-gray-500 italic">Kein hinterlegter Monster-Statblock (Standard-Charakter).</p>
+                    </div>
+                `;
+            }
+        }
         document.getElementById('selectedCombatantCardContainer').innerHTML = activeStatHTML;
 
         state.combatants.forEach(c => {
