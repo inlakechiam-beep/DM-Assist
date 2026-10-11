@@ -320,7 +320,7 @@
         <div class="bg-forest-900/60 border border-forest-700/40 rounded-xl p-5 space-y-5">
             <div class="flex flex-col md:flex-row md:items-center justify-between border-b border-gold-500/20 pb-4 gap-4">
                 <h2 class="font-cinzel text-xl font-bold text-gold-400">Sylvanus Namensschmiede</h2>
-                <div class="flex gap-3 items-center">
+                <div class="flex gap-2 items-center flex-wrap">
                     <select id="nameGenRaceSelect" class="bg-forest-950 text-gold-400 border border-forest-700 text-xs rounded-lg px-3 py-2">
                         <option value="mensch">Mensch</option>
                         <option value="elf">Elf</option>
@@ -333,7 +333,9 @@
                         <option value="maennlich">Männlich</option>
                         <option value="weiblich">Weiblich</option>
                     </select>
-                    <button onclick="generateNames()" class="px-3 py-2 bg-gold-500 text-forest-950 font-bold text-xs rounded-lg">🔄 Neue Namen</button>
+                    <button onclick="generateNames()" class="px-2.5 py-2 bg-gold-500 text-forest-950 font-bold text-xs rounded-lg">🔄 Beide</button>
+                    <button onclick="generateFirstNameOnly()" class="px-2.5 py-2 bg-forest-800 text-gold-300 border border-gold-500/30 text-xs rounded-lg">🔄 Nur Vorname</button>
+                    <button onclick="generateLastNameOnly()" class="px-2.5 py-2 bg-forest-800 text-gold-300 border border-gold-500/30 text-xs rounded-lg">🔄 Nur Nachname</button>
                 </div>
             </div>
             <div class="bg-forest-950/80 border border-gold-500/30 rounded-xl p-4 flex justify-between items-center">
@@ -345,11 +347,11 @@
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                    <h3 class="text-xs font-bold text-gold-400 mb-2 uppercase">Vornamen</h3>
+                    <h3 class="text-xs font-bold text-gold-400 mb-2 uppercase">Vornamen (Klick zum Auswählen)</h3>
                     <div id="vornamenListContainer" class="space-y-1.5 max-h-48 overflow-y-auto pr-1"></div>
                 </div>
                 <div>
-                    <h3 class="text-xs font-bold text-gold-400 mb-2 uppercase">Nachnamen</h3>
+                    <h3 class="text-xs font-bold text-gold-400 mb-2 uppercase">Nachnamen (Klick zum Auswählen)</h3>
                     <div id="nachnamenListContainer" class="space-y-1.5 max-h-48 overflow-y-auto pr-1"></div>
                 </div>
             </div>
@@ -370,7 +372,7 @@
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-forest-900/60 p-4 rounded-xl border border-forest-700/40">
             <div>
                 <h2 class="font-cinzel text-xl font-bold text-gold-400">Monster & Kampf (Aktiv & Bibliothek)</h2>
-                <p class="text-xs text-gray-400">Ordne Kreaturen per Drag & Drop oder Kategorien. Klicke auf Encounter-Farben, um sie zuzuordnen.</p>
+                <p class="text-xs text-gray-400">Ordne Kreaturen per Drag & Drop an. Ziehe sie auf andere Karten oder in Bereiche zum Sortieren.</p>
             </div>
             <button id="openNewMonsterModalBtn" class="px-3 py-1.5 rounded-lg bg-gold-500 text-forest-950 font-semibold text-xs">+ Monster hinzufügen</button>
         </div>
@@ -378,13 +380,13 @@
         <!-- Aktive Monster Sektion -->
         <div class="space-y-3">
             <h3 class="font-cinzel text-md font-bold text-gold-400 border-b border-gold-500/20 pb-1">⚡ Aktive Monster & Encounters</h3>
-            <div id="activeMonstersGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6 min-h-[100px] p-2 rounded-xl" ondragover="event.preventDefault()" ondragleave="event.currentTarget.classList.remove('drag-over')" ondrop="dropMonsterToCategory(event, 'active')"></div>
+            <div id="activeMonstersGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6 min-h-[120px] p-2 rounded-xl" ondragover="event.preventDefault()" ondragleave="event.currentTarget.classList.remove('drag-over')" ondrop="dropMonsterContainer(event, 'active')"></div>
         </div>
 
         <!-- Bibliothek Sektion -->
         <div class="space-y-3 pt-4">
             <h3 class="font-cinzel text-md font-bold text-gray-400 border-b border-gray-700/40 pb-1">📚 Bibliothek (Archiv)</h3>
-            <div id="libraryMonstersGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6 min-h-[100px] p-2 rounded-xl bg-forest-950/30 border border-dashed border-forest-800" ondragover="event.preventDefault()" ondragleave="event.currentTarget.classList.remove('drag-over')" ondrop="dropMonsterToCategory(event, 'library')"></div>
+            <div id="libraryMonstersGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6 min-h-[120px] p-2 rounded-xl bg-forest-950/30 border border-dashed border-forest-800" ondragover="event.preventDefault()" ondragleave="event.currentTarget.classList.remove('drag-over')" ondrop="dropMonsterContainer(event, 'library')"></div>
         </div>
     </section>
 
@@ -766,13 +768,13 @@
 
     function loadState() {
         try {
-            const saved = localStorage.getItem('sylvanus_codex_data_v12');
+            const saved = localStorage.getItem('sylvanus_codex_data_v13');
             if (saved) state = { ...state, ...JSON.parse(saved) };
         } catch (e) { console.error(e); }
     }
 
     function saveState() {
-        try { localStorage.setItem('sylvanus_codex_data_v12', JSON.stringify(state)); } catch (e) { console.error(e); }
+        try { localStorage.setItem('sylvanus_codex_data_v13', JSON.stringify(state)); } catch (e) { console.error(e); }
     }
 
     function exportData() {
@@ -873,7 +875,9 @@
     document.getElementById('addSecretBtn').onclick = () => { const t = prompt('Geheimnis:'); if(t){ state.secrets.unshift({id:Date.now().toString(), text:t, status:'hidden', tag:'Geheimnis'}); saveState(); renderSecretsTab(); } };
 
     /* TAB 3: NAMENSGENERATOR */
-    let currentActiveGeneratedName = "";
+    let currentFirstName = "";
+    let currentLastName = "";
+
     function generateNames() {
         const race = document.getElementById('nameGenRaceSelect').value;
         const gender = document.getElementById('nameGenGenderSelect').value;
@@ -884,25 +888,77 @@
         const shuffledVs = [...vs].sort(() => 0.5 - Math.random());
         const shuffledNs = [...ns].sort(() => 0.5 - Math.random());
 
-        document.getElementById('vornamenListContainer').innerHTML = shuffledVs.map(v => `<div class="p-2 bg-forest-950/60 border border-forest-700/40 rounded text-xs text-gray-200 cursor-pointer hover:border-gold-500" onclick="selectGeneratedName('${v} ${shuffledNs[0]}')">${v}</div>`).join('');
-        document.getElementById('nachnamenListContainer').innerHTML = shuffledNs.map(n => `<div class="p-2 bg-forest-950/60 border border-forest-700/40 rounded text-xs text-gray-200 cursor-pointer hover:border-gold-500" onclick="selectGeneratedName('${shuffledVs[0]} ${n}')">${n}</div>`).join('');
-        
-        currentActiveGeneratedName = `${shuffledVs[0]} ${shuffledNs[0]}`;
-        document.getElementById('fullGeneratedNameDisplay').textContent = currentActiveGeneratedName;
+        currentFirstName = shuffledVs[0];
+        currentLastName = shuffledNs[0];
+
+        updateNameGenDisplay(vs, ns);
     }
 
-    function selectGeneratedName(fullName) {
-        currentActiveGeneratedName = fullName;
-        document.getElementById('fullGeneratedNameDisplay').textContent = fullName;
+    function generateFirstNameOnly() {
+        const race = document.getElementById('nameGenRaceSelect').value;
+        const gender = document.getElementById('nameGenGenderSelect').value;
+        const rData = NAME_DATABASE[race] || NAME_DATABASE.mensch;
+        const vs = rData.vornamen[gender] || rData.vornamen.maennlich;
+        const ns = rData.nachnamen;
+
+        const shuffledVs = [...vs].sort(() => 0.5 - Math.random());
+        currentFirstName = shuffledVs[0];
+
+        updateNameGenDisplay(vs, ns);
+    }
+
+    function generateLastNameOnly() {
+        const race = document.getElementById('nameGenRaceSelect').value;
+        const gender = document.getElementById('nameGenGenderSelect').value;
+        const rData = NAME_DATABASE[race] || NAME_DATABASE.mensch;
+        const vs = rData.vornamen[gender] || rData.vornamen.maennlich;
+        const ns = rData.nachnamen;
+
+        const shuffledNs = [...ns].sort(() => 0.5 - Math.random());
+        currentLastName = shuffledNs[0];
+
+        updateNameGenDisplay(vs, ns);
+    }
+
+    function updateNameGenDisplay(vs, ns) {
+        document.getElementById('vornamenListContainer').innerHTML = vs.map(v => `<div class="p-2 bg-forest-950/60 border border-forest-700/40 rounded text-xs text-gray-200 cursor-pointer hover:border-gold-500 transition-colors ${v === currentFirstName ? 'border-gold-500 bg-gold-500/15' : ''}" onclick="selectFirstName('${v}')">${v}</div>`).join('');
+        document.getElementById('nachnamenListContainer').innerHTML = ns.map(n => `<div class="p-2 bg-forest-950/60 border border-forest-700/40 rounded text-xs text-gray-200 cursor-pointer hover:border-gold-500 transition-colors ${n === currentLastName ? 'border-gold-500 bg-gold-500/15' : ''}" onclick="selectLastName('${n}')">${n}</div>`).join('');
+        
+        document.getElementById('fullGeneratedNameDisplay').textContent = `${currentFirstName} ${currentLastName}`;
+    }
+
+    function selectFirstName(v) {
+        currentFirstName = v;
+        document.getElementById('fullGeneratedNameDisplay').textContent = `${currentFirstName} ${currentLastName}`;
+        highlightNameLists();
+    }
+
+    function selectLastName(n) {
+        currentLastName = n;
+        document.getElementById('fullGeneratedNameDisplay').textContent = `${currentFirstName} ${currentLastName}`;
+        highlightNameLists();
+    }
+
+    function highlightNameLists() {
+        document.querySelectorAll('#vornamenListContainer > div').forEach(el => {
+            if (el.textContent.trim() === currentFirstName) el.classList.add('border-gold-500', 'bg-gold-500/15');
+            else el.classList.remove('border-gold-500', 'bg-gold-500/15');
+        });
+        document.querySelectorAll('#nachnamenListContainer > div').forEach(el => {
+            if (el.textContent.trim() === currentLastName) el.classList.add('border-gold-500', 'bg-gold-500/15');
+            else el.classList.remove('border-gold-500', 'bg-gold-500/15');
+        });
     }
 
     function copyActiveGeneratedName() {
-        navigator.clipboard.writeText(currentActiveGeneratedName);
+        const fullName = `${currentFirstName} ${currentLastName}`;
+        navigator.clipboard.writeText(fullName);
         showToast("Name in die Zwischenablage kopiert!", "success");
     }
 
     function transferNameToNPC() {
-        document.getElementById('npcNameInput').value = currentActiveGeneratedName;
+        const fullName = `${currentFirstName} ${currentLastName}`;
+        document.getElementById('npcNameInput').value = fullName;
         document.getElementById('npcModal').classList.remove('hidden');
     }
 
@@ -933,7 +989,7 @@
         saveState(); document.getElementById('npcModal').classList.add('hidden'); renderNPCsTab(); showToast('NPC gespeichert!', 'success');
     };
 
-    /* TAB 5 & KREATUR STATBLOCK DESIGN GENERATOR (Exakt wie im Bild) */
+    /* TAB 5 & KREATUR STATBLOCK DESIGN GENERATOR */
     function buildMonsterStatblockHTML(m, isCard = true, cardIndex = 0) {
         const s = m.stats || {};
         
@@ -1029,37 +1085,31 @@
 
             <!-- 2-Row Attributes Grid -->
             <div class="bg-[#081511] border border-[#1c3c31] rounded-lg p-2 my-3 grid grid-cols-3 gap-y-2 divide-x divide-[#1c3c31]">
-                <!-- STÄ -->
                 <div class="px-1.5 text-center">
                     <span class="text-xs font-bold text-[#eacb67]">STÄ</span>
                     <span class="text-xs font-bold text-gray-100">${s.sta?.val||10} (${s.sta?.mod||'+0'})</span>
                     <span class="text-[10px] text-gray-400 block sm:inline sm:ml-1">RW:${s.sta?.rw||'+0'}</span>
                 </div>
-                <!-- GES -->
                 <div class="px-1.5 text-center">
                     <span class="text-xs font-bold text-[#eacb67]">GES</span>
                     <span class="text-xs font-bold text-gray-100">${s.ges?.val||10} (${s.ges?.mod||'+0'})</span>
                     <span class="text-[10px] text-gray-400 block sm:inline sm:ml-1">RW:${s.ges?.rw||'+0'}</span>
                 </div>
-                <!-- KON -->
                 <div class="px-1.5 text-center">
                     <span class="text-xs font-bold text-[#eacb67]">KON</span>
                     <span class="text-xs font-bold text-gray-100">${s.kon?.val||10} (${s.kon?.mod||'+0'})</span>
                     <span class="text-[10px] text-gray-400 block sm:inline sm:ml-1">RW:${s.kon?.rw||'+0'}</span>
                 </div>
-                <!-- INT -->
                 <div class="px-1.5 text-center border-t border-[#1c3c31] pt-1.5">
                     <span class="text-xs font-bold text-[#eacb67]">INT</span>
                     <span class="text-xs font-bold text-gray-100">${s.int?.val||10} (${s.int?.mod||'+0'})</span>
                     <span class="text-[10px] text-gray-400 block sm:inline sm:ml-1">RW:${s.int?.rw||'+0'}</span>
                 </div>
-                <!-- WEI -->
                 <div class="px-1.5 text-center border-t border-[#1c3c31] pt-1.5">
                     <span class="text-xs font-bold text-[#eacb67]">WEI</span>
                     <span class="text-xs font-bold text-gray-100">${s.wei?.val||10} (${s.wei?.mod||'+0'})</span>
                     <span class="text-[10px] text-gray-400 block sm:inline sm:ml-1">RW:${s.wei?.rw||'+0'}</span>
                 </div>
-                <!-- CHA -->
                 <div class="px-1.5 text-center border-t border-[#1c3c31] pt-1.5">
                     <span class="text-xs font-bold text-[#eacb67]">CHA</span>
                     <span class="text-xs font-bold text-gray-100">${s.cha?.val||10} (${s.cha?.mod||'+0'})</span>
@@ -1111,7 +1161,7 @@
 
             card.innerHTML = buildMonsterStatblockHTML(m, true, index);
 
-            // Drag Events
+            // Drag Events for Monster Sorting & Moving
             card.ondragstart = (e) => { e.dataTransfer.setData('text/plain', index); card.classList.add('dragging'); };
             card.ondragend = () => { card.classList.remove('dragging'); };
             card.ondragover = (e) => { e.preventDefault(); };
@@ -1122,6 +1172,7 @@
                 const toIdx = index;
                 if (!isNaN(fromIdx) && fromIdx !== toIdx) {
                     const moved = state.monsters.splice(fromIdx, 1)[0];
+                    moved.category = m.category; // Inherit target category
                     state.monsters.splice(toIdx, 0, moved);
                     saveState(); renderMonstersTab();
                 }
@@ -1151,13 +1202,18 @@
         });
     }
 
-    function dropMonsterToCategory(e, category) {
+    function dropMonsterContainer(e, category) {
         e.preventDefault();
         e.currentTarget.classList.remove('drag-over');
-        const idx = e.dataTransfer.getData('text/plain');
-        if (idx !== '') {
-            state.monsters[idx].category = category;
-            saveState(); renderMonstersTab();
+        const idxStr = e.dataTransfer.getData('text/plain');
+        if (idxStr !== '') {
+            const fromIdx = parseInt(idxStr);
+            if (!isNaN(fromIdx) && state.monsters[fromIdx]) {
+                const moved = state.monsters.splice(fromIdx, 1)[0];
+                moved.category = category;
+                state.monsters.push(moved);
+                saveState(); renderMonstersTab();
+            }
         }
     }
 
@@ -1340,7 +1396,19 @@
         }
     }
 
-    function dropNodeContainer(e) { e.preventDefault(); e.currentTarget.classList.remove('drag-over'); }
+    function dropNodeContainer(e) {
+        e.preventDefault();
+        e.currentTarget.classList.remove('drag-over');
+        const idxStr = e.dataTransfer.getData('text/plain');
+        if (idxStr !== '') {
+            const fromIdx = parseInt(idxStr);
+            if (!isNaN(fromIdx) && state.nodes[fromIdx]) {
+                const moved = state.nodes.splice(fromIdx, 1)[0];
+                state.nodes.push(moved);
+                saveState(); renderNodesTab();
+            }
+        }
+    }
 
     function openNodeModalForEdit(n = null) {
         document.getElementById('nodeModalTitle').textContent = n ? 'Szene bearbeiten' : 'Neue Szene hinzufügen';
