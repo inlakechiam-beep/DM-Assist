@@ -482,17 +482,10 @@
                     <div id="tracker-list"></div>
                 </div>
             </div>
-            <!-- Rechte Spalte: Sticky Statblock & Notizen -->
+            <!-- Rechte Spalte: Unabhängig scrollbarer Statblock -->
             <div class="space-y-6 lg:sticky lg:top-20">
-                <div id="selectedCombatantCardContainer" class="bg-[#0b1b16] border border-[#1f4236] rounded-xl p-5 shadow-xl min-h-[300px]">
+                <div id="selectedCombatantCardContainer" class="bg-[#0b1b16] border border-[#1f4236] rounded-xl p-5 shadow-xl max-h-[calc(100vh-120px)] overflow-y-auto">
                     <div class="text-center py-10 text-gray-400 text-xs italic">⚔️ Klicke links auf eine Kreatur, um ihren vollständigen Statblock hier anzuzeigen.</div>
-                </div>
-                <div class="bg-forest-900/60 border border-forest-700/40 rounded-xl p-5 flex flex-col shadow-md">
-                    <div class="flex justify-between border-b border-gold-500/20 pb-3 mb-3">
-                        <h2 class="font-cinzel text-md font-bold text-gold-400">Schnell-Notizen</h2>
-                        <button id="clearNotesBtn" class="text-xs text-gray-400 hover:text-red-400">Leeren</button>
-                    </div>
-                    <textarea id="scratchpadNotes" class="w-full h-40 bg-forest-950/80 border border-forest-700/60 rounded-lg p-3 text-xs text-gray-200 resize-none font-mono" placeholder="Notizen..."></textarea>
                 </div>
             </div>
         </div>
@@ -819,19 +812,18 @@
         checklist: [{ id: '1', text: 'Spionage-Hinweis auflösen', done: true }],
         recap: ['Die Helden entkamen knapp.'],
         combatants: [{ id: '1', name: 'Held Paladin', init: 20, hp: 50, maxHp: 50, tempHp: 0, img: '', conditions: [], history: ['Start'] }],
-        activeId: '1',
-        notes: ''
+        activeId: '1'
     };
 
     function loadState() {
         try {
-            const saved = localStorage.getItem('sylvanus_codex_data_v15');
+            const saved = localStorage.getItem('sylvanus_codex_data_v16');
             if (saved) state = { ...state, ...JSON.parse(saved) };
         } catch (e) { console.error(e); }
     }
 
     function saveState() {
-        try { localStorage.setItem('sylvanus_codex_data_v15', JSON.stringify(state)); } catch (e) { console.error(e); }
+        try { localStorage.setItem('sylvanus_codex_data_v16', JSON.stringify(state)); } catch (e) { console.error(e); }
     }
 
     function exportData() {
@@ -1516,7 +1508,6 @@
     function removeCombatant(id, e) { if(e) e.stopPropagation(); state.combatants = state.combatants.filter(c => c.id !== id); saveState(); renderInitiativeTab(); }
     function setActive(id) { state.activeId = id; saveState(); renderInitiativeTab(); }
     
-    // COMMIT MAX HP WHEN LEAVING INPUT FIELD OR PRESSING ENTER
     function commitMaxHp(id, val) {
         const c = state.combatants.find(x => x.id === id);
         if (c) {
@@ -1604,12 +1595,8 @@
             wrapper.appendChild(card);
             listEl.appendChild(wrapper);
         });
-
-        const notes = document.getElementById('scratchpadNotes');
-        if(notes) { notes.value = state.notes || ''; notes.oninput = (e) => { state.notes = e.target.value; saveState(); }; }
     }
 
-    document.getElementById('clearNotesBtn').onclick = () => { state.notes = ''; document.getElementById('scratchpadNotes').value = ''; saveState(); };
     document.getElementById('resetDataBtn').onclick = () => { if(confirm('Alles zurücksetzen?')){ localStorage.clear(); location.reload(); } };
 
     window.onload = function() {
