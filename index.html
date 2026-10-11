@@ -215,6 +215,42 @@
         .card-actions button { padding: 5px 8px; font-size: 0.85rem; background: transparent; border: 1px solid var(--border-subtle); color: var(--text-muted); border-radius: 6px; }
         .card-actions button:hover { background: #ef4444; border-color: #ef4444; color: #fff; }
 
+        /* Namensschmiede Kartenelemente */
+        .name-selection-item {
+            background: rgba(11, 24, 20, 0.6);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 8px;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            user-select: none;
+        }
+        .name-selection-item:hover {
+            border-color: rgba(212, 175, 55, 0.5);
+            background: rgba(29, 61, 52, 0.4);
+        }
+        .name-selection-item.selected {
+            border-color: #d4af37;
+            background: rgba(212, 175, 55, 0.12);
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.15);
+        }
+        .name-radio-dot {
+            width: 12px; height: 12px;
+            border-radius: 50%;
+            border: 1px solid rgba(212, 175, 55, 0.5);
+            margin-right: 10px;
+            display: inline-block;
+            transition: all 0.15s ease;
+        }
+        .name-selection-item.selected .name-radio-dot {
+            background: #d4af37;
+            border-color: #d4af37;
+            box-shadow: 0 0 6px #d4af37;
+        }
+
         @media (max-width: 1024px) {
             .combatant-card { flex-wrap: wrap; }
             .character-square-container { border-right: none; padding-right: 0; }
@@ -315,46 +351,80 @@
         <div id="secretsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
     </section>
 
-    <!-- TAB 3: NAMENSGENERATOR -->
-    <section id="tab-namensgen" class="tab-content hidden space-y-6">
-        <div class="bg-forest-900/60 border border-forest-700/40 rounded-xl p-5 space-y-5">
-            <div class="flex flex-col md:flex-row md:items-center justify-between border-b border-gold-500/20 pb-4 gap-4">
-                <h2 class="font-cinzel text-xl font-bold text-gold-400">Sylvanus Namensschmiede</h2>
-                <div class="flex gap-2 items-center flex-wrap">
-                    <select id="nameGenRaceSelect" class="bg-forest-950 text-gold-400 border border-forest-700 text-xs rounded-lg px-3 py-2">
-                        <option value="mensch">Mensch</option>
-                        <option value="elf">Elf</option>
-                        <option value="tiefling">Tiefling</option>
-                        <option value="zwerg">Zwerg</option>
-                        <option value="ork">Ork</option>
-                        <option value="halbling">Halbling</option>
-                    </select>
-                    <select id="nameGenGenderSelect" class="bg-forest-950 text-gold-400 border border-forest-700 text-xs rounded-lg px-3 py-2">
-                        <option value="maennlich">Männlich</option>
-                        <option value="weiblich">Weiblich</option>
-                    </select>
-                    <button onclick="generateNames()" class="px-2.5 py-2 bg-gold-500 text-forest-950 font-bold text-xs rounded-lg">🔄 Beide</button>
-                    <button onclick="generateFirstNameOnly()" class="px-2.5 py-2 bg-forest-800 text-gold-300 border border-gold-500/30 text-xs rounded-lg">🔄 Nur Vorname</button>
-                    <button onclick="generateLastNameOnly()" class="px-2.5 py-2 bg-forest-800 text-gold-300 border border-gold-500/30 text-xs rounded-lg">🔄 Nur Nachname</button>
+    <!-- TAB 3: NAMENSGENERATOR (EXAKT WIE IM BILD) -->
+    <section id="tab-namensgen" class="tab-content hidden space-y-5">
+        <div class="bg-[#0b1b16] border border-[#1d3d34] rounded-2xl p-6 shadow-2xl space-y-6">
+            
+            <!-- Header Row mit Volks & Geschlechts-Wahl -->
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gold-500/20 pb-4">
+                <div>
+                    <h2 class="font-cinzel text-2xl font-bold text-[#eacb67] tracking-wider">SYLVANUS NAMENSSCHMIEDE</h2>
+                    <p class="text-xs text-gray-300 mt-1">Klicke jeweils auf einen Vorname & Nachname, um sie frei zu kombinieren.</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-400 tracking-wider uppercase mb-1">VOLK</label>
+                        <select id="nameGenRaceSelect" class="bg-[#081310] text-[#eacb67] border border-[#22483d] text-xs font-semibold rounded-lg px-4 py-2 focus:outline-none focus:border-gold-500">
+                            <option value="mensch">Mensch</option>
+                            <option value="elf">Elf</option>
+                            <option value="tiefling">Tiefling</option>
+                            <option value="zwerg">Zwerg</option>
+                            <option value="gnom">Gnom</option>
+                            <option value="ork">Ork</option>
+                            <option value="halbling">Halbling</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-400 tracking-wider uppercase mb-1">GESCHLECHT</label>
+                        <select id="nameGenGenderSelect" class="bg-[#081310] text-[#eacb67] border border-[#22483d] text-xs font-semibold rounded-lg px-4 py-2 focus:outline-none focus:border-gold-500">
+                            <option value="maennlich">Männlich</option>
+                            <option value="weiblich">Weiblich</option>
+                        </select>
+                    </div>
                 </div>
             </div>
-            <div class="bg-forest-950/80 border border-gold-500/30 rounded-xl p-4 flex justify-between items-center">
-                <div id="fullGeneratedNameDisplay" class="font-cinzel text-xl text-white font-bold">...</div>
-                <div class="flex gap-2">
-                    <button id="copyFullNameBtn" onclick="copyActiveGeneratedName()" class="px-3 py-1.5 bg-forest-800 text-gold-300 text-xs rounded">Kopieren</button>
-                    <button id="transferFullNameToNPCBtn" onclick="transferNameToNPC()" class="px-3 py-1.5 bg-gold-500 text-forest-950 text-xs font-semibold rounded">Als NPC anlegen</button>
+
+            <!-- Ausgewählter voller Name Box -->
+            <div class="bg-[#071310] border border-[#1f4236] rounded-xl p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shadow-inner">
+                <div>
+                    <div class="text-[10px] font-bold text-[#eacb67] tracking-widest uppercase mb-1">AUSGEWÄHLTER VOLLER NAME</div>
+                    <div id="fullGeneratedNameDisplay" class="font-cinzel text-2xl font-bold text-white tracking-wide">...</div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="copyActiveGeneratedName()" class="px-4 py-2 bg-[#1b382e] hover:bg-[#284d40] border border-gold-500/30 text-gray-200 text-xs font-medium rounded-lg flex items-center gap-1.5 transition-all">
+                        📋 Kopieren
+                    </button>
+                    <button onclick="transferNameToNPC()" class="px-4 py-2 bg-[#d4af37] hover:bg-[#eacb67] text-[#0b1814] text-xs font-bold rounded-lg flex items-center gap-1.5 transition-all shadow-md">
+                        👤+ Als NPC anlegen
+                    </button>
                 </div>
             </div>
+
+            <!-- 2-Spalten Generierung (Vornamen & Nachnamen separat) -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <h3 class="text-xs font-bold text-gold-400 mb-2 uppercase">Vornamen (Klick zum Auswählen)</h3>
-                    <div id="vornamenListContainer" class="space-y-1.5 max-h-48 overflow-y-auto pr-1"></div>
+                <!-- Vornamen Spalte -->
+                <div class="bg-[#071511] border border-[#1a382d] rounded-xl p-4 space-y-3">
+                    <div class="flex justify-between items-center border-b border-[#1a382d] pb-2">
+                        <h3 class="font-cinzel text-sm font-bold text-[#eacb67] tracking-wide">VORNAMEN</h3>
+                        <button onclick="generateNewFirstNames()" class="px-3 py-1 bg-[#18362b] hover:bg-[#254d3e] border border-gold-500/30 text-[#eacb67] text-xs font-semibold rounded-md flex items-center gap-1 transition-all">
+                            🔄 Neu
+                        </button>
+                    </div>
+                    <div id="vornamenListContainer" class="space-y-2"></div>
                 </div>
-                <div>
-                    <h3 class="text-xs font-bold text-gold-400 mb-2 uppercase">Nachnamen (Klick zum Auswählen)</h3>
-                    <div id="nachnamenListContainer" class="space-y-1.5 max-h-48 overflow-y-auto pr-1"></div>
+
+                <!-- Nachnamen Spalte -->
+                <div class="bg-[#071511] border border-[#1a382d] rounded-xl p-4 space-y-3">
+                    <div class="flex justify-between items-center border-b border-[#1a382d] pb-2">
+                        <h3 class="font-cinzel text-sm font-bold text-[#eacb67] tracking-wide">NACHNAMEN & SIPPEN</h3>
+                        <button onclick="generateNewLastNames()" class="px-3 py-1 bg-[#18362b] hover:bg-[#254d3e] border border-gold-500/30 text-[#eacb67] text-xs font-semibold rounded-md flex items-center gap-1 transition-all">
+                            🔄 Neu
+                        </button>
+                    </div>
+                    <div id="nachnamenListContainer" class="space-y-2"></div>
                 </div>
             </div>
+
         </div>
     </section>
 
@@ -706,48 +776,56 @@
         { id: 'n-2', title: '2. Der Wald-Hinterhalt', status: 'planned', description: 'Wölfe greifen an.', clues: 'Spuren im Schlamm' }
     ];
 
+    /* SEHR UMFANGREICHE KULTURGETREUE FANTASY NAMENS-DATENBANK */
     const NAME_DATABASE = {
         mensch: {
             vornamen: {
-                maennlich: ['Alaric', 'Cedric', 'Gideon', 'Roland', 'Valerian', 'Wulfric', 'Bastian', 'Cassian'],
-                weiblich: ['Clara', 'Helena', 'Isolde', 'Rowena', 'Thalia', 'Valeria', 'Beatrix', 'Rosalind']
+                maennlich: ['Valentin', 'Roderick', 'Wilhelm', 'Alaric', 'Henrik', 'Cedric', 'Gideon', 'Roland', 'Valerian', 'Wulfric', 'Bastian', 'Cassian', 'Kaelen', 'Leofric', 'Gareth', 'Aldous', 'Eldrin', 'Benedict', 'Godfrey', 'Caelen'],
+                weiblich: ['Clara', 'Helena', 'Isolde', 'Rowena', 'Thalia', 'Valeria', 'Beatrix', 'Rosalind', 'Eleanor', 'Genevieve', 'Aurelia', 'Lyra', 'Adelaide', 'Mireia', 'Evelyn', 'Caelia', 'Gwendolyn', 'Seraphina']
             },
-            nachnamen: ['Dornenwall', 'Eichenschild', 'Adlerstein', 'Brandt', 'Winterborn', 'Schwarzweber']
+            nachnamen: ['Falkenhorst', 'Dornenwall', 'Eichenschild', 'Winterberg', 'Holzmann', 'Adlerstein', 'Brandt', 'Winterborn', 'Schwarzweber', 'Königsmark', 'Löwenherz', 'Sternenwall', 'Steinberger', 'Eisenhaag']
         },
         elf: {
             vornamen: {
-                maennlich: ['Aerion', 'Fenris', 'Elion', 'Thalion', 'Valandil', 'Kaelen', 'Sylas'],
-                weiblich: ['Alysia', 'Lyra', 'Aelin', 'Calanthe', 'Nymue', 'Ilmarien', 'Vespera']
+                maennlich: ['Caelynn', 'Melandrach', 'Faelar', 'Therai', 'Aelar', 'Adran', 'Berrian', 'Erevan', 'Galinndan', 'Himo', 'Ivellios', 'Laucian', 'Mindartis', 'Paelias', 'Soveliss', 'Thamior', 'Tharivol', 'Vararis'],
+                weiblich: ['Althaea', 'Anastrianna', 'Andraste', 'Antinua', 'Bethrynna', 'Birel', 'Enna', 'Felosial', 'Ielenia', 'Leshanna', 'Lia', 'Meriele', 'Naivara', 'Quelenna', 'Sariel', 'Shanairra', 'Vadania', 'Xiloscient']
             },
-            nachnamen: ['Mondflüstern', 'Silberzweig', 'Sternenweber', 'Sommerwind', 'Nachtschatten', 'Schattenlauf']
+            nachnamen: ['Galanodel', 'Amastacia', 'Liadon', 'Siannodel', 'Xiloscient', 'Holimion', 'Ilphelkiir', 'Meliamne', 'Nailo', 'Nae\'lo', 'Thimdral', 'Vaelis', 'Kaelenis', 'Faeril', 'Solas', 'Starling', 'Lothlorien', 'Oakenheel']
         },
         tiefling: {
             vornamen: {
-                maennlich: ['Azazel', 'Damien', 'Malakai', 'Malthus', 'Xavier', 'Zephyrus'],
-                weiblich: ['Aktaia', 'Damaia', 'Kallista', 'Lilith', 'Miri', 'Nox', 'Ravana']
+                maennlich: ['Akemenos', 'Barakas', 'Damien', 'Ekemon', 'Iados', 'Kairon', 'Leucis', 'Melech', 'Morthos', 'Pelaios', 'Skamos', 'Therai', 'Malakor', 'Zephyrus', 'Ignis', 'Xavier', 'Azazel', 'Malthus'],
+                weiblich: ['Aktaia', 'Anakis', 'Bryseis', 'Criella', 'Damaia', 'Ea', 'Kallista', 'Lerissa', 'Makaria', 'Nemeia', 'Orianna', 'Phelaia', 'Rieta', 'Sorrow', 'Havoc', 'Grief', 'Torment', 'Veritas']
             },
-            nachnamen: ['Aschenbringer', 'Glutwind', 'Seelenbann', 'Höllenbrand', 'Rabenkralle', 'Dornherz']
+            nachnamen: ['Despair', 'Havoc', 'Lament', 'Malice', 'Vengeance', 'Zephyr', 'Ignis', 'Ashford', 'Brimstone', 'Dread', 'Shadowend', 'Netherwalker', 'Graveheart', 'Ruin', 'Obsidian', 'Ironwill']
         },
         zwerg: {
             vornamen: {
-                maennlich: ['Dain', 'Thorin', 'Brom', 'Grumgar', 'Thrain', 'Balin', 'Farin'],
-                weiblich: ['Amber', 'Helja', 'Dagna', 'Freya', 'Thora', 'Gisela', 'Yvaine']
+                maennlich: ['Adrik', 'Baern', 'Brottor', 'Dain', 'Darrak', 'Eberk', 'Einkil', 'Fargrim', 'Flint', 'Harbek', 'Kildrak', 'Morgran', 'Orsik', 'Oskar', 'Rangrim', 'Thorin', 'Thoradin', 'Torgrim', 'Vondal'],
+                weiblich: ['Amber', 'Artin,', 'Audhild', 'Bardryn', 'Dagnal', 'Diesa', 'Eldeth', 'Falkrunn', 'Finellen', 'Gurdis', 'Helja', 'Hlin', 'Kathra', 'Kristryd', 'Ilde', 'Liftrasa', 'Sannl', 'Torbera', 'Vistra']
             },
-            nachnamen: ['Ambossbrecher', 'Goldader', 'Eisenfaust', 'Steinbarts', 'Kupferkessel', 'Runenschmied']
+            nachnamen: ['Ambossbrecher', 'Goldader', 'Eisenfaust', 'Steinbarts', 'Kupferkessel', 'Runenschmied', 'Granitbrecher', 'Tiefenritter', 'Erzkron', 'Felsenschild', 'Bergdrache', 'Silberhammer']
+        },
+        gnom: {
+            vornamen: {
+                maennlich: ['Bimble', 'Zook', 'Nim', 'Boddyknock', 'Burgell', 'Dimble', 'Fonkin', 'Gimbl', 'Garrick', 'Gerbo', 'Jorclack', 'Kellen', 'Namfoodle', 'Orryn', 'Roondar', 'Seebo', 'Wrenn', 'Zook'],
+                weiblich: ['Bimpnottin', 'Ellywick', 'Loopmottin', 'Bree', 'Callie', 'Ellyjoybell', 'Lilli', 'Marna', 'Roywyn', 'Shamil', 'Tana', 'Waywocket', 'Zanna', 'Nissa', 'Nyx', 'Pippa', 'Tink']
+            },
+            nachnamen: ['Scheppen', 'Folkor', 'Garrick', 'Nackle', 'Timbers', 'Beren', 'Daergel', 'Murnig', 'Turen', 'Sparklegem', 'Stumbleduck', 'Copperpot', 'Fiddlefen', 'Pocketsmith', 'Whistlewind']
         },
         ork: {
             vornamen: {
-                maennlich: ['Grommash', 'Kargath', 'Thok', 'Muzgob', 'Durok', 'Krag'],
-                weiblich: ['Gorgona', 'Zulka', 'Borka', 'Shagra', 'Urzula']
+                maennlich: ['Dench', 'Feng', 'Gell', 'Henk', 'Holg', 'Imsh', 'Keth', 'Krusk', 'Mhurren', 'Ront', 'Shump', 'Thokk', 'Grommash', 'Kargath', 'Muzgob', 'Durok', 'Krag', 'Ugarth', 'Brak'],
+                weiblich: ['Baggi', 'Emen', 'Engwer', 'Kansif', 'Myev', 'Neega', 'Ova', 'Ovell', 'Sutha', 'Vola', 'Volen', 'Gorgona', 'Zulka', 'Borka', 'Shagra', 'Urzula', 'Kraka', 'Morda']
             },
-            nachnamen: ['Schädelspalter', 'Blutauge', 'Eisenkiefer', 'Kriegsschrei', 'Knochenbrecher']
+            nachnamen: ['Schädelspalter', 'Blutauge', 'Eisenkiefer', 'Kriegsschrei', 'Knochenbrecher', 'Felsbeisser', 'Nachtreisser', 'Dunkelzorn', 'Blutfaust', 'Sturmbrecher', 'Schattenkralle']
         },
         halbling: {
             vornamen: {
-                maennlich: ['Frodo', 'Milo', 'Finn', 'Pippin', 'Barnaby', 'Jasper'],
-                weiblich: ['Rosie', 'Poppy', 'Daisy', 'Clover', 'Marigold', 'Pansy']
+                maennlich: ['Alton', 'Ander', 'Cade', 'Corrin', 'Eldon', 'Errich', 'Finnan', 'Garret', 'Lindal', 'Lyle', 'Merric', 'Milo', 'Osborn', 'Perrin', 'Reed', 'Roscoe', 'Wellby', 'Barnaby'],
+                weiblich: ['Andry', 'Bree', 'Callacta', 'Cora', 'Euphemia', 'Jillian', 'Lavinia', 'Lidda', 'Merla', 'Nedda', 'Paela', 'Portia', 'Seraphina', 'Shaena', 'Trym', 'Vani', 'Verna', 'Marigold']
             },
-            nachnamen: ['Grünflanke', 'Schnellfuss', 'Trommelstock', 'Fassbinder', 'Bauchklang']
+            nachnamen: ['Grünflanke', 'Schnellfuss', 'Trommelstock', 'Fassbinder', 'Bauchklang', 'Unterberg', 'Kleintal', 'Sonnenglanz', 'Gartenfreund', 'Teekessel', 'Auenwind', 'Beutlin']
         }
     };
 
@@ -768,13 +846,13 @@
 
     function loadState() {
         try {
-            const saved = localStorage.getItem('sylvanus_codex_data_v13');
+            const saved = localStorage.getItem('sylvanus_codex_data_v14');
             if (saved) state = { ...state, ...JSON.parse(saved) };
         } catch (e) { console.error(e); }
     }
 
     function saveState() {
-        try { localStorage.setItem('sylvanus_codex_data_v13', JSON.stringify(state)); } catch (e) { console.error(e); }
+        try { localStorage.setItem('sylvanus_codex_data_v14', JSON.stringify(state)); } catch (e) { console.error(e); }
     }
 
     function exportData() {
@@ -874,86 +952,99 @@
     }
     document.getElementById('addSecretBtn').onclick = () => { const t = prompt('Geheimnis:'); if(t){ state.secrets.unshift({id:Date.now().toString(), text:t, status:'hidden', tag:'Geheimnis'}); saveState(); renderSecretsTab(); } };
 
-    /* TAB 3: NAMENSGENERATOR */
-    let currentFirstName = "";
-    let currentLastName = "";
+    /* TAB 3: NAMENSGENERATOR (ANHANG-VORLAGE REPRODUZIERT) */
+    let currentFirstName = "Valentin";
+    let currentLastName = "Falkenhorst";
+    let displayedFirstNames = [];
+    let displayedLastNames = [];
 
-    function generateNames() {
+    function getRandomItems(array, count) {
+        const shuffled = [...array].sort(() => 0.5 - Math.random());
+        return shuffled.slice(0, count);
+    }
+
+    function generateNewFirstNames() {
         const race = document.getElementById('nameGenRaceSelect').value;
         const gender = document.getElementById('nameGenGenderSelect').value;
         const rData = NAME_DATABASE[race] || NAME_DATABASE.mensch;
         const vs = rData.vornamen[gender] || rData.vornamen.maennlich;
-        const ns = rData.nachnamen;
 
-        const shuffledVs = [...vs].sort(() => 0.5 - Math.random());
-        const shuffledNs = [...ns].sort(() => 0.5 - Math.random());
-
-        currentFirstName = shuffledVs[0];
-        currentLastName = shuffledNs[0];
-
-        updateNameGenDisplay(vs, ns);
+        displayedFirstNames = getRandomItems(vs, 5);
+        if (!displayedFirstNames.includes(currentFirstName)) {
+            currentFirstName = displayedFirstNames[0];
+        }
+        renderNameLists();
     }
 
-    function generateFirstNameOnly() {
+    function generateNewLastNames() {
         const race = document.getElementById('nameGenRaceSelect').value;
-        const gender = document.getElementById('nameGenGenderSelect').value;
         const rData = NAME_DATABASE[race] || NAME_DATABASE.mensch;
-        const vs = rData.vornamen[gender] || rData.vornamen.maennlich;
         const ns = rData.nachnamen;
 
-        const shuffledVs = [...vs].sort(() => 0.5 - Math.random());
-        currentFirstName = shuffledVs[0];
-
-        updateNameGenDisplay(vs, ns);
+        displayedLastNames = getRandomItems(ns, 5);
+        if (!displayedLastNames.includes(currentLastName)) {
+            currentLastName = displayedLastNames[0];
+        }
+        renderNameLists();
     }
 
-    function generateLastNameOnly() {
-        const race = document.getElementById('nameGenRaceSelect').value;
-        const gender = document.getElementById('nameGenGenderSelect').value;
-        const rData = NAME_DATABASE[race] || NAME_DATABASE.mensch;
-        const vs = rData.vornamen[gender] || rData.vornamen.maennlich;
-        const ns = rData.nachnamen;
-
-        const shuffledNs = [...ns].sort(() => 0.5 - Math.random());
-        currentLastName = shuffledNs[0];
-
-        updateNameGenDisplay(vs, ns);
+    function fullNameGeneratorReset() {
+        generateNewFirstNames();
+        generateNewLastNames();
     }
 
-    function updateNameGenDisplay(vs, ns) {
-        document.getElementById('vornamenListContainer').innerHTML = vs.map(v => `<div class="p-2 bg-forest-950/60 border border-forest-700/40 rounded text-xs text-gray-200 cursor-pointer hover:border-gold-500 transition-colors ${v === currentFirstName ? 'border-gold-500 bg-gold-500/15' : ''}" onclick="selectFirstName('${v}')">${v}</div>`).join('');
-        document.getElementById('nachnamenListContainer').innerHTML = ns.map(n => `<div class="p-2 bg-forest-950/60 border border-forest-700/40 rounded text-xs text-gray-200 cursor-pointer hover:border-gold-500 transition-colors ${n === currentLastName ? 'border-gold-500 bg-gold-500/15' : ''}" onclick="selectLastName('${n}')">${n}</div>`).join('');
-        
+    function renderNameLists() {
+        const fnContainer = document.getElementById('vornamenListContainer');
+        const lnContainer = document.getElementById('nachnamenListContainer');
+
+        fnContainer.innerHTML = displayedFirstNames.map(fn => {
+            const isSelected = fn === currentFirstName;
+            return `
+                <div class="name-selection-item ${isSelected ? 'selected' : ''}" onclick="selectFirstName('${fn}')">
+                    <div class="flex items-center">
+                        <span class="name-radio-dot"></span>
+                        <span class="text-xs font-semibold ${isSelected ? 'text-[#eacb67]' : 'text-gray-200'}">${fn}</span>
+                    </div>
+                    <button onclick="event.stopPropagation(); copySingleText('${fn}')" title="Vorname kopieren" class="text-gray-500 hover:text-gold-400 p-1 text-xs">📋</button>
+                </div>
+            `;
+        }).join('');
+
+        lnContainer.innerHTML = displayedLastNames.map(ln => {
+            const isSelected = ln === currentLastName;
+            return `
+                <div class="name-selection-item ${isSelected ? 'selected' : ''}" onclick="selectLastName('${ln}')">
+                    <div class="flex items-center">
+                        <span class="name-radio-dot"></span>
+                        <span class="text-xs font-semibold ${isSelected ? 'text-[#eacb67]' : 'text-gray-200'}">${ln}</span>
+                    </div>
+                    <button onclick="event.stopPropagation(); copySingleText('${ln}')" title="Nachname kopieren" class="text-gray-500 hover:text-gold-400 p-1 text-xs">📋</button>
+                </div>
+            `;
+        }).join('');
+
         document.getElementById('fullGeneratedNameDisplay').textContent = `${currentFirstName} ${currentLastName}`;
     }
 
-    function selectFirstName(v) {
-        currentFirstName = v;
-        document.getElementById('fullGeneratedNameDisplay').textContent = `${currentFirstName} ${currentLastName}`;
-        highlightNameLists();
+    function selectFirstName(fn) {
+        currentFirstName = fn;
+        renderNameLists();
     }
 
-    function selectLastName(n) {
-        currentLastName = n;
-        document.getElementById('fullGeneratedNameDisplay').textContent = `${currentFirstName} ${currentLastName}`;
-        highlightNameLists();
+    function selectLastName(ln) {
+        currentLastName = ln;
+        renderNameLists();
     }
 
-    function highlightNameLists() {
-        document.querySelectorAll('#vornamenListContainer > div').forEach(el => {
-            if (el.textContent.trim() === currentFirstName) el.classList.add('border-gold-500', 'bg-gold-500/15');
-            else el.classList.remove('border-gold-500', 'bg-gold-500/15');
-        });
-        document.querySelectorAll('#nachnamenListContainer > div').forEach(el => {
-            if (el.textContent.trim() === currentLastName) el.classList.add('border-gold-500', 'bg-gold-500/15');
-            else el.classList.remove('border-gold-500', 'bg-gold-500/15');
-        });
+    function copySingleText(text) {
+        navigator.clipboard.writeText(text);
+        showToast(`"${text}" kopiert!`, "success");
     }
 
     function copyActiveGeneratedName() {
         const fullName = `${currentFirstName} ${currentLastName}`;
         navigator.clipboard.writeText(fullName);
-        showToast("Name in die Zwischenablage kopiert!", "success");
+        showToast(`"${fullName}" in Zwischenablage kopiert!`, "success");
     }
 
     function transferNameToNPC() {
@@ -962,8 +1053,8 @@
         document.getElementById('npcModal').classList.remove('hidden');
     }
 
-    document.getElementById('nameGenRaceSelect').onchange = generateNames;
-    document.getElementById('nameGenGenderSelect').onchange = generateNames;
+    document.getElementById('nameGenRaceSelect').onchange = fullNameGeneratorReset;
+    document.getElementById('nameGenGenderSelect').onchange = fullNameGeneratorReset;
 
     /* TAB 4: NPC */
     function renderNPCsTab() {
@@ -1161,7 +1252,7 @@
 
             card.innerHTML = buildMonsterStatblockHTML(m, true, index);
 
-            // Drag Events for Monster Sorting & Moving
+            // Drag Events for Monster Sorting
             card.ondragstart = (e) => { e.dataTransfer.setData('text/plain', index); card.classList.add('dragging'); };
             card.ondragend = () => { card.classList.remove('dragging'); };
             card.ondragover = (e) => { e.preventDefault(); };
@@ -1172,7 +1263,7 @@
                 const toIdx = index;
                 if (!isNaN(fromIdx) && fromIdx !== toIdx) {
                     const moved = state.monsters.splice(fromIdx, 1)[0];
-                    moved.category = m.category; // Inherit target category
+                    moved.category = m.category;
                     state.monsters.splice(toIdx, 0, moved);
                     saveState(); renderMonstersTab();
                 }
@@ -1549,7 +1640,7 @@
         initTabs();
         renderAuftaktTab();
         renderSecretsTab();
-        generateNames();
+        fullNameGeneratorReset();
         renderNPCsTab();
         renderMonstersTab();
         renderNodesTab();
