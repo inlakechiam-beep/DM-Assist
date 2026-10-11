@@ -104,7 +104,7 @@
             background: rgba(212, 175, 55, 0.05);
         }
 
-        /* Initiative Tracker Scoped Styles */
+        /* Initiative Tracker Scoped Styles & Responsive Layout */
         .init-tracker-container { width: 100%; }
         .init-header {
             width: 100%; background: #1d3d34; border: 1px solid rgba(212, 175, 55, 0.3);
@@ -183,7 +183,6 @@
         .max-hp-input { color: var(--text-main); }
         .btn-full-hp { padding: 3px 6px; font-size: 0.68rem; background: var(--bg-input); border: 1px solid var(--border-subtle); color: var(--text-muted); border-radius: 6px; cursor: pointer; font-weight: bold; }
         .btn-full-hp:hover { background: var(--accent-gold); color: #0b1814; border-color: var(--accent-gold); }
-        .temp-hp-display { font-size: 0.78rem; color: #a855f7; font-weight: 700; }
 
         .hp-inputs { display: flex; gap: 4px; }
         .hp-inputs input[type="number"] { width: 50px; background: var(--bg-input); border: 1px solid var(--border-subtle); color: var(--text-main); padding: 4px; border-radius: 6px; text-align: center; font-size: 0.82rem; }
@@ -200,7 +199,6 @@
         .history-header { font-size: 0.62rem; font-weight: 700; color: var(--text-muted); letter-spacing: 0.5px; }
         .history-box { background: var(--bg-input); border-radius: 6px; padding: 4px 6px; height: 42px; max-height: 42px; overflow-y: auto; font-size: 0.7rem; color: var(--text-muted); border: 1px solid var(--border-subtle); }
         .history-entry { margin-bottom: 2px; white-space: nowrap; }
-        .history-entry.empty { color: #69a890; font-style: italic; }
 
         .conditions-section { flex: 1; display: flex; flex-direction: column; gap: 5px; min-width: 220px; }
         .conditions-header { font-size: 0.62rem; font-weight: 800; color: var(--text-muted); letter-spacing: 0.8px; text-transform: uppercase; }
@@ -217,7 +215,8 @@
         .card-actions button { padding: 5px 8px; font-size: 0.85rem; background: transparent; border: 1px solid var(--border-subtle); color: var(--text-muted); border-radius: 6px; }
         .card-actions button:hover { background: #ef4444; border-color: #ef4444; color: #fff; }
 
-        @media (max-width: 900px) {
+        /* Responsive Breakpoint for Initiative Tracker layout (Landscape vs Portrait iPad) */
+        @media (max-width: 1024px) {
             .combatant-card { flex-wrap: wrap; }
             .character-square-container { border-right: none; padding-right: 0; }
             .hp-section { border-right: none; border-bottom: 1px solid var(--border-subtle); padding-right: 0; padding-bottom: 10px; width: 100%; max-width: 100%; }
@@ -409,7 +408,8 @@
                 </div>
             </div>
             <div class="space-y-6">
-                <div id="selectedCombatantCardContainer" class="hidden lg:block bg-forest-900/80 border border-gold-500/40 rounded-xl p-5 shadow-lg min-h-[300px]">
+                <!-- Statblock Container: Rechts bei Querformat (horizontal) / Untereinander bei Hochformat via CSS Grid -->
+                <div id="selectedCombatantCardContainer" class="bg-forest-900/80 border border-gold-500/40 rounded-xl p-5 shadow-lg min-h-[300px]">
                     <div class="text-center py-10 text-gray-400 text-xs italic">⚔️ Klicke links auf eine Kreatur, um ihren Statblock hier anzuzeigen.</div>
                 </div>
                 <div class="bg-forest-900/60 border border-forest-700/40 rounded-xl p-5 flex flex-col shadow-md">
@@ -488,7 +488,7 @@
         <form id="monsterForm" class="space-y-4">
             <input type="hidden" id="monsterIdInput">
 
-            <!-- Kategorie & Outline Farben Auswahl -->
+            <!-- Kategorie & Outline Farben -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-forest-950/60 p-3 rounded-lg border border-forest-700/50">
                 <div>
                     <label class="block text-xs text-gold-400 font-bold mb-1">Kategorie</label>
@@ -509,43 +509,69 @@
                 </div>
             </div>
 
+            <!-- Allgemeine Infos mit Labels -->
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <input id="monsterNameInput" type="text" required placeholder="Name" class="bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100">
-                <input id="monsterTypeInput" type="text" placeholder="Typ" class="bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100">
-                <input id="monsterXpInput" type="text" placeholder="XP" class="bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100">
+                <div><label class="block text-[11px] text-gray-400 mb-1">Name</label><input id="monsterNameInput" type="text" required class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100"></div>
+                <div><label class="block text-[11px] text-gray-400 mb-1">Kreaturentyp</label><input id="monsterTypeInput" type="text" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100"></div>
+                <div><label class="block text-[11px] text-gray-400 mb-1">Erfahrungspunkte (XP)</label><input id="monsterXpInput" type="text" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100"></div>
             </div>
+
             <div class="grid grid-cols-4 gap-2">
-                <input id="monsterAcInput" type="number" required placeholder="RK" class="bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100">
-                <input id="monsterHpInput" type="number" required placeholder="TP" class="bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100">
-                <input id="monsterInitInput" type="text" placeholder="Init" class="bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100">
-                <input id="monsterSpeedInput" type="text" placeholder="Tempo" class="bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100">
+                <div><label class="block text-[11px] text-gray-400 mb-1">Rüstungsklasse (RK)</label><input id="monsterAcInput" type="number" required class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100"></div>
+                <div><label class="block text-[11px] text-gray-400 mb-1">Trefferpunkte (TP)</label><input id="monsterHpInput" type="number" required class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100"></div>
+                <div><label class="block text-[11px] text-gray-400 mb-1">Initiative</label><input id="monsterInitInput" type="text" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100"></div>
+                <div><label class="block text-[11px] text-gray-400 mb-1">Bewegungsrate</label><input id="monsterSpeedInput" type="text" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100"></div>
             </div>
 
-            <!-- Attribute & Modifikatoren (Stärke, Geschicklichkeit, etc.) -->
-            <div class="grid grid-cols-6 gap-2 bg-forest-950/40 p-2 rounded-lg border border-forest-700/40">
-                <div><label class="text-[10px] text-gray-400 block">STR</label><input id="m-sta-val" type="number" placeholder="10" class="w-full bg-forest-900 text-xs p-1 text-center border border-forest-700 rounded text-gray-100"></div>
-                <div><label class="text-[10px] text-gray-400 block">GES</label><input id="m-ges-val" type="number" placeholder="10" class="w-full bg-forest-900 text-xs p-1 text-center border border-forest-700 rounded text-gray-100"></div>
-                <div><label class="text-[10px] text-gray-400 block">KON</label><input id="m-kon-val" type="number" placeholder="10" class="w-full bg-forest-900 text-xs p-1 text-center border border-forest-700 rounded text-gray-100"></div>
-                <div><label class="text-[10px] text-gray-400 block">INT</label><input id="m-int-val" type="number" placeholder="10" class="w-full bg-forest-900 text-xs p-1 text-center border border-forest-700 rounded text-gray-100"></div>
-                <div><label class="text-[10px] text-gray-400 block">WEI</label><input id="m-wei-val" type="number" placeholder="10" class="w-full bg-forest-900 text-xs p-1 text-center border border-forest-700 rounded text-gray-100"></div>
-                <div><label class="text-[10px] text-gray-400 block">CHA</label><input id="m-cha-val" type="number" placeholder="10" class="w-full bg-forest-900 text-xs p-1 text-center border border-forest-700 rounded text-gray-100"></div>
+            <!-- Attribute -->
+            <div class="bg-forest-950/40 p-2.5 rounded-lg border border-forest-700/40 space-y-2">
+                <label class="block text-xs text-gold-400 font-bold">Attribute</label>
+                <div class="grid grid-cols-6 gap-2">
+                    <div><label class="text-[10px] text-gray-400 block">STR</label><input id="m-sta-val" type="number" value="10" class="w-full bg-forest-900 text-xs p-1 text-center border border-forest-700 rounded text-gray-100"></div>
+                    <div><label class="text-[10px] text-gray-400 block">GES</label><input id="m-ges-val" type="number" value="10" class="w-full bg-forest-900 text-xs p-1 text-center border border-forest-700 rounded text-gray-100"></div>
+                    <div><label class="text-[10px] text-gray-400 block">KON</label><input id="m-kon-val" type="number" value="10" class="w-full bg-forest-900 text-xs p-1 text-center border border-forest-700 rounded text-gray-100"></div>
+                    <div><label class="text-[10px] text-gray-400 block">INT</label><input id="m-int-val" type="number" value="10" class="w-full bg-forest-900 text-xs p-1 text-center border border-forest-700 rounded text-gray-100"></div>
+                    <div><label class="text-[10px] text-gray-400 block">WEI</label><input id="m-wei-val" type="number" value="10" class="w-full bg-forest-900 text-xs p-1 text-center border border-forest-700 rounded text-gray-100"></div>
+                    <div><label class="text-[10px] text-gray-400 block">CHA</label><input id="m-cha-val" type="number" value="10" class="w-full bg-forest-900 text-xs p-1 text-center border border-forest-700 rounded text-gray-100"></div>
+                </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-2">
-                <input id="monsterSkillsInput" type="text" placeholder="Fertigkeiten (z.B. Heimlichkeit +6)" class="bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100">
-                <input id="monsterResistancesInput" type="text" placeholder="Resistenzen / Immunitäten" class="bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <div><label class="block text-[11px] text-gray-400 mb-1">Rettungswürfe (z.B. GES +5)</label><input id="monsterSavesInput" type="text" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100"></div>
+                <div><label class="block text-[11px] text-gray-400 mb-1">Fertigkeiten</label><input id="monsterSkillsInput" type="text" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100"></div>
             </div>
-            <div class="grid grid-cols-2 gap-2">
-                <input id="monsterSensesInput" type="text" placeholder="Sinne (z.B. Dunkelsicht 18m)" class="bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100">
-                <input id="monsterLanguagesInput" type="text" placeholder="Sprachen" class="bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <div><label class="block text-[11px] text-gray-400 mb-1">Resistenzen / Immunitäten</label><input id="monsterResistancesInput" type="text" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100"></div>
+                <div><label class="block text-[11px] text-gray-400 mb-1">Sinne</label><input id="monsterSensesInput" type="text" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100"></div>
+                <div><label class="block text-[11px] text-gray-400 mb-1">Sprachen</label><input id="monsterLanguagesInput" type="text" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100"></div>
             </div>
 
-            <!-- Merkmale, Aktionen, Bonus-Aktionen, Reaktionen, Taktik -->
-            <textarea id="monsterTraitsInput" rows="2" placeholder="Merkmale (Traits) - kommasepariert oder pro Zeile..." class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100"></textarea>
-            <textarea id="monsterActionsInput" rows="2" placeholder="Aktionen (z.B. Klauenangriff +5 Treffer...)" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100"></textarea>
-            <textarea id="monsterBonusActionsInput" rows="2" placeholder="Bonus-Aktionen (optional)..." class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100"></textarea>
-            <textarea id="monsterReactionsInput" rows="2" placeholder="Reaktionen (optional, nur sichtbar falls vorhanden)..." class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100"></textarea>
-            <textarea id="monsterTacticsInput" rows="2" placeholder="Kampftaktik..." class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100"></textarea>
+            <!-- Merkmale -->
+            <div>
+                <label class="block text-[11px] text-gray-400 mb-1">Merkmale (Traits)</label>
+                <textarea id="monsterTraitsInput" rows="2" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100" placeholder="Jedes Merkmal in eine neue Zeile..."></textarea>
+            </div>
+
+            <!-- Dynamische Sektionen mit + Button -->
+            <div class="space-y-1 pt-2 border-t border-forest-700/50">
+                <div class="flex justify-between items-center"><label class="text-xs text-gold-400 font-bold">Aktionen</label><button type="button" onclick="addDynamicField('actionsContainer')" class="px-2 py-0.5 bg-gold-500/20 text-gold-400 text-xs rounded">+ Aktion</button></div>
+                <div id="actionsContainer" class="space-y-2 pt-1"></div>
+            </div>
+
+            <div class="space-y-1 pt-2 border-t border-forest-700/50">
+                <div class="flex justify-between items-center"><label class="text-xs text-gold-400 font-bold">Bonus-Aktionen</label><button type="button" onclick="addDynamicField('bonusActionsContainer')" class="px-2 py-0.5 bg-gold-500/20 text-gold-400 text-xs rounded">+ Bonus-Aktion</button></div>
+                <div id="bonusActionsContainer" class="space-y-2 pt-1"></div>
+            </div>
+
+            <div class="space-y-1 pt-2 border-t border-forest-700/50">
+                <div class="flex justify-between items-center"><label class="text-xs text-gold-400 font-bold">Reaktionen</label><button type="button" onclick="addDynamicField('reactionsContainer')" class="px-2 py-0.5 bg-gold-500/20 text-gold-400 text-xs rounded">+ Reaktion</button></div>
+                <div id="reactionsContainer" class="space-y-2 pt-1"></div>
+            </div>
+
+            <div>
+                <label class="block text-[11px] text-gray-400 mb-1">Kampftaktik</label>
+                <textarea id="monsterTacticsInput" rows="2" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100"></textarea>
+            </div>
 
             <div class="flex justify-end space-x-2 pt-2">
                 <button type="button" class="closeMonsterModalBtn px-4 py-2 bg-forest-800 text-gray-300 text-xs rounded-lg">Abbrechen</button>
@@ -586,12 +612,12 @@
     const DEFAULT_MONSTERS = [
         {
             id: 'm-1', name: 'Schattenpanther', type: 'Bestie (Mittel)', xp: '700 XP', ac: 15, hp: 45, init: '+4', speed: '12m',
-            stats: { sta: { val: 16, mod: '+3' }, ges: { val: 18, mod: '+4' }, kon: { val: 14, mod: '+2' }, int: { val: 3, mod: '-4' }, wei: { val: 12, mod: '+1' }, cha: { val: 8, mod: '-1' } },
-            skills: 'Heimlichkeit +6', resistances: 'Kälteresistenz', senses: 'Dunkelsicht 18m', languages: '–',
+            stats: { sta: { val: 16 }, ges: { val: 18 }, kon: { val: 14 }, int: { val: 3 }, wei: { val: 12 }, cha: { val: 8 } },
+            saves: 'GES +6, WEI +3', skills: 'Heimlichkeit +6', resistances: 'Kälteresistenz', senses: 'Dunkelsicht 18m', languages: '–',
             traits: ['Scharfes Gehör: Hat Vorteil auf Weisheitswürfe (Wahrnehmung).'],
-            actions: ['Pratschenangriff: Nahkampf-Waffenangriff, +6 Treffer, Reichweite 1.5m. Treffer: 8 (1d8 + 4) Wuchtschaden.'],
+            actions: [{ name: 'Pratschenangriff', desc: 'Nahkampf-Waffenangriff, +6 Treffer, Reichweite 1.5m. Treffer: 8 (1d8 + 4) Wuchtschaden.' }],
             bonusActions: [],
-            reactions: ['Geisterhafte Parade: Erhält +2 RK gegen einen Nahkampf-Angriff.'],
+            reactions: [{ name: 'Geisterhafte Parade', desc: 'Erhält +2 RK gegen einen Nahkampf-Angriff.' }],
             tactics: 'Nutzt Dämmerung & Hinterhalt.',
             category: 'active', outlines: ['#ef4444', '#3b82f6']
         }
@@ -626,13 +652,13 @@
 
     function loadState() {
         try {
-            const saved = localStorage.getItem('sylvanus_codex_data_v9');
+            const saved = localStorage.getItem('sylvanus_codex_data_v10');
             if (saved) state = { ...state, ...JSON.parse(saved) };
         } catch (e) { console.error(e); }
     }
 
     function saveState() {
-        try { localStorage.setItem('sylvanus_codex_data_v9', JSON.stringify(state)); } catch (e) { console.error(e); }
+        try { localStorage.setItem('sylvanus_codex_data_v10', JSON.stringify(state)); } catch (e) { console.error(e); }
     }
 
     function exportData() {
@@ -776,6 +802,18 @@
         return m >= 0 ? `+${m}` : `${m}`;
     }
 
+    function addDynamicField(containerId, nameVal = '', descVal = '') {
+        const container = document.getElementById(containerId);
+        const row = document.createElement('div');
+        row.className = 'flex gap-2 items-center';
+        row.innerHTML = `
+            <input type="text" placeholder="Name" value="${nameVal}" class="dyn-name w-1/3 bg-forest-950 border border-forest-700 text-xs rounded p-1.5 text-gray-100 font-semibold">
+            <input type="text" placeholder="Beschreibung" value="${descVal}" class="dyn-desc flex-1 bg-forest-950 border border-forest-700 text-xs rounded p-1.5 text-gray-100">
+            <button type="button" onclick="this.parentElement.remove()" class="text-red-400 hover:text-red-300 px-2 text-xs">✕</button>
+        `;
+        container.appendChild(row);
+    }
+
     function renderMonstersTab() {
         const activeGrid = document.getElementById('activeMonstersGrid');
         const libraryGrid = document.getElementById('libraryMonstersGrid');
@@ -794,15 +832,13 @@
                 card.style.boxShadow = `0 4px 16px rgba(0,0,0,0.25), inset 3px 0 0 ${m.outlines[0]}`;
             }
 
-            // Stats string
             const s = m.stats || {};
             const statsLine = `STR: ${s.sta?.val||10}(${calcMod(s.sta?.val||10)}) | GES: ${s.ges?.val||10}(${calcMod(s.ges?.val||10)}) | KON: ${s.kon?.val||10}(${calcMod(s.kon?.val||10)}) | INT: ${s.int?.val||10}(${calcMod(s.int?.val||10)}) | WEI: ${s.wei?.val||10}(${calcMod(s.wei?.val||10)}) | CHA: ${s.cha?.val||10}(${calcMod(s.cha?.val||10)})`;
 
-            // Optional sections
             const traitsHtml = m.traits && m.traits.length > 0 ? `<div class="mt-2 text-[11px]"><strong>Merkmale:</strong><ul class="list-disc pl-4">${m.traits.map(t=>`<li>${t}</li>`).join('')}</ul></div>` : '';
-            const actionsHtml = m.actions && m.actions.length > 0 ? `<div class="mt-2 text-[11px]"><strong>Aktionen:</strong><ul class="list-disc pl-4">${m.actions.map(a=>`<li>${a}</li>`).join('')}</ul></div>` : '';
-            const bonusActionsHtml = m.bonusActions && m.bonusActions.length > 0 ? `<div class="mt-2 text-[11px]"><strong>Bonus-Aktionen:</strong><ul class="list-disc pl-4">${m.bonusActions.map(ba=>`<li>${ba}</li>`).join('')}</ul></div>` : '';
-            const reactionsHtml = m.reactions && m.reactions.length > 0 ? `<div class="mt-2 text-[11px]"><strong>Reaktionen:</strong><ul class="list-disc pl-4">${m.reactions.map(r=>`<li>${r}</li>`).join('')}</ul></div>` : '';
+            const actionsHtml = m.actions && m.actions.length > 0 ? `<div class="mt-2 text-[11px]"><strong>Aktionen:</strong><ul class="list-disc pl-4">${m.actions.map(a=>`<li><strong>${a.name}:</strong>${a.desc}</li>`).join('')}</ul></div>` : '';
+            const bonusActionsHtml = m.bonusActions && m.bonusActions.length > 0 ? `<div class="mt-2 text-[11px]"><strong>Bonus-Aktionen:</strong><ul class="list-disc pl-4">${m.bonusActions.map(ba=>`<li><strong>${ba.name}:</strong>${ba.desc}</li>`).join('')}</ul></div>` : '';
+            const reactionsHtml = m.reactions && m.reactions.length > 0 ? `<div class="mt-2 text-[11px]"><strong>Reaktionen:</strong><ul class="list-disc pl-4">${m.reactions.map(r=>`<li><strong>${r.name}:</strong>${r.desc}</li>`).join('')}</ul></div>` : '';
 
             card.innerHTML = `
                 ${outlinesHtml}
@@ -814,7 +850,8 @@
                     <span class="px-2 py-0.5 rounded text-[10px] ${isLib?'bg-gray-800 text-gray-300':'bg-gold-500/20 text-gold-300'}">${isLib?'Bibliothek':'Aktiv'}</span>
                 </div>
                 <div class="text-[11px] text-gold-300/80 mt-1 font-mono">${statsLine}</div>
-                ${m.skills?`<p class="text-[11px] mt-1"><strong>Fertigkeiten:</strong> ${m.skills}</p>`:''}
+                ${m.saves?`<p class="text-[11px] mt-1"><strong>Rettungswürfe:</strong> ${m.saves}</p>`:''}
+                ${m.skills?`<p class="text-[11px]"><strong>Fertigkeiten:</strong> ${m.skills}</p>`:''}
                 ${m.resistances?`<p class="text-[11px]"><strong>Resistenzen:</strong> ${m.resistances}</p>`:''}
                 ${m.senses?`<p class="text-[11px]"><strong>Sinne:</strong> ${m.senses}</p>`:''}
                 ${traitsHtml}
@@ -822,9 +859,12 @@
                 ${bonusActionsHtml}
                 ${reactionsHtml}
                 <p class="text-xs text-gray-300 mt-2"><strong>Taktik:</strong> ${m.tactics || 'Keine Angabe'}</p>
-                <div class="flex justify-end gap-2 pt-3 border-t border-forest-800/60 mt-3">
-                    <button class="edit-btn text-xs text-gold-400">✏️ Bearbeiten</button>
-                    <button class="delete-btn text-xs text-red-400">🗑️ Löschen</button>
+                <div class="flex justify-between items-center pt-3 border-t border-forest-800/60 mt-3">
+                    <button class="add-to-init-btn text-xs px-2 py-1 bg-gold-500/20 text-gold-400 rounded hover:bg-gold-500/30">⚔️ Zur Initiative</button>
+                    <div class="flex gap-2">
+                        <button class="edit-btn text-xs text-gold-400">✏️ Bearbeiten</button>
+                        <button class="delete-btn text-xs text-red-400">🗑️ Löschen</button>
+                    </div>
                 </div>
             `;
 
@@ -844,6 +884,10 @@
                 }
             };
 
+            card.querySelector('.add-to-init-btn').onclick = () => {
+                addCombatant(m.name, parseInt(m.init) || 10, m.hp);
+                showToast(`${m.name} zur Initiative hinzugefügt!`, 'success');
+            };
             card.querySelector('.edit-btn').onclick = () => openMonsterModalForEdit(m);
             card.querySelector('.delete-btn').onclick = () => {
                 if (confirm(`Möchtest du das Monster "${m.name}" wirklich unwiderruflich löschen?`)) {
@@ -886,16 +930,30 @@
         document.getElementById('m-wei-val').value = stats.wei?.val || 10;
         document.getElementById('m-cha-val').value = stats.cha?.val || 10;
 
+        document.getElementById('monsterSavesInput').value = m ? (m.saves || '') : '';
         document.getElementById('monsterSkillsInput').value = m ? (m.skills || '') : '';
         document.getElementById('monsterResistancesInput').value = m ? (m.resistances || '') : '';
         document.getElementById('monsterSensesInput').value = m ? (m.senses || '') : '';
         document.getElementById('monsterLanguagesInput').value = m ? (m.languages || '') : '';
         document.getElementById('monsterTraitsInput').value = m && m.traits ? m.traits.join('\n') : '';
-        document.getElementById('monsterActionsInput').value = m && m.actions ? m.actions.join('\n') : '';
-        document.getElementById('monsterBonusActionsInput').value = m && m.bonusActions ? m.bonusActions.join('\n') : '';
-        document.getElementById('monsterReactionsInput').value = m && m.reactions ? m.reactions.join('\n') : '';
         document.getElementById('monsterTacticsInput').value = m ? m.tactics : '';
         document.getElementById('monsterCategorySelect').value = m ? (m.category || 'active') : 'active';
+
+        // Populate dynamic containers
+        document.getElementById('actionsContainer').innerHTML = '';
+        if (m && m.actions) {
+            m.actions.forEach(a => addDynamicField('actionsContainer', a.name, a.desc));
+        }
+
+        document.getElementById('bonusActionsContainer').innerHTML = '';
+        if (m && m.bonusActions) {
+            m.bonusActions.forEach(ba => addDynamicField('bonusActionsContainer', ba.name, ba.desc));
+        }
+
+        document.getElementById('reactionsContainer').innerHTML = '';
+        if (m && m.reactions) {
+            m.reactions.forEach(r => addDynamicField('reactionsContainer', r.name, r.desc));
+        }
 
         const outlines = m ? (m.outlines || []) : [];
         document.querySelectorAll('#outlineColorCheckboxes input').forEach(chk => {
@@ -914,9 +972,28 @@
         const selectedColors = Array.from(document.querySelectorAll('#outlineColorCheckboxes input:checked')).map(chk => chk.value);
 
         const traitsArr = document.getElementById('monsterTraitsInput').value.split('\n').map(x => x.trim()).filter(Boolean);
-        const actionsArr = document.getElementById('monsterActionsInput').value.split('\n').map(x => x.trim()).filter(Boolean);
-        const bonusActionsArr = document.getElementById('monsterBonusActionsInput').value.split('\n').map(x => x.trim()).filter(Boolean);
-        const reactionsArr = document.getElementById('monsterReactionsInput').value.split('\n').map(x => x.trim()).filter(Boolean);
+
+        // Gather dynamic actions
+        const actionsArr = [];
+        document.querySelectorAll('#actionsContainer > div').forEach(row => {
+            const name = row.querySelector('.dyn-name').value.trim();
+            const desc = row.querySelector('.dyn-desc').value.trim();
+            if (name || desc) actionsArr.push({ name: name || 'Aktion', desc });
+        });
+
+        const bonusActionsArr = [];
+        document.querySelectorAll('#bonusActionsContainer > div').forEach(row => {
+            const name = row.querySelector('.dyn-name').value.trim();
+            const desc = row.querySelector('.dyn-desc').value.trim();
+            if (name || desc) bonusActionsArr.push({ name: name || 'Bonus-Aktion', desc });
+        });
+
+        const reactionsArr = [];
+        document.querySelectorAll('#reactionsContainer > div').forEach(row => {
+            const name = row.querySelector('.dyn-name').value.trim();
+            const desc = row.querySelector('.dyn-desc').value.trim();
+            if (name || desc) reactionsArr.push({ name: name || 'Reaktion', desc });
+        });
 
         const monsterObj = {
             id: id || 'm-' + Date.now(),
@@ -935,6 +1012,7 @@
                 wei: { val: parseInt(document.getElementById('m-wei-val').value)||10 },
                 cha: { val: parseInt(document.getElementById('m-cha-val').value)||10 }
             },
+            saves: document.getElementById('monsterSavesInput').value,
             skills: document.getElementById('monsterSkillsInput').value,
             resistances: document.getElementById('monsterResistancesInput').value,
             senses: document.getElementById('monsterSensesInput').value,
@@ -957,7 +1035,7 @@
         saveState(); document.getElementById('monsterModal').classList.add('hidden'); renderMonstersTab(); showToast('Monster gespeichert!', 'success');
     };
 
-    /* TAB 6: KNOTEN ABLAUFPLAN (Drag & Drop + Status Direktwahl) */
+    /* TAB 6: KNOTEN ABLAUFPLAN */
     function renderNodesTab() {
         const container = document.getElementById('nodesGraphContainer');
         container.innerHTML = '';
@@ -987,7 +1065,6 @@
                 </div>
             `;
 
-            // Drag Events
             card.ondragstart = (e) => { e.dataTransfer.setData('text/plain', index); card.classList.add('dragging'); };
             card.ondragend = () => { card.classList.remove('dragging'); };
             card.ondragover = (e) => { e.preventDefault(); };
@@ -1022,10 +1099,7 @@
         }
     }
 
-    function dropNodeContainer(e) {
-        e.preventDefault();
-        e.currentTarget.classList.remove('drag-over');
-    }
+    function dropNodeContainer(e) { e.preventDefault(); e.currentTarget.classList.remove('drag-over'); }
 
     function openNodeModalForEdit(n = null) {
         document.getElementById('nodeModalTitle').textContent = n ? 'Szene bearbeiten' : 'Neue Szene hinzufügen';
@@ -1090,7 +1164,7 @@
         if (!state.activeId && state.combatants.length > 0) state.activeId = state.combatants[0].id;
 
         const activeCombatant = state.combatants.find(x => x.id === state.activeId);
-        let activeStatHTML = activeCombatant ? `<div class="space-y-3"><h3 class="font-cinzel text-lg font-bold text-gold-400">${activeCombatant.name}</h3><p class="text-xs text-gray-400">Initiative: ${activeCombatant.init} | HP: ${activeCombatant.hp}/${activeCombatant.maxHp}</p></div>` : `<div class="text-center py-10 text-gray-400 text-xs italic">Klicke links auf eine Kreatur.</div>`;
+        let activeStatHTML = activeCombatant ? `<div class="space-y-3"><h3 class="font-cinzel text-lg font-bold text-gold-400">${activeCombatant.name}</h3><p class="text-xs text-gray-400">Initiative: ${activeCombatant.init} | TP: ${activeCombatant.hp}/${activeCombatant.maxHp}</p></div>` : `<div class="text-center py-10 text-gray-400 text-xs italic">Klicke links auf eine Kreatur.</div>`;
         document.getElementById('selectedCombatantCardContainer').innerHTML = activeStatHTML;
 
         state.combatants.forEach(c => {
@@ -1130,13 +1204,6 @@
                 <div class="card-actions"><button onclick="removeCombatant('${c.id}', event)">✕</button></div>
             `;
             wrapper.appendChild(card);
-
-            if(isActive) {
-                const inline = document.createElement('div');
-                inline.className = 'lg:hidden bg-forest-900/90 border border-gold-500/40 rounded-xl p-4 shadow-lg w-full';
-                inline.innerHTML = activeStatHTML;
-                wrapper.appendChild(inline);
-            }
             listEl.appendChild(wrapper);
         });
 
