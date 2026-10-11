@@ -420,8 +420,8 @@
                 </div>
             </div>
             <div class="space-y-6">
-                <!-- Statblock Container: Rechts bei Querformat (horizontal) / Untereinander bei Hochformat via CSS Grid -->
-                <div id="selectedCombatantCardContainer" class="bg-forest-900/80 border border-gold-500/40 rounded-xl p-5 shadow-lg min-h-[300px]">
+                <!-- Statblock Container -->
+                <div id="selectedCombatantCardContainer" class="bg-[#0b1b16] border border-[#1f4236] rounded-xl p-5 shadow-xl min-h-[300px]">
                     <div class="text-center py-10 text-gray-400 text-xs italic">⚔️ Klicke links auf eine Kreatur, um ihren vollständigen Statblock hier anzuzeigen.</div>
                 </div>
                 <div class="bg-forest-900/60 border border-forest-700/40 rounded-xl p-5 flex flex-col shadow-md">
@@ -535,13 +535,13 @@
                 <div><label class="block text-[11px] text-gray-400 mb-1">Bewegungsrate</label><input id="monsterSpeedInput" type="text" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100"></div>
             </div>
 
-            <!-- Attribute, Modifikatoren & Rettungswürfe (Manuell anpassbar) -->
+            <!-- Attribute, Modifikatoren & Rettungswürfe -->
             <div class="bg-forest-950/40 p-3 rounded-lg border border-forest-700/40 space-y-3">
                 <label class="block text-xs text-gold-400 font-bold">Attribute, Modifikatoren & Rettungswürfe (Wert / Mod / RW)</label>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <!-- STR -->
                     <div class="bg-forest-900 p-2 rounded border border-forest-800">
-                        <span class="text-[10px] text-gold-300 font-bold block mb-1">STRÄRKE (STR)</span>
+                        <span class="text-[10px] text-gold-300 font-bold block mb-1">STÄRKE (STÄ)</span>
                         <div class="grid grid-cols-3 gap-1">
                             <div><label class="text-[9px] text-gray-400 block">Wert</label><input id="m-sta-val" type="number" value="10" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-150"></div>
                             <div><label class="text-[9px] text-gray-400 block">Mod</label><input id="m-sta-mod" type="text" value="+0" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-150"></div>
@@ -597,11 +597,11 @@
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                <div><label class="block text-[11px] text-gray-400 mb-1">Fertigkeiten</label><input id="monsterSkillsInput" type="text" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100"></div>
-                <div><label class="block text-[11px] text-gray-400 mb-1">Ausrüstung</label><input id="monsterEquipmentInput" type="text" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100" placeholder="z.B. Kettenhemd, Langschwert"></div>
+                <div><label class="block text-[11px] text-gray-400 mb-1">Fähigkeiten / Fertigkeiten</label><input id="monsterSkillsInput" type="text" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100"></div>
+                <div><label class="block text-[11px] text-gray-400 mb-1">Ausrüstung</label><input id="monsterEquipmentInput" type="text" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100"></div>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                <div><label class="block text-[11px] text-gray-400 mb-1">Resistenzen / Immunitäten</label><input id="monsterResistancesInput" type="text" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100"></div>
+                <div><label class="block text-[11px] text-gray-400 mb-1">Resistenzen</label><input id="monsterResistancesInput" type="text" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100"></div>
                 <div><label class="block text-[11px] text-gray-400 mb-1">Sinne</label><input id="monsterSensesInput" type="text" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100"></div>
                 <div><label class="block text-[11px] text-gray-400 mb-1">Sprachen</label><input id="monsterLanguagesInput" type="text" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100"></div>
             </div>
@@ -671,7 +671,7 @@
 
     const DEFAULT_MONSTERS = [
         {
-            id: 'm-1', name: 'Schattenpanther', type: 'Bestie (Mittel)', xp: '700', ac: 15, hp: 45, init: '+4', speed: '12m',
+            id: 'm-1', name: 'SCHATTENPANTHER', type: 'Bestie (Mittel)', xp: '700', ac: 15, hp: 45, init: '+4', speed: '12m / Klettern 9m',
             stats: {
                 sta: { val: 16, mod: '+3', rw: '+3' },
                 ges: { val: 18, mod: '+4', rw: '+6' },
@@ -680,13 +680,22 @@
                 wei: { val: 12, mod: '+1', rw: '+3' },
                 cha: { val: 8, mod: '-1', rw: '-1' }
             },
-            equipment: 'Klauen & Zähne', skills: 'Heimlichkeit +6', resistances: 'Kälteresistenz', senses: 'Dunkelsicht 18m', languages: '–',
-            traits: ['Scharfes Gehör: Hat Vorteil auf Weisheitswürfe (Wahrnehmung).'],
-            actions: [{ name: 'Pratschenangriff', desc: 'Nahkampf-Waffenangriff, +6 Treffer, Reichweite 1.5m. Treffer: 8 (1d8 + 4) Wuchtschaden.' }],
-            bonusActions: [],
-            reactions: [{ name: 'Geisterhafte Parade', desc: 'Erhält +2 RK gegen einen Nahkampf-Angriff.' }],
-            tactics: 'Nutzt Dämmerung & Hinterhalt.',
-            category: 'active', outlines: ['#ef4444', '#3b82f6']
+            skills: 'Wahrnehmung +5, Heimlichkeit +8',
+            resistances: 'Keine',
+            senses: 'Dunkelsicht 18m, Passiv 15',
+            languages: '—',
+            equipment: '',
+            traits: ['Schatten-Tarnung: Hat Vorteil auf Würfe für Heimlichkeit im Dämmerlicht oder in Dunkelheit.'],
+            actions: [
+                { name: 'Anspringen', desc: 'Wenn der Panther sich 6m geradeaus auf das Ziel zubewegt, muss das Ziel einen Stärke-Rettungswurf (SG 14) bestehen oder liegt hin.' },
+                { name: 'Biss', desc: '+6 zum Treffen, Reichweite 1.5m, Schaden: 10 (2d6 + 4) Hieb-Schaden.' }
+            ],
+            bonusActions: [
+                { name: 'Rückzug im Schatten', desc: 'Kann im Dämmerlicht als Bonusaktion die Verstecken-Aktion nutzen.' }
+            ],
+            reactions: [],
+            tactics: 'Nutzt Dämmerung & Hinterhalt. Zielt bevorzugt auf isolierte Zauberwirker.',
+            category: 'active', outlines: ['#22c55e']
         }
     ];
 
@@ -695,7 +704,6 @@
         { id: 'n-2', title: '2. Der Wald-Hinterhalt', status: 'planned', description: 'Wölfe greifen an.', clues: 'Spuren im Schlamm' }
     ];
 
-    /* Erweiterter Namensgenerator mit vielen Optionen & sprachlichen Nachnamen */
     const NAME_DATABASE = {
         mensch: {
             vornamen: {
@@ -758,13 +766,13 @@
 
     function loadState() {
         try {
-            const saved = localStorage.getItem('sylvanus_codex_data_v11');
+            const saved = localStorage.getItem('sylvanus_codex_data_v12');
             if (saved) state = { ...state, ...JSON.parse(saved) };
         } catch (e) { console.error(e); }
     }
 
     function saveState() {
-        try { localStorage.setItem('sylvanus_codex_data_v11', JSON.stringify(state)); } catch (e) { console.error(e); }
+        try { localStorage.setItem('sylvanus_codex_data_v12', JSON.stringify(state)); } catch (e) { console.error(e); }
     }
 
     function exportData() {
@@ -873,7 +881,6 @@
         const vs = rData.vornamen[gender] || rData.vornamen.maennlich;
         const ns = rData.nachnamen;
 
-        // Shuffle arrays for variety
         const shuffledVs = [...vs].sort(() => 0.5 - Math.random());
         const shuffledNs = [...ns].sort(() => 0.5 - Math.random());
 
@@ -897,7 +904,6 @@
     function transferNameToNPC() {
         document.getElementById('npcNameInput').value = currentActiveGeneratedName;
         document.getElementById('npcModal').classList.remove('hidden');
-        // Switch to NPC tab if desired or just open modal
     }
 
     document.getElementById('nameGenRaceSelect').onchange = generateNames;
@@ -927,7 +933,158 @@
         saveState(); document.getElementById('npcModal').classList.add('hidden'); renderNPCsTab(); showToast('NPC gespeichert!', 'success');
     };
 
-    /* TAB 5: MONSTER & KAMPF */
+    /* TAB 5 & KREATUR STATBLOCK DESIGN GENERATOR (Exakt wie im Bild) */
+    function buildMonsterStatblockHTML(m, isCard = true, cardIndex = 0) {
+        const s = m.stats || {};
+        
+        let outlinesHtml = '';
+        if (Array.isArray(m.outlines) && m.outlines.length > 0) {
+            outlinesHtml = `<div class="flex gap-1.5 mb-2">${m.outlines.map(c => `<span class="w-4 h-2 rounded-full inline-block shadow-sm" style="background:${c}"></span>`).join('')}</div>`;
+        }
+
+        const traitsHtml = m.traits && m.traits.length > 0 ? `
+            <div class="mt-4">
+                <h4 class="text-xs font-bold text-[#eacb67] tracking-wider uppercase mb-1">MERKMALE:</h4>
+                <div class="space-y-1">
+                    ${m.traits.map(t => {
+                        const parts = t.split(':');
+                        if(parts.length > 1) {
+                            return `<p class="text-xs text-gray-200"><strong class="text-[#eacb67] font-semibold">${parts[0]}:</strong>${parts.slice(1).join(':')}</p>`;
+                        }
+                        return `<p class="text-xs text-gray-200">${t}</p>`;
+                    }).join('')}
+                </div>
+            </div>` : '';
+
+        const actionsHtml = m.actions && m.actions.length > 0 ? `
+            <div class="mt-4">
+                <h4 class="text-xs font-bold text-[#eacb67] tracking-wider uppercase mb-1">AKTIONEN:</h4>
+                <div class="space-y-1.5">
+                    ${m.actions.map(a => `<p class="text-xs text-gray-200"><strong class="text-[#eacb67] font-semibold">${a.name}:</strong>${a.desc}</p>`).join('')}
+                </div>
+            </div>` : '';
+
+        const bonusActionsHtml = m.bonusActions && m.bonusActions.length > 0 ? `
+            <div class="mt-4">
+                <h4 class="text-xs font-bold text-[#eacb67] tracking-wider uppercase mb-1">BONUS-AKTIONEN:</h4>
+                <div class="space-y-1.5">
+                    ${m.bonusActions.map(ba => `<p class="text-xs text-gray-200"><strong class="text-[#eacb67] font-semibold">${ba.name}:</strong>${ba.desc}</p>`).join('')}
+                </div>
+            </div>` : '';
+
+        const reactionsHtml = m.reactions && m.reactions.length > 0 ? `
+            <div class="mt-4">
+                <h4 class="text-xs font-bold text-[#eacb67] tracking-wider uppercase mb-1">REAKTIONEN:</h4>
+                <div class="space-y-1.5">
+                    ${m.reactions.map(r => `<p class="text-xs text-gray-200"><strong class="text-[#eacb67] font-semibold">${r.name}:</strong>${r.desc}</p>`).join('')}
+                </div>
+            </div>` : '';
+
+        const tacticsHtml = m.tactics ? `
+            <div class="mt-4 bg-[#081511] border border-[#1b3d32] rounded-lg p-3">
+                <h4 class="text-xs font-bold text-[#eacb67] flex items-center gap-1 mb-1">⚔️ KI-KAMPFTAKTIK:</h4>
+                <p class="text-xs text-gray-300 leading-relaxed">${m.tactics}</p>
+            </div>` : '';
+
+        const buttonsHtml = isCard ? `
+            <div class="flex justify-end items-center gap-2 pt-4 mt-4 border-t border-[#1b3d32]">
+                <button class="add-to-init-btn text-xs px-3 py-1.5 bg-[#23483d] hover:bg-[#34705d] text-[#eacb67] font-semibold rounded-md border border-[#d4af37]/40 flex items-center gap-1 transition-all">+ Initiative</button>
+                <button class="duplicate-btn text-xs px-3 py-1.5 bg-[#132822] hover:bg-[#1f3f36] text-gray-300 rounded-md border border-gray-700/60 flex items-center gap-1 transition-all">📋 Duplizieren</button>
+                <button class="edit-btn text-xs px-3 py-1.5 bg-[#132822] hover:bg-[#1f3f36] text-[#eacb67] rounded-md border border-gray-700/60 flex items-center gap-1 transition-all">✏️ Bearbeiten</button>
+                <button class="delete-btn text-xs p-1.5 text-gray-400 hover:text-red-400 transition-all">🗑️</button>
+            </div>` : '';
+
+        return `
+            ${outlinesHtml}
+            <!-- Header -->
+            <div class="flex justify-between items-start mb-1">
+                <div>
+                    <h3 class="font-cinzel text-xl font-bold tracking-wide text-[#eacb67] uppercase">${m.name}</h3>
+                    <p class="text-xs text-gray-400">${m.type}</p>
+                </div>
+                <div class="bg-[#213a30] text-[#eacb67] border border-[#385e50] text-xs font-bold px-3 py-1 rounded-md">
+                    ${m.xp ? (m.xp.toString().includes('XP') ? m.xp : m.xp + ' XP') : '0 XP'}
+                </div>
+            </div>
+
+            <!-- Top Core Stats Grid -->
+            <div class="bg-[#081511] border border-[#1c3c31] rounded-lg p-2.5 my-3 grid grid-cols-4 text-center divide-x divide-[#1c3c31]">
+                <div>
+                    <div class="text-[10px] text-gray-400">RK (AC)</div>
+                    <div class="text-sm font-extrabold text-[#eacb67] mt-0.5">${m.ac}</div>
+                </div>
+                <div>
+                    <div class="text-[10px] text-gray-400">TP (HP)</div>
+                    <div class="text-sm font-extrabold text-[#22c55e] mt-0.5">${m.hp}</div>
+                </div>
+                <div>
+                    <div class="text-[10px] text-gray-400">Initiative</div>
+                    <div class="text-sm font-bold text-gray-100 mt-0.5">${m.init}</div>
+                </div>
+                <div>
+                    <div class="text-[10px] text-gray-400">Tempo</div>
+                    <div class="text-xs font-bold text-gray-100 mt-1">${m.speed}</div>
+                </div>
+            </div>
+
+            <!-- 2-Row Attributes Grid -->
+            <div class="bg-[#081511] border border-[#1c3c31] rounded-lg p-2 my-3 grid grid-cols-3 gap-y-2 divide-x divide-[#1c3c31]">
+                <!-- STÄ -->
+                <div class="px-1.5 text-center">
+                    <span class="text-xs font-bold text-[#eacb67]">STÄ</span>
+                    <span class="text-xs font-bold text-gray-100">${s.sta?.val||10} (${s.sta?.mod||'+0'})</span>
+                    <span class="text-[10px] text-gray-400 block sm:inline sm:ml-1">RW:${s.sta?.rw||'+0'}</span>
+                </div>
+                <!-- GES -->
+                <div class="px-1.5 text-center">
+                    <span class="text-xs font-bold text-[#eacb67]">GES</span>
+                    <span class="text-xs font-bold text-gray-100">${s.ges?.val||10} (${s.ges?.mod||'+0'})</span>
+                    <span class="text-[10px] text-gray-400 block sm:inline sm:ml-1">RW:${s.ges?.rw||'+0'}</span>
+                </div>
+                <!-- KON -->
+                <div class="px-1.5 text-center">
+                    <span class="text-xs font-bold text-[#eacb67]">KON</span>
+                    <span class="text-xs font-bold text-gray-100">${s.kon?.val||10} (${s.kon?.mod||'+0'})</span>
+                    <span class="text-[10px] text-gray-400 block sm:inline sm:ml-1">RW:${s.kon?.rw||'+0'}</span>
+                </div>
+                <!-- INT -->
+                <div class="px-1.5 text-center border-t border-[#1c3c31] pt-1.5">
+                    <span class="text-xs font-bold text-[#eacb67]">INT</span>
+                    <span class="text-xs font-bold text-gray-100">${s.int?.val||10} (${s.int?.mod||'+0'})</span>
+                    <span class="text-[10px] text-gray-400 block sm:inline sm:ml-1">RW:${s.int?.rw||'+0'}</span>
+                </div>
+                <!-- WEI -->
+                <div class="px-1.5 text-center border-t border-[#1c3c31] pt-1.5">
+                    <span class="text-xs font-bold text-[#eacb67]">WEI</span>
+                    <span class="text-xs font-bold text-gray-100">${s.wei?.val||10} (${s.wei?.mod||'+0'})</span>
+                    <span class="text-[10px] text-gray-400 block sm:inline sm:ml-1">RW:${s.wei?.rw||'+0'}</span>
+                </div>
+                <!-- CHA -->
+                <div class="px-1.5 text-center border-t border-[#1c3c31] pt-1.5">
+                    <span class="text-xs font-bold text-[#eacb67]">CHA</span>
+                    <span class="text-xs font-bold text-gray-100">${s.cha?.val||10} (${s.cha?.mod||'+0'})</span>
+                    <span class="text-[10px] text-gray-400 block sm:inline sm:ml-1">RW:${s.cha?.rw||'+0'}</span>
+                </div>
+            </div>
+
+            <!-- Details List -->
+            <div class="space-y-1 text-xs mt-3">
+                ${m.skills ? `<p><strong class="text-[#eacb67]">Fähigkeiten:</strong> <span class="text-gray-200">${m.skills}</span></p>` : ''}
+                ${m.equipment ? `<p><strong class="text-[#eacb67]">Ausrüstung:</strong> <span class="text-gray-200">${m.equipment}</span></p>` : ''}
+                ${m.resistances ? `<p><strong class="text-[#eacb67]">Resistenzen:</strong> <span class="text-gray-200">${m.resistances}</span></p>` : ''}
+                ${m.senses ? `<p><strong class="text-[#eacb67]">Sinne:</strong> <span class="text-gray-200">${m.senses}</span></p>` : ''}
+                ${m.languages ? `<p><strong class="text-[#eacb67]">Sprachen:</strong> <span class="text-gray-200">${m.languages}</span></p>` : ''}
+            </div>
+
+            ${traitsHtml}
+            ${actionsHtml}
+            ${bonusActionsHtml}
+            ${reactionsHtml}
+            ${tacticsHtml}
+            ${buttonsHtml}
+        `;
+    }
+
     function addDynamicField(containerId, nameVal = '', descVal = '') {
         const container = document.getElementById(containerId);
         const row = document.createElement('div');
@@ -948,56 +1105,11 @@
         state.monsters.forEach((m, index) => {
             const isLib = m.category === 'library';
             const card = document.createElement('div');
-            card.className = `draggable-item rounded-xl p-4 shadow-md border transition-all ${isLib ? 'bg-forest-950/40 border-gray-700/40 text-gray-400' : 'bg-forest-900/80 border-forest-700/60 text-gray-100'}`;
+            card.className = `draggable-item rounded-xl p-5 shadow-xl border transition-all ${isLib ? 'bg-[#0b1613]/80 border-gray-800 text-gray-400' : 'bg-[#0e211a] border-[#1f4236] text-gray-100'}`;
             card.draggable = true;
             card.dataset.index = index;
 
-            let outlinesHtml = '';
-            if (Array.isArray(m.outlines) && m.outlines.length > 0) {
-                outlinesHtml = `<div class="flex gap-1.5 mb-2">${m.outlines.map(c => `<span class="w-4 h-2 rounded-full inline-block shadow-sm" style="background:${c}"></span>`).join('')}</div>`;
-                card.style.boxShadow = `0 4px 16px rgba(0,0,0,0.25), inset 3px 0 0 ${m.outlines[0]}`;
-            }
-
-            const s = m.stats || {};
-            // Two-row layout for attributes
-            const row1 = `STR ${s.sta?.val||10} (${s.sta?.mod||'+0'}) [${s.sta?.rw||'+0'}] | GES ${s.ges?.val||10} (${s.ges?.mod||'+0'}) [${s.ges?.rw||'+0'}] | KON ${s.kon?.val||10} (${s.kon?.mod||'+0'}) [${s.kon?.rw||'+0'}]`;
-            const row2 = `INT ${s.int?.val||10} (${s.int?.mod||'+0'}) [${s.int?.rw||'+0'}] | WEI ${s.wei?.val||10} (${s.wei?.mod||'+0'}) [${s.wei?.rw||'+0'}] | CHA ${s.cha?.val||10} (${s.cha?.mod||'+0'}) [${s.cha?.rw||'+0'}]`;
-
-            const traitsHtml = m.traits && m.traits.length > 0 ? `<div class="mt-2 text-[11px]"><strong>Merkmale:</strong><ul class="list-disc pl-4">${m.traits.map(t=>`<li>${t}</li>`).join('')}</ul></div>` : '';
-            const actionsHtml = m.actions && m.actions.length > 0 ? `<div class="mt-2 text-[11px]"><strong>Aktionen:</strong><ul class="list-disc pl-4">${m.actions.map(a=>`<li><strong>${a.name}:</strong>${a.desc}</li>`).join('')}</ul></div>` : '';
-            const bonusActionsHtml = m.bonusActions && m.bonusActions.length > 0 ? `<div class="mt-2 text-[11px]"><strong>Bonus-Aktionen:</strong><ul class="list-disc pl-4">${m.bonusActions.map(ba=>`<li><strong>${ba.name}:</strong>${ba.desc}</li>`).join('')}</ul></div>` : '';
-            const reactionsHtml = m.reactions && m.reactions.length > 0 ? `<div class="mt-2 text-[11px]"><strong>Reaktionen:</strong><ul class="list-disc pl-4">${m.reactions.map(r=>`<li><strong>${r.name}:</strong>${r.desc}</li>`).join('')}</ul></div>` : '';
-
-            card.innerHTML = `
-                ${outlinesHtml}
-                <div class="flex justify-between items-start border-b border-forest-700/50 pb-2">
-                    <div>
-                        <h3 class="font-cinzel text-base font-bold text-gold-400">${m.name}</h3>
-                        <p class="text-[11px] text-gray-400">${m.type} | RK: ${m.ac} | TP: ${m.hp} | Init: ${m.init} | Tempo: ${m.speed} | XP: ${m.xp ? m.xp + ' XP' : '0 XP'}</p>
-                    </div>
-                    <span class="px-2 py-0.5 rounded text-[10px] ${isLib?'bg-gray-800 text-gray-300':'bg-gold-500/20 text-gold-300'}">${isLib?'Bibliothek':'Aktiv'}</span>
-                </div>
-                <div class="text-[11px] text-gold-300/80 mt-1.5 font-mono space-y-0.5 bg-forest-950/60 p-2 rounded border border-forest-700/40">
-                    <div>${row1}</div>
-                    <div>${row2}</div>
-                </div>
-                ${m.skills?`<p class="text-[11px] mt-1"><strong>Fertigkeiten:</strong> ${m.skills}</p>`:''}
-                ${m.equipment?`<p class="text-[11px]"><strong>Ausrüstung:</strong> ${m.equipment}</p>`:''}
-                ${m.resistances?`<p class="text-[11px]"><strong>Resistenzen:</strong> ${m.resistances}</p>`:''}
-                ${m.senses?`<p class="text-[11px]"><strong>Sinne:</strong> ${m.senses}</p>`:''}
-                ${traitsHtml}
-                ${actionsHtml}
-                ${bonusActionsHtml}
-                ${reactionsHtml}
-                <p class="text-xs text-gray-300 mt-2"><strong>Taktik:</strong> ${m.tactics || 'Keine Angabe'}</p>
-                <div class="flex justify-between items-center pt-3 border-t border-forest-800/60 mt-3">
-                    <button class="add-to-init-btn text-xs px-2 py-1 bg-gold-500/20 text-gold-400 rounded hover:bg-gold-500/30">⚔️ Zur Initiative</button>
-                    <div class="flex gap-2">
-                        <button class="edit-btn text-xs text-gold-400">✏️ Bearbeiten</button>
-                        <button class="delete-btn text-xs text-red-400">🗑️ Löschen</button>
-                    </div>
-                </div>
-            `;
+            card.innerHTML = buildMonsterStatblockHTML(m, true, index);
 
             // Drag Events
             card.ondragstart = (e) => { e.dataTransfer.setData('text/plain', index); card.classList.add('dragging'); };
@@ -1019,9 +1131,16 @@
                 addCombatantFromMonster(m);
                 showToast(`${m.name} zur Initiative hinzugefügt!`, 'success');
             };
+            card.querySelector('.duplicate-btn').onclick = () => {
+                const dup = JSON.parse(JSON.stringify(m));
+                dup.id = 'm-' + Date.now();
+                dup.name = dup.name + ' (Kopie)';
+                state.monsters.splice(index + 1, 0, dup);
+                saveState(); renderMonstersTab(); showToast('Kreatur dupliziert!', 'success');
+            };
             card.querySelector('.edit-btn').onclick = () => openMonsterModalForEdit(m);
             card.querySelector('.delete-btn').onclick = () => {
-                if (confirm(`Möchtest du das Monster "${m.name}" wirklich unwiderruflich löschen?`)) {
+                if (confirm(`Möchtest du das Monster "${m.name}" wirklich löschen?`)) {
                     state.monsters = state.monsters.filter(x => x.id !== m.id);
                     saveState(); renderMonstersTab(); showToast('Monster gelöscht', 'info');
                 }
@@ -1069,7 +1188,6 @@
         document.getElementById('monsterTacticsInput').value = m ? m.tactics : '';
         document.getElementById('monsterCategorySelect').value = m ? (m.category || 'active') : 'active';
 
-        // Populate dynamic containers
         document.getElementById('actionsContainer').innerHTML = '';
         if (m && m.actions) m.actions.forEach(a => addDynamicField('actionsContainer', a.name, a.desc));
 
@@ -1297,37 +1415,7 @@
         
         if (activeCombatant) {
             if (activeCombatant.monsterData) {
-                const m = activeCombatant.monsterData;
-                const s = m.stats || {};
-                const row1 = `STR ${s.sta?.val||10} (${s.sta?.mod||'+0'}) [${s.sta?.rw||'+0'}] | GES ${s.ges?.val||10} (${s.ges?.mod||'+0'}) [${s.ges?.rw||'+0'}] | KON ${s.kon?.val||10} (${s.kon?.mod||'+0'}) [${s.kon?.rw||'+0'}]`;
-                const row2 = `INT ${s.int?.val||10} (${s.int?.mod||'+0'}) [${s.int?.rw||'+0'}] | WEI ${s.wei?.val||10} (${s.wei?.mod||'+0'}) [${s.wei?.rw||'+0'}] | CHA ${s.cha?.val||10} (${s.cha?.mod||'+0'}) [${s.cha?.rw||'+0'}]`;
-
-                const traitsHtml = m.traits && m.traits.length > 0 ? `<div class="mt-2 text-[11px]"><strong>Merkmale:</strong><ul class="list-disc pl-4">${m.traits.map(t=>`<li>${t}</li>`).join('')}</ul></div>` : '';
-                const actionsHtml = m.actions && m.actions.length > 0 ? `<div class="mt-2 text-[11px]"><strong>Aktionen:</strong><ul class="list-disc pl-4">${m.actions.map(a=>`<li><strong>${a.name}:</strong>${a.desc}</li>`).join('')}</ul></div>` : '';
-                const bonusActionsHtml = m.bonusActions && m.bonusActions.length > 0 ? `<div class="mt-2 text-[11px]"><strong>Bonus-Aktionen:</strong><ul class="list-disc pl-4">${m.bonusActions.map(ba=>`<li><strong>${ba.name}:</strong>${ba.desc}</li>`).join('')}</ul></div>` : '';
-                const reactionsHtml = m.reactions && m.reactions.length > 0 ? `<div class="mt-2 text-[11px]"><strong>Reaktionen:</strong><ul class="list-disc pl-4">${m.reactions.map(r=>`<li><strong>${r.name}:</strong>${r.desc}</li>`).join('')}</ul></div>` : '';
-
-                activeStatHTML = `
-                    <div class="space-y-3">
-                        <div class="border-b border-gold-500/20 pb-2">
-                            <h3 class="font-cinzel text-lg font-bold text-gold-400">${activeCombatant.name}</h3>
-                            <p class="text-xs text-gray-300">${m.type} | RK: ${m.ac} | TP: ${activeCombatant.hp}/${activeCombatant.maxHp} | Init: ${activeCombatant.init}</p>
-                        </div>
-                        <div class="text-[11px] text-gold-300/80 font-mono bg-forest-950/60 p-2 rounded border border-forest-700/40 space-y-0.5">
-                            <div>${row1}</div>
-                            <div>${row2}</div>
-                        </div>
-                        ${m.skills?`<p class="text-[11px]"><strong>Fertigkeiten:</strong> ${m.skills}</p>`:''}
-                        ${m.equipment?`<p class="text-[11px]"><strong>Ausrüstung:</strong> ${m.equipment}</p>`:''}
-                        ${m.resistances?`<p class="text-[11px]"><strong>Resistenzen:</strong> ${m.resistances}</p>`:''}
-                        ${m.senses?`<p class="text-[11px]"><strong>Sinne:</strong> ${m.senses}</p>`:''}
-                        ${traitsHtml}
-                        ${actionsHtml}
-                        ${bonusActionsHtml}
-                        ${reactionsHtml}
-                        ${m.tactics?`<p class="text-xs text-gray-300"><strong>Taktik:</strong> ${m.tactics}</p>`:''}
-                    </div>
-                `;
+                activeStatHTML = buildMonsterStatblockHTML(activeCombatant.monsterData, false);
             } else {
                 activeStatHTML = `
                     <div class="space-y-3">
