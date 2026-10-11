@@ -300,7 +300,7 @@
             <button data-tab="auftakt" class="nav-tab active-tab px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-all flex items-center space-x-2">Auftakt & Rückblick</button>
             <button data-tab="geheimnisse" class="nav-tab px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-all flex items-center space-x-2">Geheimnisse</button>
             <button data-tab="namensgen" class="nav-tab px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-all flex items-center space-x-2">Namensgenerator</button>
-            <button data-tab="rollendeck" class="nav-tab px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-all flex items-center space-x-2">NPC-Rollendeck</button>
+            <button data-tab="rollendeck" class="nav-tab px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-all flex items-center space-x-2">NPCs</button>
             <button data-tab="monster" class="nav-tab px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-all flex items-center space-x-2">Monster & Kampf</button>
             <button data-tab="knoten" class="nav-tab px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-all flex items-center space-x-2">Knoten-Ablaufplan</button>
             <button data-tab="initiative" class="nav-tab px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-all flex items-center space-x-2">Initiative</button>
@@ -326,7 +326,7 @@
                     <h2 class="font-cinzel text-lg font-bold text-gold-400">Meilensteine</h2>
                     <button id="addChecklistItemBtn" class="p-1 rounded bg-gold-500/20 text-gold-400 text-xs px-2">+ Neu</button>
                 </div>
-                <div id="checklistItemsContainer" class="space-y-2.5 max-h-64 overflow-y-auto pr-1"></div>
+                <div id="checklistItemsContainer" class="space-y-2.5"></div>
             </div>
         </div>
         <div class="bg-forest-900/60 dark:bg-forest-900/80 bg-white border border-forest-700/40 rounded-xl p-5 shadow-md">
@@ -421,9 +421,9 @@
         </div>
     </section>
 
-    <!-- TAB 4: NPC-ROLLENDECK -->
+    <!-- TAB 4: NPCS -->
     <section id="tab-rollendeck" class="tab-content hidden space-y-6">
-        <div class="flex justify-between bg-forest-900/60 p-4 rounded-xl border border-forest-700/40">
+        <div class="flex justify-between items-center bg-forest-900/60 p-4 rounded-xl border border-forest-700/40 gap-4 flex-wrap">
             <input id="npcSearchInput" type="text" placeholder="NPC suchen..." class="bg-forest-950 text-xs rounded-lg px-3 py-2 border border-forest-700 text-gray-200 w-64">
             <button id="openNewNpcModalBtn" class="px-4 py-2 bg-gold-500 text-forest-950 font-semibold text-xs rounded-lg">+ Neuer NPC</button>
         </div>
@@ -817,13 +817,13 @@
 
     function loadState() {
         try {
-            const saved = localStorage.getItem('sylvanus_codex_data_v16');
+            const saved = localStorage.getItem('sylvanus_codex_data_v17');
             if (saved) state = { ...state, ...JSON.parse(saved) };
         } catch (e) { console.error(e); }
     }
 
     function saveState() {
-        try { localStorage.setItem('sylvanus_codex_data_v16', JSON.stringify(state)); } catch (e) { console.error(e); }
+        try { localStorage.setItem('sylvanus_codex_data_v17', JSON.stringify(state)); } catch (e) { console.error(e); }
     }
 
     function exportData() {
@@ -885,12 +885,54 @@
 
         const checkContainer = document.getElementById('checklistItemsContainer');
         checkContainer.innerHTML = '';
-        state.checklist.forEach(item => {
+        state.checklist.forEach((item, index) => {
             const row = document.createElement('div');
-            row.className = 'flex items-center justify-between p-2 rounded bg-forest-950/50 border border-forest-700/40 text-xs';
-            row.innerHTML = `<label class="flex items-center space-x-2 cursor-pointer flex-grow"><input type="checkbox" ${item.done ? 'checked' : ''} class="rounded bg-forest-900 border-forest-600 text-gold-500"><span class="${item.done ? 'line-through text-gray-500' : 'text-gray-200'}">${item.text}</span></label><button class="text-gray-500 hover:text-red-400 p-1">✕</button>`;
-            row.querySelector('input').onchange = (e) => { item.done = e.target.checked; saveState(); renderAuftaktTab(); };
-            row.querySelector('button').onclick = () => { state.checklist = state.checklist.filter(c => c.id !== item.id); saveState(); renderAuftaktTab(); };
+            row.className = 'draggable-item flex items-center justify-between p-2 rounded bg-forest-950/50 border border-forest-700/40 text-xs';
+            row.draggable = true;
+            row.dataset.index = index;
+
+            row.innerHTML = `
+                <div class="flex items-center space-x-2 flex-grow cursor-pointer">
+                    <input type="checkbox" ${item.done ? 'checked' : ''} class="rounded bg-forest-900 border-forest-600 text-gold-500">
+                    <span class="${item.done ? 'line-through text-gray-500' : 'text-gray-200'}">${item.text}</span>
+                </div>
+                <div class="flex items-center space-x-1">
+                    <button class="text-gray-400 hover:text-gold-300 p-1 edit-item" title="Bearbeiten">✏️</button>
+                    <button class="text-gray-500 hover:text-red-400 p-1 delete-item" title="Löschen">✕</button>
+                </div>
+            `;
+
+            row.querySelector('input[type="checkbox"]').onchange = (e) => { item.done = e.target.checked; saveState(); renderAuftaktTab(); };
+            row.querySelector('.edit-item').onclick = () => {
+                const newText = prompt('Meilenstein bearbeiten:', item.text);
+                if (newText !== null && newText.trim() !== '') {
+                    item.text = newText.trim();
+                    saveState();
+                    renderAuftaktTab();
+                }
+            };
+            row.querySelector('.delete-item').onclick = () => {
+                state.checklist = state.checklist.filter(c => c.id !== item.id);
+                saveState();
+                renderAuftaktTab();
+            };
+
+            // Drag & Drop for Checklist
+            row.ondragstart = (e) => { e.dataTransfer.setData('text/plain', index); row.classList.add('dragging'); };
+            row.ondragend = () => { row.classList.remove('dragging'); };
+            row.ondragover = (e) => { e.preventDefault(); };
+            row.ondrop = (e) => {
+                e.preventDefault();
+                const fromIdx = parseInt(e.dataTransfer.getData('text/plain'));
+                const toIdx = index;
+                if (!isNaN(fromIdx) && fromIdx !== toIdx) {
+                    const moved = state.checklist.splice(fromIdx, 1)[0];
+                    state.checklist.splice(toIdx, 0, moved);
+                    saveState();
+                    renderAuftaktTab();
+                }
+            };
+
             checkContainer.appendChild(row);
         });
 
@@ -904,7 +946,7 @@
             recapContainer.appendChild(card);
         });
     }
-    document.getElementById('addChecklistItemBtn').onclick = () => { const t = prompt('Ziel:'); if(t){ state.checklist.push({id:Date.now().toString(), text:t, done:false}); saveState(); renderAuftaktTab(); } };
+    document.getElementById('addChecklistItemBtn').onclick = () => { const t = prompt('Neuer Meilenstein:'); if(t){ state.checklist.push({id:Date.now().toString(), text:t, done:false}); saveState(); renderAuftaktTab(); } };
     document.getElementById('addRecapItemBtn').onclick = () => { const t = prompt('Stichpunkt:'); if(t){ state.recap.push(t); saveState(); renderAuftaktTab(); } };
 
     function renderSecretsTab() {
@@ -1017,8 +1059,8 @@
 
     function transferNameToNPC() {
         const fullName = `${currentFirstName} ${currentLastName}`;
+        openNpcModalForEdit(null);
         document.getElementById('npcNameInput').value = fullName;
-        document.getElementById('npcModal').classList.remove('hidden');
     }
 
     document.getElementById('nameGenRaceSelect').onchange = fullNameGeneratorReset;
@@ -1027,24 +1069,82 @@
     function renderNPCsTab() {
         const grid = document.getElementById('npcCardsGrid');
         grid.innerHTML = '';
-        state.npcs.forEach(n => {
+        const query = document.getElementById('npcSearchInput').value.toLowerCase();
+        
+        const filtered = state.npcs.filter(n => 
+            n.name.toLowerCase().includes(query) || 
+            (n.role && n.role.toLowerCase().includes(query)) ||
+            (n.location && n.location.toLowerCase().includes(query))
+        );
+
+        filtered.forEach(n => {
             const card = document.createElement('div');
-            card.className = 'bg-forest-900/80 border border-forest-700/60 rounded-xl p-4 shadow-md text-xs space-y-2';
-            card.innerHTML = `<h3 class="font-cinzel text-base font-bold text-gold-400">${n.name}</h3><p class="text-gray-400">${n.role}</p><p><strong>Ziel:</strong> ${n.goal}</p><button class="text-red-400">Löschen</button>`;
-            card.querySelector('button').onclick = () => { state.npcs = state.npcs.filter(x => x.id !== n.id); saveState(); renderNPCsTab(); };
+            card.className = 'bg-forest-900/80 border border-forest-700/60 rounded-xl p-4 shadow-md text-xs space-y-2 flex flex-col justify-between';
+            card.innerHTML = `
+                <div>
+                    <h3 class="font-cinzel text-base font-bold text-gold-400">${n.name}</h3>
+                    <p class="text-gray-400">${n.role || 'Keine Rolle'}</p>
+                    ${n.location ? `<p class="text-gray-300 mt-1"><strong>Ort:</strong> ${n.location}</p>` : ''}
+                    ${n.goal ? `<p class="text-gray-300 mt-1"><strong>Ziel:</strong> ${n.goal}</p>` : ''}
+                </div>
+                <div class="flex justify-end gap-3 pt-2 border-t border-forest-800">
+                    <button class="edit-npc text-gold-400 hover:text-gold-300">✏️ Bearbeiten</button>
+                    <button class="delete-npc text-red-400 hover:text-red-300">🗑️ Löschen</button>
+                </div>
+            `;
+            card.querySelector('.edit-npc').onclick = () => openNpcModalForEdit(n);
+            card.querySelector('.delete-npc').onclick = () => {
+                if (confirm(`NPC "${n.name}" wirklich löschen?`)) {
+                    state.npcs = state.npcs.filter(x => x.id !== n.id);
+                    saveState(); 
+                    renderNPCsTab(); 
+                    showToast('NPC gelöscht', 'info');
+                }
+            };
             grid.appendChild(card);
         });
     }
-    document.getElementById('openNewNpcModalBtn').onclick = () => document.getElementById('npcModal').classList.remove('hidden');
+
+    function openNpcModalForEdit(n = null) {
+        document.getElementById('npcModalTitle').textContent = n ? 'NPC bearbeiten' : 'Neuen NPC anlegen';
+        document.getElementById('npcIdInput').value = n ? n.id : '';
+        document.getElementById('npcNameInput').value = n ? n.name : '';
+        document.getElementById('npcRoleInput').value = n ? (n.role || '') : '';
+        document.getElementById('npcLocationInput').value = n ? (n.location || '') : '';
+        document.getElementById('npcVisualInput').value = n ? (n.visual || '') : '';
+        document.getElementById('npcVoiceInput').value = n ? (n.voice || '') : '';
+        document.getElementById('npcGoalInput').value = n ? (n.goal || '') : '';
+        document.getElementById('npcSecretInput').value = n ? (n.secret || '') : '';
+        document.getElementById('npcModal').classList.remove('hidden');
+    }
+
+    document.getElementById('openNewNpcModalBtn').onclick = () => openNpcModalForEdit(null);
     document.querySelectorAll('.closeModalBtn').forEach(b => b.onclick = () => document.getElementById('npcModal').classList.add('hidden'));
+    document.getElementById('npcSearchInput').oninput = () => renderNPCsTab();
+
     document.getElementById('npcForm').onsubmit = (e) => {
         e.preventDefault();
-        state.npcs.unshift({
-            id: 'npc-'+Date.now(), name: document.getElementById('npcNameInput').value, role: document.getElementById('npcRoleInput').value,
-            location: document.getElementById('npcLocationInput').value, visual: document.getElementById('npcVisualInput').value,
-            voice: document.getElementById('npcVoiceInput').value, goal: document.getElementById('npcGoalInput').value, secret: document.getElementById('npcSecretInput').value
-        });
-        saveState(); document.getElementById('npcModal').classList.add('hidden'); renderNPCsTab(); showToast('NPC gespeichert!', 'success');
+        const id = document.getElementById('npcIdInput').value;
+        const npcObj = {
+            id: id || 'npc-'+Date.now(),
+            name: document.getElementById('npcNameInput').value,
+            role: document.getElementById('npcRoleInput').value,
+            location: document.getElementById('npcLocationInput').value,
+            visual: document.getElementById('npcVisualInput').value,
+            voice: document.getElementById('npcVoiceInput').value,
+            goal: document.getElementById('npcGoalInput').value,
+            secret: document.getElementById('npcSecretInput').value
+        };
+        if (id) {
+            const idx = state.npcs.findIndex(x => x.id === id);
+            if (idx !== -1) state.npcs[idx] = npcObj;
+        } else {
+            state.npcs.unshift(npcObj);
+        }
+        saveState(); 
+        document.getElementById('npcModal').classList.add('hidden'); 
+        renderNPCsTab(); 
+        showToast('NPC gespeichert!', 'success');
     };
 
     function buildMonsterStatblockHTML(m, isCard = true, cardIndex = 0) {
