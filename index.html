@@ -352,7 +352,7 @@
     <!-- TAB 3: NAMENSGENERATOR -->
     <section id="tab-namensgen" class="tab-content hidden space-y-5">
         <div class="bg-[#0b1b16] border border-[#1d3d34] rounded-2xl p-6 shadow-2xl space-y-6">
-            
+
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gold-500/20 pb-4">
                 <div>
                     <h2 class="font-cinzel text-2xl font-bold text-[#eacb67] tracking-wider">SYLVANUS NAMENSSCHMIEDE</h2>
@@ -837,7 +837,14 @@
         if (event.target.files[0]) {
             reader.readAsText(event.target.files[0], "UTF-8");
             reader.onload = function(e) {
-                try { state = { ...state, ...JSON.parse(e.target.result) }; saveState(); location.reload(); }
+                try {
+                    state = { ...state, ...JSON.parse(e.target.result) };
+                    saveState();
+                    showToast("Import erfolgreich! Lade neu...", "success");
+                    setTimeout(() => {
+                        location.reload();
+                    }, 500); // Gibt iOS/WebKit 0,5 Sekunden Zeit zum Speichern
+                }
                 catch (err) { showToast("Import-Fehler!", "error"); }
             };
         }
@@ -1070,9 +1077,9 @@
         const grid = document.getElementById('npcCardsGrid');
         grid.innerHTML = '';
         const query = document.getElementById('npcSearchInput').value.toLowerCase();
-        
-        const filtered = state.npcs.filter(n => 
-            n.name.toLowerCase().includes(query) || 
+
+        const filtered = state.npcs.filter(n =>
+            n.name.toLowerCase().includes(query) ||
             (n.role && n.role.toLowerCase().includes(query)) ||
             (n.location && n.location.toLowerCase().includes(query))
         );
@@ -1096,8 +1103,8 @@
             card.querySelector('.delete-npc').onclick = () => {
                 if (confirm(`NPC "${n.name}" wirklich löschen?`)) {
                     state.npcs = state.npcs.filter(x => x.id !== n.id);
-                    saveState(); 
-                    renderNPCsTab(); 
+                    saveState();
+                    renderNPCsTab();
                     showToast('NPC gelöscht', 'info');
                 }
             };
@@ -1141,19 +1148,97 @@
         } else {
             state.npcs.unshift(npcObj);
         }
-        saveState(); 
-        document.getElementById('npcModal').classList.add('hidden'); 
-        renderNPCsTab(); 
+        saveState();
+        document.getElementById('npcModal').classList.add('hidden');
+        renderNPCsTab();
         showToast('NPC gespeichert!', 'success');
     };
 
-    function buildMonsterStatblockHTML(m, isCard = true, cardIndex = 0) {
-        const s = m.stats || {};
-        
-        let outlinesHtml = '';
-        if (Array.isArray(m.outlines) && m.outlines.length > 0) {
-            outlinesHtml = `<div class="flex gap-1.5 mb-2">${m.outlines.map(c => `<span class="w-4 h-2 rounded-full inline-block shadow-sm" style="background:${c}"></span>`).join('')}</div>`;
+    // Helper to generate CSS border and shadow based on monster outlines
+    function getMonsterCardBorderStyle(m) {
+        const outlines = Array.isArray(m.outlines) ? m.outlines.filter(Boolean) : [];
+        if (outlines.length === 0) {
+            return {
+                border: m.category === 'library' ? '1px solid #374151' : '1px solid #1f4236',
+                boxShadow: '0 4px 16px rgba(0, 0, 0, 0.25)'
+            };
         }
+        if (outlines.length === 1) {
+            return {
+                border: `3px solid ${outlines[0]}`,
+                boxShadow: `0 0 12px ${outlines[0]}55, 0 4px 16px rgba(0, 0, 0, 0.3)`
+            };
+        }
+        // Multiple colors: concentric rings via border + box-shadow
+        const primary = outlines[0];
+        const rings = outlines.slice(1).map((color, idx) => `0 0 0 ${(idx + 1) * 3}px ${color}`);
+        rings.push(`0 0 14px ${primary}40`);
+        rings.push('0 4px 16px rgba(0, 0, 0, 0.3)');
+        return {
+            border: `3px solid ${primary}`,
+            boxShadow: rings.join(', ')
+        };
+    }
+
+    // Base name extractor (e.g. "Ork 2" -> "Ork", "Goblin (Kopie)" -> "Goblin")
+    function getBaseMonsterName(name) {
+        if (!name) return 'Kreatur';
+        let cleaned = name.replace(/\s*\(Kopie(\s*\d+)?\)$/i, '').trim();
+        const match = cleaned.match(/^(.+?)\s+(\d+)$/);
+        if (match) {
+            return match[1].trim();
+        }
+        return cleaned;
+    }
+
+    // Calculates next ascending name (e.g. "Goblin 2", "Goblin 3") for active monsters
+    function getNextMonsterNameForActive(sourceName) {
+        const baseName = getBaseMonsterName(sourceName);
+        const activeMonsters = state.monsters.filter(x => x.category === 'active');
+        
+        const existingNumbers = [];
+        let hasBaseExact = false;
+        
+        activeMonsters.forEach(m => {
+            const mTrimmed = m.name.trim();
+            const mBase = getBaseMonsterName(mTrimmed);
+            if (mBase.toLowerCase() === baseName.toLowerCase()) {
+                const numMatch = mTrimmed.match(/^.+?\s+(\d+)$/);
+                if (numMatch) {
+                    existingNumbers.push(parseInt(numMatch[1], 10));
+                } else {
+                    hasBaseExact = true;
+                    existingNumbers.push(1);
+                }
+            }
+        });
+
+        // If no active monster has this base name, use baseName as-is
+        if (!hasBaseExact && existingNumbers.length === 0) {
+            return baseName;
+        }
+
+        // Next number is max existing + 1 (at least 2)
+        const maxNum = Math.max(1, ...existingNumbers);
+        const nextNum = Math.max(2, maxNum + 1);
+        return `${baseName} ${nextNum}`;
+    }
+
+    // Track which monsters are expanded in the Monster & Kampf tab
+    const expandedMonsterIds = new Set();
+
+    function toggleMonsterExpanded(id) {
+        if (expandedMonsterIds.has(id)) {
+            expandedMonsterIds.delete(id);
+        } else {
+            expandedMonsterIds.add(id);
+        }
+        renderMonstersTab();
+    }
+
+    // Statblock details (RK, TP, Stats, Traits, Actions, Tactics etc.)
+    function buildMonsterStatblockDetailsHTML(m) {
+        const s = m.stats || {};
 
         const traitsHtml = m.traits && m.traits.length > 0 ? `
             <div class="mt-4">
@@ -1199,26 +1284,7 @@
                 <p class="text-xs text-gray-300 leading-relaxed">${m.tactics}</p>
             </div>` : '';
 
-        const buttonsHtml = isCard ? `
-            <div class="flex justify-end items-center gap-2 pt-4 mt-4 border-t border-[#1b3d32]">
-                <button class="add-to-init-btn text-xs px-3 py-1.5 bg-[#23483d] hover:bg-[#34705d] text-[#eacb67] font-semibold rounded-md border border-[#d4af37]/40 flex items-center gap-1 transition-all">+ Initiative</button>
-                <button class="duplicate-btn text-xs px-3 py-1.5 bg-[#132822] hover:bg-[#1f3f36] text-gray-300 rounded-md border border-gray-700/60 flex items-center gap-1 transition-all">📋 Duplizieren</button>
-                <button class="edit-btn text-xs px-3 py-1.5 bg-[#132822] hover:bg-[#1f3f36] text-[#eacb67] rounded-md border border-gray-700/60 flex items-center gap-1 transition-all">✏️ Bearbeiten</button>
-                <button class="delete-btn text-xs p-1.5 text-gray-400 hover:text-red-400 transition-all">🗑️</button>
-            </div>` : '';
-
         return `
-            ${outlinesHtml}
-            <div class="flex justify-between items-start mb-1">
-                <div>
-                    <h3 class="font-cinzel text-xl font-bold tracking-wide text-[#eacb67] uppercase">${m.name}</h3>
-                    <p class="text-xs text-gray-400">${m.type}</p>
-                </div>
-                <div class="bg-[#213a30] text-[#eacb67] border border-[#385e50] text-xs font-bold px-3 py-1 rounded-md">
-                    ${m.xp ? (m.xp.toString().includes('XP') ? m.xp : m.xp + ' XP') : '0 XP'}
-                </div>
-            </div>
-
             <div class="bg-[#081511] border border-[#1c3c31] rounded-lg p-2.5 my-3 grid grid-cols-4 text-center divide-x divide-[#1c3c31]">
                 <div>
                     <div class="text-[10px] text-gray-400">RK (AC)</div>
@@ -1284,7 +1350,27 @@
             ${bonusActionsHtml}
             ${reactionsHtml}
             ${tacticsHtml}
-            ${buttonsHtml}
+        `;
+    }
+
+    // Function used by Initiative tab (isCard=false) to display complete monster card on right side
+    function buildMonsterStatblockHTML(m, isCard = true, cardIndex = 0) {
+        let outlinesHtml = '';
+        if (!isCard && Array.isArray(m.outlines) && m.outlines.length > 0) {
+            outlinesHtml = `<div class="flex gap-1.5 mb-2">${m.outlines.map(c => `<span class="w-4 h-2 rounded-full inline-block shadow-sm" style="background:${c}"></span>`).join('')}</div>`;
+        }
+        return `
+            ${outlinesHtml}
+            <div class="flex justify-between items-start mb-1">
+                <div>
+                    <h3 class="font-cinzel text-xl font-bold tracking-wide text-[#eacb67] uppercase">${m.name}</h3>
+                    <p class="text-xs text-gray-400">${m.type}</p>
+                </div>
+                <div class="bg-[#213a30] text-[#eacb67] border border-[#385e50] text-xs font-bold px-3 py-1 rounded-md">
+                    ${m.xp ? (m.xp.toString().includes('XP') ? m.xp : m.xp + ' XP') : '0 XP'}
+                </div>
+            </div>
+            ${buildMonsterStatblockDetailsHTML(m)}
         `;
     }
 
@@ -1307,13 +1393,150 @@
 
         state.monsters.forEach((m, index) => {
             const isLib = m.category === 'library';
+            const isExpanded = expandedMonsterIds.has(m.id);
+            const borderStyles = getMonsterCardBorderStyle(m);
+
             const card = document.createElement('div');
-            card.className = `draggable-item rounded-xl p-5 shadow-xl border transition-all ${isLib ? 'bg-[#0b1613]/80 border-gray-800 text-gray-400' : 'bg-[#0e211a] border-[#1f4236] text-gray-100'}`;
+            card.className = `draggable-item rounded-xl p-4 shadow-xl transition-all ${isLib ? 'bg-[#0b1613]/90 text-gray-300' : 'bg-[#0e211a] text-gray-100'}`;
             card.draggable = true;
             card.dataset.index = index;
+            card.style.border = borderStyles.border;
+            card.style.boxShadow = borderStyles.boxShadow;
 
-            card.innerHTML = buildMonsterStatblockHTML(m, true, index);
+            if (isLib) {
+                // Bibliothek (Archiv) Card - Kompakt (Name, Typ, XP), per Klick aufklappbar, + Icon für Übertrag in Aktive
+                card.innerHTML = `
+                    <div class="flex justify-between items-start gap-2 cursor-pointer card-header-click" title="Klicken, um Statblock ${isExpanded ? 'einzuklappen' : 'anzuzeigen'}">
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <h3 class="font-cinzel text-lg font-bold tracking-wide text-gray-200 uppercase truncate">${m.name}</h3>
+                                <span class="text-[10px] text-gray-400 bg-forest-950/70 border border-forest-800 px-2 py-0.5 rounded font-sans">${isExpanded ? '▲ Einklappen' : '▼ Details'}</span>
+                            </div>
+                            <p class="text-xs text-gray-400 truncate mt-0.5">${m.type || 'Kreatur'}</p>
+                        </div>
+                        <div class="bg-[#1b2f27] text-gray-300 border border-gray-700 text-xs font-bold px-2.5 py-1 rounded-md flex-shrink-0">
+                            ${m.xp ? (m.xp.toString().includes('XP') ? m.xp : m.xp + ' XP') : '0 XP'}
+                        </div>
+                    </div>
 
+                    <div class="flex flex-wrap items-center justify-end gap-1.5 pt-3 mt-3 border-t border-forest-800/60">
+                        <button class="add-to-active-btn text-xs px-3 py-1.5 bg-[#d4af37] hover:bg-[#eacb67] text-[#0b1814] font-bold rounded-md flex items-center gap-1 transition-all shadow-md" title="Als eigenständige Kreatur zu Aktive Monster hinzufügen">➕ Zu Aktiv</button>
+                        <button class="edit-btn text-xs px-2.5 py-1.5 bg-[#132822] hover:bg-[#1f3f36] text-[#eacb67] rounded-md border border-gray-700/60 flex items-center gap-1 transition-all" title="Bearbeiten">✏️ Bearbeiten</button>
+                        <button class="delete-btn text-xs p-1.5 text-gray-400 hover:text-red-400 transition-all" title="Löschen">🗑️</button>
+                    </div>
+
+                    <div class="monster-details ${isExpanded ? 'block' : 'hidden'} pt-2 border-t border-forest-800/40 mt-3">
+                        ${buildMonsterStatblockDetailsHTML(m)}
+                    </div>
+                `;
+
+                card.querySelector('.card-header-click').onclick = () => toggleMonsterExpanded(m.id);
+
+                card.querySelector('.add-to-active-btn').onclick = (e) => {
+                    e.stopPropagation();
+                    const newMonster = JSON.parse(JSON.stringify(m));
+                    newMonster.id = 'm-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+                    newMonster.category = 'active';
+                    newMonster.name = getNextMonsterNameForActive(m.name);
+                    state.monsters.unshift(newMonster);
+                    saveState();
+                    renderMonstersTab();
+                    showToast(`"${newMonster.name}" zu aktiven Monstern hinzugefügt!`, 'success');
+                };
+
+                card.querySelector('.edit-btn').onclick = (e) => {
+                    e.stopPropagation();
+                    openMonsterModalForEdit(m);
+                };
+
+                card.querySelector('.delete-btn').onclick = (e) => {
+                    e.stopPropagation();
+                    if (confirm(`Möchtest du das Monster "${m.name}" wirklich aus der Bibliothek löschen?`)) {
+                        state.monsters = state.monsters.filter(x => x.id !== m.id);
+                        expandedMonsterIds.delete(m.id);
+                        saveState();
+                        renderMonstersTab();
+                        showToast('Monster aus Bibliothek gelöscht', 'info');
+                    }
+                };
+
+                libraryGrid.appendChild(card);
+            } else {
+                // Aktive Monster Card - Kompakt (nur Name, Kreaturtyp, XP, farbiger Rahmen), Button für Bibliothek
+                card.innerHTML = `
+                    <div class="flex justify-between items-start gap-2 cursor-pointer card-header-click" title="Klicken, um Statblock ${isExpanded ? 'einzuklappen' : 'anzuzeigen'}">
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <h3 class="font-cinzel text-lg font-bold tracking-wide text-[#eacb67] uppercase truncate">${m.name}</h3>
+                                <span class="text-[10px] text-[#eacb67] bg-[#1a382d] border border-gold-500/30 px-2 py-0.5 rounded font-sans">${isExpanded ? '▲ Einklappen' : '▼ Details'}</span>
+                            </div>
+                            <p class="text-xs text-gray-400 truncate mt-0.5">${m.type || 'Kreatur'}</p>
+                        </div>
+                        <div class="bg-[#213a30] text-[#eacb67] border border-[#385e50] text-xs font-bold px-2.5 py-1 rounded-md flex-shrink-0">
+                            ${m.xp ? (m.xp.toString().includes('XP') ? m.xp : m.xp + ' XP') : '0 XP'}
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap items-center justify-end gap-1.5 pt-3 mt-3 border-t border-[#1b3d32]/60">
+                        <button class="add-to-init-btn text-xs px-2.5 py-1.5 bg-[#23483d] hover:bg-[#34705d] text-[#eacb67] font-semibold rounded-md border border-[#d4af37]/40 flex items-center gap-1 transition-all" title="Zur Initiative hinzufügen (würfelt 1W20 + Init)">⚔️ + Init</button>
+                        <button class="move-to-lib-btn text-xs px-2.5 py-1.5 bg-[#18362b] hover:bg-[#254d3e] text-[#97c7b2] hover:text-[#eacb67] font-medium rounded-md border border-forest-700/60 flex items-center gap-1 transition-all" title="In Bibliothek (Archiv) verschieben">📚 Zur Bibliothek</button>
+                        <button class="duplicate-btn text-xs px-2.5 py-1.5 bg-[#132822] hover:bg-[#1f3f36] text-gray-300 rounded-md border border-gray-700/60 flex items-center gap-1 transition-all" title="Duplizieren mit aufsteigender Nummer">📋 Kopie</button>
+                        <button class="edit-btn text-xs px-2.5 py-1.5 bg-[#132822] hover:bg-[#1f3f36] text-[#eacb67] rounded-md border border-gray-700/60 flex items-center gap-1 transition-all" title="Bearbeiten">✏️</button>
+                        <button class="delete-btn text-xs p-1.5 text-gray-400 hover:text-red-400 transition-all" title="Löschen">🗑️</button>
+                    </div>
+
+                    <div class="monster-details ${isExpanded ? 'block' : 'hidden'} pt-2 border-t border-forest-800/40 mt-3">
+                        ${buildMonsterStatblockDetailsHTML(m)}
+                    </div>
+                `;
+
+                card.querySelector('.card-header-click').onclick = () => toggleMonsterExpanded(m.id);
+
+                card.querySelector('.add-to-init-btn').onclick = (e) => {
+                    e.stopPropagation();
+                    addCombatantFromMonster(m);
+                };
+
+                card.querySelector('.move-to-lib-btn').onclick = (e) => {
+                    e.stopPropagation();
+                    m.category = 'library';
+                    saveState();
+                    renderMonstersTab();
+                    showToast(`"${m.name}" zur Bibliothek hinzugefügt!`, 'success');
+                };
+
+                card.querySelector('.duplicate-btn').onclick = (e) => {
+                    e.stopPropagation();
+                    const dup = JSON.parse(JSON.stringify(m));
+                    dup.id = 'm-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+                    dup.category = 'active';
+                    dup.name = getNextMonsterNameForActive(m.name);
+                    state.monsters.splice(index + 1, 0, dup);
+                    saveState();
+                    renderMonstersTab();
+                    showToast(`"${dup.name}" erstellt!`, 'success');
+                };
+
+                card.querySelector('.edit-btn').onclick = (e) => {
+                    e.stopPropagation();
+                    openMonsterModalForEdit(m);
+                };
+
+                card.querySelector('.delete-btn').onclick = (e) => {
+                    e.stopPropagation();
+                    if (confirm(`Möchtest du das Monster "${m.name}" wirklich löschen?`)) {
+                        state.monsters = state.monsters.filter(x => x.id !== m.id);
+                        expandedMonsterIds.delete(m.id);
+                        saveState();
+                        renderMonstersTab();
+                        showToast('Monster gelöscht', 'info');
+                    }
+                };
+
+                activeGrid.appendChild(card);
+            }
+
+            // Drag & Drop
             card.ondragstart = (e) => { e.dataTransfer.setData('text/plain', index); card.classList.add('dragging'); };
             card.ondragend = () => { card.classList.remove('dragging'); };
             card.ondragover = (e) => { e.preventDefault(); };
@@ -1329,28 +1552,6 @@
                     saveState(); renderMonstersTab();
                 }
             };
-
-            card.querySelector('.add-to-init-btn').onclick = () => {
-                addCombatantFromMonster(m);
-                showToast(`${m.name} zur Initiative hinzugefügt!`, 'success');
-            };
-            card.querySelector('.duplicate-btn').onclick = () => {
-                const dup = JSON.parse(JSON.stringify(m));
-                dup.id = 'm-' + Date.now();
-                dup.name = dup.name + ' (Kopie)';
-                state.monsters.splice(index + 1, 0, dup);
-                saveState(); renderMonstersTab(); showToast('Kreatur dupliziert!', 'success');
-            };
-            card.querySelector('.edit-btn').onclick = () => openMonsterModalForEdit(m);
-            card.querySelector('.delete-btn').onclick = () => {
-                if (confirm(`Möchtest du das Monster "${m.name}" wirklich löschen?`)) {
-                    state.monsters = state.monsters.filter(x => x.id !== m.id);
-                    saveState(); renderMonstersTab(); showToast('Monster gelöscht', 'info');
-                }
-            };
-
-            if (isLib) libraryGrid.appendChild(card);
-            else activeGrid.appendChild(card);
         });
     }
 
@@ -1593,7 +1794,7 @@
 
     function adjustSquareSize(val) { document.documentElement.style.setProperty('--square-size', `${val}px`); }
     function sortCombatants() { if (!state.combatants) state.combatants = []; state.combatants.sort((a, b) => b.init - a.init); }
-    
+
     function addCombatant(name = 'Neuer Held', init = 10, maxHp = 30, fullMonsterData = null) {
         if (!state.combatants) state.combatants = [];
         const id = Date.now().toString();
@@ -1602,12 +1803,24 @@
     }
 
     function addCombatantFromMonster(m) {
-        addCombatant(m.name, parseInt(m.init) || 10, m.hp, m);
+        const d20 = Math.floor(Math.random() * 20) + 1;
+        let mod = 0;
+        if (m.init !== undefined && m.init !== null) {
+            const parsed = parseInt(String(m.init).trim(), 10);
+            if (!isNaN(parsed)) {
+                mod = parsed;
+            }
+        }
+        const totalInit = d20 + mod;
+        const modDisplay = mod >= 0 ? `+${mod}` : `${mod}`;
+        
+        addCombatant(m.name, totalInit, m.hp, m);
+        showToast(`🎲 ${m.name}: 1W20 (${d20}) ${modDisplay} = ${totalInit} Initiative!`, 'success');
     }
 
     function removeCombatant(id, e) { if(e) e.stopPropagation(); state.combatants = state.combatants.filter(c => c.id !== id); saveState(); renderInitiativeTab(); }
     function setActive(id) { state.activeId = id; saveState(); renderInitiativeTab(); }
-    
+
     function commitMaxHp(id, val) {
         const c = state.combatants.find(x => x.id === id);
         if (c) {
@@ -1628,7 +1841,51 @@
     function addTempHp(id) { const c = state.combatants.find(x => x.id === id); const v = parseInt(document.getElementById(`val-${id}`).value)||0; if(v>0){ c.tempHp = v; c.history.unshift(`+${v} Temp`); saveState(); renderInitiativeTab(); } }
     function toggleCondition(cid, condId) { const c = state.combatants.find(x => x.id === cid); if(!c) return; if(!c.conditions) c.conditions=[]; const idx = c.conditions.indexOf(condId); if(idx>-1) c.conditions.splice(idx,1); else c.conditions.push(condId); saveState(); renderInitiativeTab(); }
     function resetAllLogs() { state.combatants.forEach(c => c.history = []); saveState(); renderInitiativeTab(); }
-    function handleImageUpload(id, input) { if (input.files && input.files[0]) { const reader = new FileReader(); reader.onload = (e) => { const c = state.combatants.find(x => x.id === id); if(c){ c.img = e.target.result; saveState(); renderInitiativeTab(); } }; reader.readAsDataURL(input.files[0]); } }
+    function handleImageUpload(id, input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const MAX_SIZE = 300;
+                    let width = img.width;
+                    let height = img.height;
+
+                    // Proportionale Skalierung auf max 150x150 Pixel
+                    if (width > height) {
+                        if (width > MAX_SIZE) {
+                            height *= MAX_SIZE / width;
+                            width = MAX_SIZE;
+                        }
+                    } else {
+                        if (height > MAX_SIZE) {
+                            width *= MAX_SIZE / height;
+                            height = MAX_SIZE;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    // Als komprimiertes JPEG (80% Qualität) speichern
+                    const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+
+                    const c = state.combatants.find(x => x.id === id);
+                    if (c) {
+                        c.img = compressedDataUrl;
+                        saveState();
+                        renderInitiativeTab();
+                        showToast("Bild komprimiert & gespeichert!", "success");
+                    }
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
     function updateName(id, val) { const c = state.combatants.find(x => x.id === id); if(c){ c.name = val; saveState(); } }
     function resetTracker() { if(confirm('Alles löschen?')){ state.combatants = []; state.activeId = null; saveState(); renderInitiativeTab(); } }
 
@@ -1640,7 +1897,7 @@
 
         const activeCombatant = state.combatants.find(x => x.id === state.activeId);
         let activeStatHTML = `<div class="text-center py-10 text-gray-400 text-xs italic">Klicke links auf eine Kreatur, um ihren vollständigen Statblock hier anzuzeigen.</div>`;
-        
+
         if (activeCombatant) {
             if (activeCombatant.monsterData) {
                 activeStatHTML = buildMonsterStatblockHTML(activeCombatant.monsterData, false);
