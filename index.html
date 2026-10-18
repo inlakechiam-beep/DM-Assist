@@ -255,7 +255,73 @@
             .hp-section { border-right: none; border-bottom: 1px solid var(--border-subtle); padding-right: 0; padding-bottom: 10px; width: 100%; max-width: 100%; }
             .conditions-section { width: 100%; }
         }
+
+        /* Orte & Welten Origami-Stil & Faden-Glow */
+        .origami-card {
+            background: linear-gradient(135deg, #fdfbf7 0%, #f1e4cb 100%);
+            color: #2c221e;
+            border: 2px solid #d4af37;
+            box-shadow: 0 6px 20px -6px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(184, 134, 11, 0.1);
+            position: relative;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .origami-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, #b8860b, #d4af37, #ffd700, #d4af37, #b8860b);
+            border-radius: 2px 2px 0 0;
+        }
+
+        .origami-card:hover {
+            box-shadow: 0 10px 25px -5px rgba(212, 175, 55, 0.25), inset 0 0 20px rgba(184, 134, 11, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .origami-card.active-card {
+            border: 3px solid #34d399 !important;
+            background: linear-gradient(135deg, #fffef9 0%, #e2f5e8 100%);
+            box-shadow: 0 0 25px 3px rgba(52, 211, 153, 0.6), 0 10px 30px rgba(0, 0, 0, 0.7) !important;
+            transform: translateY(-3px);
+        }
+
+        .origami-card.active-card::before {
+            background: linear-gradient(90deg, #059669, #34d399, #6ee7b7, #34d399, #059669);
+            height: 4px;
+        }
+
+        .origami-card.active-card-note {
+            border: 3px solid #f87171 !important;
+            background: linear-gradient(135deg, #fffdfa 0%, #fef2f2 100%);
+            box-shadow: 0 0 25px 3px rgba(248, 113, 113, 0.5), 0 10px 30px rgba(0, 0, 0, 0.7) !important;
+            transform: translateY(-3px);
+        }
+
+        .origami-card.active-card-note::before {
+            background: linear-gradient(90deg, #dc2626, #f87171, #fca5a5, #f87171, #dc2626);
+            height: 4px;
+        }
+
+        .badge-type {
+            font-size: 0.75rem;
+            padding: 0.2rem 0.75rem;
+            border-radius: 9999px;
+            font-weight: 700;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        @keyframes unfold {
+            0% { transform: scaleY(0.95); opacity: 0; }
+            100% { transform: scaleY(1); opacity: 1; }
+        }
+
+        .animate-unfold {
+            animation: unfold 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
     </style>
+    <!-- FontAwesome 6.4.0 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="forest-pattern dark:bg-forest-950 dark:text-gray-100 bg-parchment-100 text-parchment-900 min-h-screen flex flex-col selection:bg-gold-500 selection:text-forest-950">
 
@@ -298,6 +364,7 @@
     <nav class="bg-forest-950/80 border-t border-forest-800/80 px-2 sm:px-6 overflow-x-auto">
         <div class="max-w-7xl mx-auto flex space-x-1 sm:space-x-2 py-2 min-w-max" id="navTabsContainer">
             <button data-tab="auftakt" class="nav-tab active-tab px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-all flex items-center space-x-2">Auftakt & Rückblick</button>
+            <button data-tab="orte" class="nav-tab px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-all flex items-center space-x-2">Orte & Welten</button>
             <button data-tab="geheimnisse" class="nav-tab px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-all flex items-center space-x-2">Geheimnisse</button>
             <button data-tab="namensgen" class="nav-tab px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-all flex items-center space-x-2">Namensgenerator</button>
             <button data-tab="rollendeck" class="nav-tab px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-all flex items-center space-x-2">NPCs</button>
@@ -335,6 +402,41 @@
                 <button id="addRecapItemBtn" class="px-3 py-1.5 rounded-lg bg-gold-500/20 text-gold-400 text-xs">+ Stichpunkt</button>
             </div>
             <div id="recapListContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+        </div>
+    </section>
+
+    
+    <!-- TAB: ORTE & WELTEN -->
+    <section id="tab-orte" class="tab-content hidden space-y-6">
+        <!-- Steuerungsleiste -->
+        <div class="bg-forest-900/60 border border-forest-700/40 rounded-xl p-4 shadow-md flex flex-col md:flex-row justify-between items-center gap-4">
+            <!-- Suche -->
+            <div class="relative w-full md:w-96">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-gold-400">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </span>
+                <input type="text" id="orteSearchInput" placeholder="Welt, Stadt, Gebäude, NPC suchen..."
+                       class="w-full pl-10 pr-4 py-2 bg-forest-950 border border-forest-700 rounded-lg text-xs text-gray-200 placeholder-gray-400 focus:outline-none focus:border-gold-500 transition shadow-inner">
+            </div>
+
+            <!-- Aktionen -->
+            <div class="flex items-center space-x-2 w-full md:w-auto justify-end flex-wrap gap-y-2">
+                <button onclick="collapseAllOrte()" class="px-3 py-1.5 bg-forest-800 hover:bg-forest-700 text-gray-200 border border-gold-500/30 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 shadow">
+                    <i class="fa-solid fa-angles-up text-gold-400"></i> Alle schließen
+                </button>
+                <button onclick="openOrteAddModal('world', null)" class="px-3.5 py-1.5 bg-gold-500 hover:bg-gold-400 text-forest-950 font-bold text-xs rounded-lg shadow-md border border-gold-400 transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-plus-circle"></i> Welt erstellen
+                </button>
+                <button onclick="resetOrteToDefaultData()" title="Standarddaten wiederherstellen" class="p-2 bg-forest-800/60 hover:bg-red-950/40 text-gold-400 hover:text-red-300 border border-gold-500/30 rounded-lg text-xs transition shadow">
+                    <i class="fa-solid fa-rotate-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Full-Width Ebenen-Container mit Faden -->
+        <div id="fullWidthTreeContainer" class="w-full space-y-6 pb-16 relative min-h-[350px]">
+            <!-- SVG Container für den Verbindungsfaden -->
+            <svg id="threadSvg" class="absolute inset-0 w-full h-full pointer-events-none z-10 overflow-visible"></svg>
         </div>
     </section>
 
@@ -423,11 +525,26 @@
 
     <!-- TAB 4: NPCS -->
     <section id="tab-rollendeck" class="tab-content hidden space-y-6">
-        <div class="flex justify-between items-center bg-forest-900/60 p-4 rounded-xl border border-forest-700/40 gap-4 flex-wrap">
-            <input id="npcSearchInput" type="text" placeholder="NPC suchen..." class="bg-forest-950 text-xs rounded-lg px-3 py-2 border border-forest-700 text-gray-200 w-64">
-            <button id="openNewNpcModalBtn" class="px-4 py-2 bg-gold-500 text-forest-950 font-semibold text-xs rounded-lg">+ Neuer NPC</button>
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-forest-900/60 p-4 rounded-xl border border-forest-700/40">
+            <div>
+                <h2 class="font-cinzel text-xl font-bold text-gold-400">Personen & Nicht-Spieler-Charaktere (NPCs)</h2>
+                <p class="text-xs text-gray-400">Klicke auf eine Karte, um sie vollständig einzusehen. Organisiere NPCs in Aktiv oder Bibliothek.</p>
+            </div>
+            <div class="flex items-center gap-3 flex-wrap">
+                <input id="npcSearchInput" type="text" placeholder="NPC suchen (Name, Rasse, Beruf, Ort)..." class="bg-forest-950 text-xs rounded-lg px-3 py-2 border border-forest-700 text-gray-200 w-64 focus:ring-1 focus:ring-gold-500">
+                <button id="openNewNpcModalBtn" class="px-4 py-2 bg-gold-500 hover:bg-gold-400 text-forest-950 font-semibold text-xs rounded-lg transition-all shadow-md">+ Neuer NPC</button>
+            </div>
         </div>
-        <div id="npcCardsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+
+        <div class="space-y-3">
+            <h3 class="font-cinzel text-md font-bold text-gold-400 border-b border-gold-500/20 pb-1">🎭 Aktive NPCs</h3>
+            <div id="activeNpcCardsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 min-h-[120px] p-2 rounded-xl" ondragover="event.preventDefault(); event.currentTarget.classList.add('drag-over')" ondragenter="event.preventDefault(); event.currentTarget.classList.add('drag-over')" ondragleave="event.currentTarget.classList.remove('drag-over')" ondrop="dropNpcContainer(event, 'active')"></div>
+        </div>
+
+        <div class="space-y-3 pt-4">
+            <h3 class="font-cinzel text-md font-bold text-gray-400 border-b border-gray-700/40 pb-1">📚 Bibliothek (Archiv)</h3>
+            <div id="libraryNpcCardsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 min-h-[120px] p-2 rounded-xl bg-forest-950/30 border border-dashed border-forest-800" ondragover="event.preventDefault(); event.currentTarget.classList.add('drag-over')" ondragenter="event.preventDefault(); event.currentTarget.classList.add('drag-over')" ondragleave="event.currentTarget.classList.remove('drag-over')" ondrop="dropNpcContainer(event, 'library')"></div>
+        </div>
     </section>
 
     <!-- TAB 5: MONSTER & KAMPF -->
@@ -442,12 +559,12 @@
 
         <div class="space-y-3">
             <h3 class="font-cinzel text-md font-bold text-gold-400 border-b border-gold-500/20 pb-1">⚡ Aktive Monster & Encounters</h3>
-            <div id="activeMonstersGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6 min-h-[120px] p-2 rounded-xl" ondragover="event.preventDefault()" ondragleave="event.currentTarget.classList.remove('drag-over')" ondrop="dropMonsterContainer(event, 'active')"></div>
+            <div id="activeMonstersGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6 min-h-[120px] p-2 rounded-xl" ondragover="event.preventDefault(); event.currentTarget.classList.add('drag-over')" ondragenter="event.preventDefault(); event.currentTarget.classList.add('drag-over')" ondragleave="event.currentTarget.classList.remove('drag-over')" ondrop="dropMonsterContainer(event, 'active')"></div>
         </div>
 
         <div class="space-y-3 pt-4">
             <h3 class="font-cinzel text-md font-bold text-gray-400 border-b border-gray-700/40 pb-1">📚 Bibliothek (Archiv)</h3>
-            <div id="libraryMonstersGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6 min-h-[120px] p-2 rounded-xl bg-forest-950/30 border border-dashed border-forest-800" ondragover="event.preventDefault()" ondragleave="event.currentTarget.classList.remove('drag-over')" ondrop="dropMonsterContainer(event, 'library')"></div>
+            <div id="libraryMonstersGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6 min-h-[120px] p-2 rounded-xl bg-forest-950/30 border border-dashed border-forest-800" ondragover="event.preventDefault(); event.currentTarget.classList.add('drag-over')" ondragenter="event.preventDefault(); event.currentTarget.classList.add('drag-over')" ondragleave="event.currentTarget.classList.remove('drag-over')" ondrop="dropMonsterContainer(event, 'library')"></div>
         </div>
     </section>
 
@@ -458,7 +575,7 @@
                 <h2 class="font-cinzel text-xl font-bold text-gold-400">Knoten-Ablaufplan (Drag & Drop)</h2>
                 <button id="addNodeBtn" class="px-3 py-1.5 rounded-lg bg-gold-500 text-forest-950 font-semibold text-xs">+ Szene hinzufügen</button>
             </div>
-            <div id="nodesGraphContainer" class="grid grid-cols-1 md:grid-cols-3 gap-4 min-h-[300px]" ondragover="event.preventDefault()" ondragleave="event.currentTarget.classList.remove('drag-over')" ondrop="dropNodeContainer(event)"></div>
+            <div id="nodesGraphContainer" class="grid grid-cols-1 md:grid-cols-3 gap-4 min-h-[300px]" ondragover="event.preventDefault(); event.currentTarget.classList.add('drag-over')" ondragenter="event.preventDefault(); event.currentTarget.classList.add('drag-over')" ondragleave="event.currentTarget.classList.remove('drag-over')" ondrop="dropNodeContainer(event)"></div>
         </div>
     </section>
 
@@ -493,6 +610,63 @@
 
 </main>
 
+
+<!-- MODAL: ORTE / ELEMENT HINZUFÜGEN / BEARBEITEN -->
+<div id="locationModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-forest-900 border border-gold-500/40 rounded-xl max-w-lg w-full p-6 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto animate-unfold">
+        <div class="flex justify-between border-b border-gold-500/20 pb-3">
+            <h3 id="locationModalTitle" class="font-cinzel text-lg font-bold text-gold-400 flex items-center gap-2">
+                <i class="fa-solid fa-scroll"></i> Element hinzufügen
+            </h3>
+            <button onclick="closeOrteModal()" class="text-gray-400 hover:text-white transition">✕</button>
+        </div>
+        <form id="locationForm" onsubmit="handleOrteFormSubmit(event)" class="space-y-3.5">
+            <input type="hidden" id="locationModalActionType">
+            <input type="hidden" id="locationModalTargetId">
+            <input type="hidden" id="locationModalParentId">
+
+            <div>
+                <label id="locationLabelName" class="block text-xs font-semibold text-gray-300 mb-1">Name</label>
+                <input type="text" id="locationInputName" required placeholder="z. B. Tiefwasser, Falkenwacht..."
+                       class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100 focus:outline-none focus:border-gold-500 transition">
+            </div>
+
+            <div id="locationProfessionContainer" class="hidden">
+                <label class="block text-xs font-semibold text-gray-300 mb-1">Beruf / Rolle (für NPCs)</label>
+                <input type="text" id="locationInputProfession" placeholder="z. B. Graf, Leibwächter, Wirtin..."
+                       class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100 focus:outline-none focus:border-gold-500 transition">
+            </div>
+
+            <div id="locationDescriptionContainer" class="hidden">
+                <label id="locationLabelDescription" class="block text-xs font-semibold text-gray-300 mb-1">Notiztext / Details</label>
+                <textarea id="locationInputDescription" rows="5" placeholder="Notiztext eingeben... Tipp: Du kannst '### Überschrift' nutzen oder einfache Textzeilen erfassen."
+                          class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100 focus:outline-none focus:border-gold-500 transition"></textarea>
+                <p class="text-[11px] text-gray-400 mt-1">Zeilen mit <b>#</b> oder <b>##</b> werden automatisch als hervorgehobene Zwischenüberschriften formatiert.</p>
+            </div>
+
+            <div class="flex justify-end space-x-2 pt-3 border-t border-forest-800">
+                <button type="button" onclick="closeOrteModal()" class="px-4 py-2 bg-forest-800 text-gray-300 text-xs rounded-lg hover:bg-forest-700 transition">Abbrechen</button>
+                <button type="submit" class="px-4 py-2 bg-gold-500 text-forest-950 font-bold text-xs rounded-lg hover:bg-gold-400 transition shadow-md">Speichern</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- MODAL: ORTE LÖSCHEN BESTÄTIGUNG -->
+<div id="locationConfirmModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-forest-900 border-2 border-red-500/60 rounded-xl max-w-md w-full p-6 text-center space-y-4 shadow-2xl animate-unfold">
+        <div class="w-12 h-12 rounded-full bg-red-950/50 border border-red-500 text-red-400 flex items-center justify-center mx-auto text-xl">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+        <h3 class="font-cinzel text-lg font-bold text-white">Element wirklich löschen?</h3>
+        <p id="locationConfirmText" class="text-xs text-gray-300">Möchtest du diesen Ort und alle Unterelemente unwiderruflich entfernen?</p>
+        <div class="flex justify-center space-x-3 pt-2">
+            <button onclick="closeOrteConfirmModal()" class="px-4 py-2 bg-forest-800 text-gray-300 text-xs rounded-lg hover:bg-forest-700 transition">Abbrechen</button>
+            <button id="locationConfirmBtn" class="px-4 py-2 bg-red-600 hover:bg-red-500 text-white font-bold text-xs rounded-lg shadow-md transition">Löschen</button>
+        </div>
+    </div>
+</div>
+
 <!-- MODAL: NODE (SZENE) BEARBEITEN / ERSTELLEN -->
 <div id="nodeModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
     <div class="bg-forest-900 border border-gold-500/40 rounded-xl max-w-md w-full p-6 space-y-4 shadow-2xl">
@@ -524,23 +698,67 @@
 
 <!-- MODAL: NPC -->
 <div id="npcModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="bg-forest-900 border border-gold-500/40 rounded-xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
+    <div class="bg-forest-900 border border-gold-500/40 rounded-xl max-w-lg w-full p-6 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
         <div class="flex justify-between border-b border-gold-500/20 pb-3">
             <h3 id="npcModalTitle" class="font-cinzel text-lg font-bold text-gold-400">NPC anlegen</h3>
             <button class="closeModalBtn text-gray-400 hover:text-white">✕</button>
         </div>
-        <form id="npcForm" class="space-y-3">
+        <form id="npcForm" class="space-y-3.5">
             <input type="hidden" id="npcIdInput">
-            <input id="npcNameInput" type="text" required placeholder="Name" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100">
-            <input id="npcRoleInput" type="text" placeholder="Rolle" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100">
-            <input id="npcLocationInput" type="text" placeholder="Ort" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100">
-            <input id="npcVisualInput" type="text" placeholder="Optischer Anker" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100">
-            <input id="npcVoiceInput" type="text" placeholder="Stimme" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100">
-            <input id="npcGoalInput" type="text" placeholder="Motivation" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100">
-            <input id="npcSecretInput" type="text" placeholder="Geheimnis" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100">
-            <div class="flex justify-end space-x-2 pt-2">
-                <button type="button" class="closeModalBtn px-4 py-2 bg-forest-800 text-gray-300 text-xs rounded-lg">Abbrechen</button>
-                <button type="submit" class="px-4 py-2 bg-gold-500 text-forest-950 font-bold text-xs rounded-lg">Speichern</button>
+
+            <div class="bg-forest-950/60 p-3 rounded-lg border border-forest-700/50">
+                <label class="block text-xs text-gold-400 font-bold mb-1">Kategorie</label>
+                <select id="npcCategorySelect" class="w-full bg-forest-900 text-gray-200 border border-forest-700 text-xs rounded p-2 focus:outline-none focus:border-gold-500">
+                    <option value="active">🎭 Aktiv</option>
+                    <option value="library">📚 Bibliothek (Archiv)</option>
+                </select>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">Name</label>
+                    <input id="npcNameInput" type="text" required class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100 focus:outline-none focus:border-gold-500" placeholder="z. B. Valeria Frostglut">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">Rasse</label>
+                    <input id="npcRaceInput" type="text" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100 focus:outline-none focus:border-gold-500" placeholder="z. B. Mensch, Tiefling, Elf...">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">Beruf</label>
+                    <input id="npcRoleInput" type="text" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100 focus:outline-none focus:border-gold-500" placeholder="z. B. Schmied, Diplomat, Söldner...">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">Ort</label>
+                    <input id="npcLocationInput" type="text" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100 focus:outline-none focus:border-gold-500" placeholder="z. B. Silber-Zitadelle, Taverne...">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-gray-300 mb-1">Optischer Anker</label>
+                <input id="npcVisualInput" type="text" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100 focus:outline-none focus:border-gold-500" placeholder="z. B. Monokel, Brandnarbe, Gehstock...">
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-gray-300 mb-1">Stimme</label>
+                <input id="npcVoiceInput" type="text" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100 focus:outline-none focus:border-gold-500" placeholder="z. B. Leise, heiser, melodisch...">
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-gray-300 mb-1">Motivation</label>
+                <textarea id="npcGoalInput" rows="2" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100 focus:outline-none focus:border-gold-500" placeholder="Was treibt den NPC an?"></textarea>
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-gray-300 mb-1">Geheimnis</label>
+                <textarea id="npcSecretInput" rows="2" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100 focus:outline-none focus:border-gold-500" placeholder="Versteckte Absicht, finsteres Geheimnis..."></textarea>
+            </div>
+
+            <div class="flex justify-end space-x-2 pt-2 border-t border-forest-800">
+                <button type="button" class="closeModalBtn px-4 py-2 bg-forest-800 text-gray-300 text-xs rounded-lg hover:bg-forest-700 transition-colors">Abbrechen</button>
+                <button type="submit" class="px-4 py-2 bg-gold-500 text-forest-950 font-bold text-xs rounded-lg hover:bg-gold-400 transition-colors shadow-md">Speichern</button>
             </div>
         </form>
     </div>
@@ -595,49 +813,49 @@
                     <div class="bg-forest-900 p-2 rounded border border-forest-800">
                         <span class="text-[10px] text-gold-300 font-bold block mb-1">STÄRKE (STÄ)</span>
                         <div class="grid grid-cols-3 gap-1">
-                            <div><label class="text-[9px] text-gray-400 block">Wert</label><input id="m-sta-val" type="number" value="10" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-150"></div>
-                            <div><label class="text-[9px] text-gray-400 block">Mod</label><input id="m-sta-mod" type="text" value="+0" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-150"></div>
-                            <div><label class="text-[9px] text-gray-400 block">RW</label><input id="m-sta-rw" type="text" value="+0" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-150"></div>
+                            <div><label class="text-[9px] text-gray-400 block">Wert</label><input id="m-sta-val" type="number" value="10" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-200"></div>
+                            <div><label class="text-[9px] text-gray-400 block">Mod</label><input id="m-sta-mod" type="text" value="+0" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-200"></div>
+                            <div><label class="text-[9px] text-gray-400 block">RW</label><input id="m-sta-rw" type="text" value="+0" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-200"></div>
                         </div>
                     </div>
                     <div class="bg-forest-900 p-2 rounded border border-forest-800">
                         <span class="text-[10px] text-gold-300 font-bold block mb-1">GESCHICKLICHKEIT (GES)</span>
                         <div class="grid grid-cols-3 gap-1">
-                            <div><label class="text-[9px] text-gray-400 block">Wert</label><input id="m-ges-val" type="number" value="10" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-150"></div>
-                            <div><label class="text-[9px] text-gray-400 block">Mod</label><input id="m-ges-mod" type="text" value="+0" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-150"></div>
-                            <div><label class="text-[9px] text-gray-400 block">RW</label><input id="m-ges-rw" type="text" value="+0" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-150"></div>
+                            <div><label class="text-[9px] text-gray-400 block">Wert</label><input id="m-ges-val" type="number" value="10" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-200"></div>
+                            <div><label class="text-[9px] text-gray-400 block">Mod</label><input id="m-ges-mod" type="text" value="+0" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-200"></div>
+                            <div><label class="text-[9px] text-gray-400 block">RW</label><input id="m-ges-rw" type="text" value="+0" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-200"></div>
                         </div>
                     </div>
                     <div class="bg-forest-900 p-2 rounded border border-forest-800">
                         <span class="text-[10px] text-gold-300 font-bold block mb-1">KONSTITUTION (KON)</span>
                         <div class="grid grid-cols-3 gap-1">
-                            <div><label class="text-[9px] text-gray-400 block">Wert</label><input id="m-kon-val" type="number" value="10" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-150"></div>
-                            <div><label class="text-[9px] text-gray-400 block">Mod</label><input id="m-kon-mod" type="text" value="+0" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-150"></div>
-                            <div><label class="text-[9px] text-gray-400 block">RW</label><input id="m-kon-rw" type="text" value="+0" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-150"></div>
+                            <div><label class="text-[9px] text-gray-400 block">Wert</label><input id="m-kon-val" type="number" value="10" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-200"></div>
+                            <div><label class="text-[9px] text-gray-400 block">Mod</label><input id="m-kon-mod" type="text" value="+0" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-200"></div>
+                            <div><label class="text-[9px] text-gray-400 block">RW</label><input id="m-kon-rw" type="text" value="+0" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-200"></div>
                         </div>
                     </div>
                     <div class="bg-forest-900 p-2 rounded border border-forest-800">
                         <span class="text-[10px] text-gold-300 font-bold block mb-1">INTELLIGENZ (INT)</span>
                         <div class="grid grid-cols-3 gap-1">
-                            <div><label class="text-[9px] text-gray-400 block">Wert</label><input id="m-int-val" type="number" value="10" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-150"></div>
-                            <div><label class="text-[9px] text-gray-400 block">Mod</label><input id="m-int-mod" type="text" value="+0" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-150"></div>
-                            <div><label class="text-[9px] text-gray-400 block">RW</label><input id="m-int-rw" type="text" value="+0" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-150"></div>
+                            <div><label class="text-[9px] text-gray-400 block">Wert</label><input id="m-int-val" type="number" value="10" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-200"></div>
+                            <div><label class="text-[9px] text-gray-400 block">Mod</label><input id="m-int-mod" type="text" value="+0" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-200"></div>
+                            <div><label class="text-[9px] text-gray-400 block">RW</label><input id="m-int-rw" type="text" value="+0" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-200"></div>
                         </div>
                     </div>
                     <div class="bg-forest-900 p-2 rounded border border-forest-800">
                         <span class="text-[10px] text-gold-300 font-bold block mb-1">WEISHEIT (WEI)</span>
                         <div class="grid grid-cols-3 gap-1">
-                            <div><label class="text-[9px] text-gray-400 block">Wert</label><input id="m-wei-val" type="number" value="10" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-150"></div>
-                            <div><label class="text-[9px] text-gray-400 block">Mod</label><input id="m-wei-mod" type="text" value="+0" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-150"></div>
-                            <div><label class="text-[9px] text-gray-400 block">RW</label><input id="m-wei-rw" type="text" value="+0" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-150"></div>
+                            <div><label class="text-[9px] text-gray-400 block">Wert</label><input id="m-wei-val" type="number" value="10" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-200"></div>
+                            <div><label class="text-[9px] text-gray-400 block">Mod</label><input id="m-wei-mod" type="text" value="+0" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-200"></div>
+                            <div><label class="text-[9px] text-gray-400 block">RW</label><input id="m-wei-rw" type="text" value="+0" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-200"></div>
                         </div>
                     </div>
                     <div class="bg-forest-900 p-2 rounded border border-forest-800">
                         <span class="text-[10px] text-gold-300 font-bold block mb-1">CHARISMA (CHA)</span>
                         <div class="grid grid-cols-3 gap-1">
-                            <div><label class="text-[9px] text-gray-400 block">Wert</label><input id="m-cha-val" type="number" value="10" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-150"></div>
-                            <div><label class="text-[9px] text-gray-400 block">Mod</label><input id="m-cha-mod" type="text" value="+0" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-150"></div>
-                            <div><label class="text-[9px] text-gray-400 block">RW</label><input id="m-cha-rw" type="text" value="+0" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-150"></div>
+                            <div><label class="text-[9px] text-gray-400 block">Wert</label><input id="m-cha-val" type="number" value="10" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-200"></div>
+                            <div><label class="text-[9px] text-gray-400 block">Mod</label><input id="m-cha-mod" type="text" value="+0" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-200"></div>
+                            <div><label class="text-[9px] text-gray-400 block">RW</label><input id="m-cha-rw" type="text" value="+0" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-200"></div>
                         </div>
                     </div>
                 </div>
@@ -687,6 +905,17 @@
 </div>
 
 <script>
+    
+    function escapeAttr(str) {
+        return (str || '').toString().replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+    function parseStatVal(id) {
+        const el = document.getElementById(id);
+        if (!el) return 10;
+        const v = parseInt(el.value, 10);
+        return isNaN(v) ? 10 : v;
+    }
+
     const CONDITIONS = [
         { id: 'betaeubt', name: 'Betäubt', color: '#f59e0b', textOnActive: '#000000' },
         { id: 'bewusstlos', name: 'Bewusstlos', color: '#64748b', textOnActive: '#ffffff' },
@@ -705,13 +934,161 @@
         { id: 'versteinert', name: 'Versteinert', color: '#78716c', textOnActive: '#ffffff' }
     ];
 
+    const DEFAULT_LOCATIONS = [
+        {
+            id: 'w1',
+            type: 'world',
+            name: 'Toril',
+            expanded: false,
+            children: [
+                {
+                    id: 'c1',
+                    type: 'continent',
+                    name: 'Faerûn',
+                    expanded: false,
+                    children: [
+                        {
+                            id: 'r1',
+                            type: 'region',
+                            name: 'Tiefwasser',
+                            expanded: false,
+                            children: [
+                                {
+                                    id: 'ci1',
+                                    type: 'city',
+                                    name: 'Falkenwacht',
+                                    expanded: false,
+                                    children: [
+                                        {
+                                            id: 'b1',
+                                            type: 'building',
+                                            name: 'Burg',
+                                            expanded: false,
+                                            children: [
+                                                {
+                                                    id: 'ro1',
+                                                    type: 'room',
+                                                    name: 'Thronsaal',
+                                                    expanded: false,
+                                                    children: [
+                                                        {
+                                                            id: 'n1',
+                                                            type: 'npc',
+                                                            name: 'Alric von Falkenwacht',
+                                                            profession: 'Graf',
+                                                            expanded: false,
+                                                            children: [
+                                                                {
+                                                                    id: 'nt1',
+                                                                    type: 'note',
+                                                                    name: 'Geheime Beobachtungen',
+                                                                    description: '### Hintergrund & Marotten\nGraf Alric neigt dazu, sich bei überraschendem Besuch hinter großen Vasen im Thronsaal zu verstecken.\n\n### Wichtige Kontakte\nSteht im engen Austausch mit Rorik Sturmblick bezüglich der Sicherheit des Kerkers.',
+                                                                    children: []
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            id: 'n2',
+                                                            type: 'npc',
+                                                            name: 'Rorik Sturmblick',
+                                                            profession: 'Leibwächter',
+                                                            expanded: false,
+                                                            children: [
+                                                                {
+                                                                    id: 'nt2',
+                                                                    type: 'note',
+                                                                    name: 'Dienstanweisungen',
+                                                                    description: '### Pflichten\nBewacht Alric Tag und Nacht.\n\n### Ausrüstung\nHat einen Schlüssel zum Kerker.',
+                                                                    children: []
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    id: 'ro2',
+                                                    type: 'room',
+                                                    name: 'Kerker',
+                                                    expanded: false,
+                                                    children: [
+                                                        {
+                                                            id: 'n3',
+                                                            type: 'npc',
+                                                            name: 'Gareth Brennfrisch',
+                                                            profession: 'Kerkermeister',
+                                                            expanded: false,
+                                                            children: [
+                                                                { id: 'nt3', type: 'note', name: 'Schlafzeiten', description: '### Hinweis\nSchläft regelmäßig während der Nachtschicht.', children: [] }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            id: 'b2',
+                                            type: 'building',
+                                            name: 'Taverne „Die frohe Gredl“',
+                                            expanded: false,
+                                            children: [
+                                                {
+                                                    id: 'ro3',
+                                                    type: 'room',
+                                                    name: 'Stube',
+                                                    expanded: false,
+                                                    children: [
+                                                        {
+                                                            id: 'n4',
+                                                            type: 'npc',
+                                                            name: 'Gredlund Siegherz',
+                                                            profession: 'Wirtin',
+                                                            expanded: false,
+                                                            children: [
+                                                                { id: 'nt4', type: 'note', name: 'Informationen', description: '### Standort\nArbeitet meist hinter der Schänke.\n\n### Gerüchte\nWeiß alles über das Geschehen in Falkenwacht.', children: [] }
+                                                            ]
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    id: 'ro4',
+                                                    type: 'room',
+                                                    name: 'Schlafzimmer',
+                                                    expanded: false,
+                                                    children: []
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    id: 'ci2',
+                                    type: 'city',
+                                    name: 'Baldurs Tor',
+                                    expanded: false,
+                                    children: []
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            id: 'w2',
+            type: 'world',
+            name: 'Eberron',
+            expanded: false,
+            children: []
+        }
+    ];
+
     const DEFAULT_SECRETS = [
         { id: '1', text: 'Der Baron steht heimlich unter dem Einfluss einer Erzteufelin.', status: 'hidden', tag: 'Politik' },
         { id: '2', text: 'Im versunkenen Tempel ruht ein Stück des Ur-Smaragds.', status: 'hidden', tag: 'Artefakt' }
     ];
 
     const DEFAULT_NPCS = [
-        { id: 'npc-1', name: 'Valeria Frostglut', role: 'Tiefling Diplomat', location: 'Silber-Zitadelle', visual: 'Monokel', voice: 'Leise', goal: 'Handelspakt erzwingen', secret: 'Waffenhandel' }
+        { id: 'npc-1', name: 'Valeria Frostglut', rasse: 'Tiefling', race: 'Tiefling', beruf: 'Diplomatin', role: 'Diplomatin', location: 'Silber-Zitadelle', visual: 'Monokel aus geschliffenem Rubin', voice: 'Leise, bestimmt und melodisch', goal: 'Handelspakt für ihr Haus erzwingen', secret: 'Heimlicher Waffenhandel mit Rebellen', category: 'active' }
     ];
 
     const DEFAULT_MONSTERS = [
@@ -808,6 +1185,7 @@
         npcs: DEFAULT_NPCS,
         monsters: DEFAULT_MONSTERS,
         nodes: DEFAULT_NODES,
+        locations: DEFAULT_LOCATIONS,
         sessionHook: '',
         checklist: [{ id: '1', text: 'Spionage-Hinweis auflösen', done: true }],
         recap: ['Die Helden entkamen knapp.'],
@@ -815,15 +1193,62 @@
         activeId: '1'
     };
 
+    function normalizeNpc(n) {
+        if (!n) return null;
+        const beruf = (n.beruf !== undefined && String(n.beruf).trim() !== '') ? n.beruf : (n.role || '');
+        const rasse = (n.rasse !== undefined && String(n.rasse).trim() !== '') ? n.rasse : (n.race || '');
+        return {
+            id: n.id || 'npc-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
+            name: n.name || 'Unbenannter NPC',
+            rasse: rasse,
+            race: rasse, // backwards compatibility with older backups
+            beruf: beruf,
+            role: beruf, // backwards compatibility with older backups
+            location: n.location || '',
+            visual: n.visual || '',
+            voice: n.voice || '',
+            goal: n.goal || '',
+            secret: n.secret || '',
+            category: n.category || 'active'
+        };
+    }
+
     function loadState() {
         try {
-            const saved = localStorage.getItem('sylvanus_codex_data_v17');
-            if (saved) state = { ...state, ...JSON.parse(saved) };
+            let saved = localStorage.getItem('sylvanus_codex_data_v18');
+            if (!saved) {
+                saved = localStorage.getItem('sylvanus_codex_data_v17');
+            }
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                state = { ...state, ...parsed };
+                if (Array.isArray(state.npcs)) {
+                    state.npcs = state.npcs.map(normalizeNpc).filter(Boolean);
+                }
+                if (Array.isArray(state.monsters)) {
+                    state.monsters = state.monsters.map(m => ({ ...m, category: m.category || 'active' }));
+                }
+                if (!state.locations || !Array.isArray(state.locations) || state.locations.length === 0) {
+                    const savedOrte = localStorage.getItem('dnd_dm_locations_v8');
+                    if (savedOrte) {
+                        try { state.locations = JSON.parse(savedOrte); } catch(e) { state.locations = DEFAULT_LOCATIONS; }
+                    } else {
+                        state.locations = DEFAULT_LOCATIONS;
+                    }
+                }
+            }
         } catch (e) { console.error(e); }
     }
 
     function saveState() {
-        try { localStorage.setItem('sylvanus_codex_data_v17', JSON.stringify(state)); } catch (e) { console.error(e); }
+        try {
+            const serialized = JSON.stringify(state);
+            localStorage.setItem('sylvanus_codex_data_v18', serialized);
+            localStorage.setItem('sylvanus_codex_data_v17', serialized);
+            if (state.locations) {
+                localStorage.setItem('dnd_dm_locations_v8', JSON.stringify(state.locations));
+            }
+        } catch (e) { console.error(e); }
     }
 
     function exportData() {
@@ -838,7 +1263,19 @@
             reader.readAsText(event.target.files[0], "UTF-8");
             reader.onload = function(e) {
                 try {
-                    state = { ...state, ...JSON.parse(e.target.result) };
+                    const imported = JSON.parse(e.target.result);
+                    state = { ...state, ...imported };
+                    if (Array.isArray(state.npcs)) {
+                        state.npcs = state.npcs.map(normalizeNpc).filter(Boolean);
+                    }
+                    if (Array.isArray(state.monsters)) {
+                        state.monsters = state.monsters.map(m => ({ ...m, category: m.category || 'active' }));
+                    }
+                    if (imported.locations && Array.isArray(imported.locations)) {
+                        state.locations = imported.locations;
+                    } else if (imported.campaignData && Array.isArray(imported.campaignData)) {
+                        state.locations = imported.campaignData;
+                    }
                     saveState();
                     showToast("Import erfolgreich! Lade neu...", "success");
                     setTimeout(() => {
@@ -846,6 +1283,9 @@
                     }, 500); // Gibt iOS/WebKit 0,5 Sekunden Zeit zum Speichern
                 }
                 catch (err) { showToast("Import-Fehler!", "error"); }
+                finally {
+                    event.target.value = '';
+                }
             };
         }
     }
@@ -860,18 +1300,35 @@
         setTimeout(() => { toast.classList.add('opacity-0', 'translate-y-2'); setTimeout(() => toast.remove(), 200); }, 3000);
     }
 
+    function activateTab(target) {
+        if (!target) target = 'auftakt';
+        state.activeTab = target;
+        document.querySelectorAll('.nav-tab').forEach(t => {
+            const isMatch = t.getAttribute('data-tab') === target;
+            t.classList.toggle('active-tab', isMatch);
+            t.classList.toggle('bg-gold-500/20', isMatch);
+            t.classList.toggle('text-gold-400', isMatch);
+            t.classList.toggle('border', isMatch);
+            t.classList.toggle('border-gold-500/40', isMatch);
+        });
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+        const tabEl = document.getElementById(`tab-${target}`);
+        if (tabEl) tabEl.classList.remove('hidden');
+        if (target === 'orte') {
+            renderOrteTree();
+            setTimeout(drawOrteThreads, 60);
+        }
+        saveState();
+    }
+
     function initTabs() {
         document.querySelectorAll('.nav-tab').forEach(tab => {
             tab.addEventListener('click', () => {
                 const target = tab.getAttribute('data-tab');
-                state.activeTab = target;
-                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active-tab', 'bg-gold-500/20', 'text-gold-400', 'border', 'border-gold-500/40'));
-                tab.classList.add('active-tab', 'bg-gold-500/20', 'text-gold-400', 'border', 'border-gold-500/40');
-                document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
-                document.getElementById(`tab-${target}`).classList.remove('hidden');
-                saveState();
+                activateTab(target);
             });
         });
+        activateTab(state.activeTab || 'auftakt');
     }
 
     function initTheme() {
@@ -1066,62 +1523,315 @@
 
     function transferNameToNPC() {
         const fullName = `${currentFirstName} ${currentLastName}`;
+        const raceVal = document.getElementById('nameGenRaceSelect').value;
+        const raceMap = {
+            mensch: 'Mensch', elf: 'Elf', tiefling: 'Tiefling', zwerg: 'Zwerg', gnom: 'Gnom', ork: 'Ork', halbling: 'Halbling'
+        };
+        activateTab('rollendeck');
         openNpcModalForEdit(null);
         document.getElementById('npcNameInput').value = fullName;
+        document.getElementById('npcRaceInput').value = raceMap[raceVal] || raceVal;
     }
 
     document.getElementById('nameGenRaceSelect').onchange = fullNameGeneratorReset;
     document.getElementById('nameGenGenderSelect').onchange = fullNameGeneratorReset;
 
+    const expandedNpcIds = new Set();
+
+    function toggleNpcExpanded(id) {
+        if (expandedNpcIds.has(id)) {
+            expandedNpcIds.delete(id);
+        } else {
+            expandedNpcIds.add(id);
+        }
+        renderNPCsTab();
+    }
+
+    function getNextNpcName(sourceName, category = 'active') {
+        if (!sourceName) return 'NPC';
+        let cleaned = sourceName.replace(/\s*\(Kopie(\s*\d+)?\)$/i, '').trim();
+        const numMatch = cleaned.match(/^(.+?)\s+(\d+)$/);
+        if (numMatch) {
+            const baseName = numMatch[1].trim();
+            const existing = state.npcs.filter(x => x.category === category);
+            const numbers = [];
+            const safeBase = baseName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            existing.forEach(n => {
+                const trimmed = n.name.trim();
+                const m = trimmed.match(new RegExp(`^${safeBase}\\s+(\\d+)$`, 'i'));
+                if (m) {
+                    numbers.push(parseInt(m[1], 10));
+                }
+            });
+            const nextNum = numbers.length > 0 ? Math.max(...numbers) + 1 : 2;
+            return `${baseName} ${nextNum}`;
+        }
+        const copyBase = `${cleaned} (Kopie)`;
+        const existing = state.npcs.filter(x => x && x.name && x.name.startsWith(cleaned));
+        if (existing.some(x => x.name === copyBase)) {
+            let counter = 2;
+            while (existing.some(x => x.name === `${cleaned} (Kopie ${counter})`)) {
+                counter++;
+            }
+            return `${cleaned} (Kopie ${counter})`;
+        }
+        return copyBase;
+    }
+
     function renderNPCsTab() {
-        const grid = document.getElementById('npcCardsGrid');
-        grid.innerHTML = '';
-        const query = document.getElementById('npcSearchInput').value.toLowerCase();
+        const activeGrid = document.getElementById('activeNpcCardsGrid');
+        const libraryGrid = document.getElementById('libraryNpcCardsGrid');
+        if (!activeGrid || !libraryGrid) return;
+        activeGrid.innerHTML = '';
+        libraryGrid.innerHTML = '';
 
-        const filtered = state.npcs.filter(n =>
-            n.name.toLowerCase().includes(query) ||
-            (n.role && n.role.toLowerCase().includes(query)) ||
-            (n.location && n.location.toLowerCase().includes(query))
-        );
+        const query = (document.getElementById('npcSearchInput')?.value || '').toLowerCase().trim();
 
-        filtered.forEach(n => {
+        state.npcs.forEach((n, index) => {
+            const isLib = n.category === 'library';
+            const isExpanded = expandedNpcIds.has(n.id);
+
+            // Filter match check
+            const matchesQuery = !query ||
+                (n.name && n.name.toLowerCase().includes(query)) ||
+                (n.rasse && n.rasse.toLowerCase().includes(query)) ||
+                (n.race && n.race.toLowerCase().includes(query)) ||
+                (n.beruf && n.beruf.toLowerCase().includes(query)) ||
+                (n.role && n.role.toLowerCase().includes(query)) ||
+                (n.location && n.location.toLowerCase().includes(query)) ||
+                (n.goal && n.goal.toLowerCase().includes(query)) ||
+                (n.visual && n.visual.toLowerCase().includes(query)) ||
+                (n.voice && n.voice.toLowerCase().includes(query)) ||
+                (n.secret && n.secret.toLowerCase().includes(query));
+
+            if (!matchesQuery) return;
+
             const card = document.createElement('div');
-            card.className = 'bg-forest-900/80 border border-forest-700/60 rounded-xl p-4 shadow-md text-xs space-y-2 flex flex-col justify-between';
-            card.innerHTML = `
-                <div>
-                    <h3 class="font-cinzel text-base font-bold text-gold-400">${n.name}</h3>
-                    <p class="text-gray-400">${n.role || 'Keine Rolle'}</p>
-                    ${n.location ? `<p class="text-gray-300 mt-1"><strong>Ort:</strong> ${n.location}</p>` : ''}
-                    ${n.goal ? `<p class="text-gray-300 mt-1"><strong>Ziel:</strong> ${n.goal}</p>` : ''}
-                </div>
-                <div class="flex justify-end gap-3 pt-2 border-t border-forest-800">
-                    <button class="edit-npc text-gold-400 hover:text-gold-300">✏️ Bearbeiten</button>
-                    <button class="delete-npc text-red-400 hover:text-red-300">🗑️ Löschen</button>
-                </div>
-            `;
-            card.querySelector('.edit-npc').onclick = () => openNpcModalForEdit(n);
-            card.querySelector('.delete-npc').onclick = () => {
-                if (confirm(`NPC "${n.name}" wirklich löschen?`)) {
-                    state.npcs = state.npcs.filter(x => x.id !== n.id);
+            card.className = `draggable-item rounded-xl p-4 shadow-xl transition-all ${isLib ? 'bg-[#0b1613]/90 text-gray-300 border border-gray-700/60' : 'bg-[#0e211a] text-gray-100 border border-[#1f4236]'}`;
+            card.draggable = true;
+            card.dataset.index = index;
+
+            const rasseText = n.rasse || n.race || 'Unbekannt';
+            const berufText = n.beruf || n.role || 'Kein Beruf';
+
+            if (isLib) {
+                // Bibliothek (Archiv) Card
+                card.innerHTML = `
+                    <div class="flex justify-between items-start gap-2 cursor-pointer card-header-click" title="Klicken, um NPC ${isExpanded ? 'einzuklappen' : 'vollständig anzuzeigen'}">
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <h3 class="font-cinzel text-lg font-bold tracking-wide text-gray-200 uppercase truncate">${n.name}</h3>
+                                <span class="text-[10px] text-gray-400 bg-forest-950/70 border border-forest-800 px-2 py-0.5 rounded font-sans">${isExpanded ? '▲ Einklappen' : '▼ Details'}</span>
+                            </div>
+                            <div class="flex items-center gap-1.5 mt-1.5 flex-wrap text-xs">
+                                <span class="px-2 py-0.5 rounded bg-forest-950 text-gray-300 border border-forest-800 font-medium">👤 ${rasseText}</span>
+                                <span class="px-2 py-0.5 rounded bg-forest-950 text-gray-400 border border-forest-800">${berufText}</span>
+                            </div>
+                        </div>
+                        <div class="bg-[#1b2f27] text-gray-400 border border-gray-700 text-[10px] font-bold px-2 py-1 rounded flex-shrink-0">
+                            Archiv
+                        </div>
+                    </div>
+
+                    <div class="mt-2.5 space-y-1 text-xs cursor-pointer card-summary-click" title="Klicken, um Details ${isExpanded ? 'einzuklappen' : 'anzuzeigen'}">
+                        <p class="text-gray-300"><strong class="text-[#eacb67]">Ort:</strong> ${n.location || '—'}</p>
+                        <p class="text-gray-300"><strong class="text-[#eacb67]">Ziel:</strong> ${n.goal || '—'}</p>
+                    </div>
+
+                    <div class="flex flex-wrap items-center justify-end gap-1.5 pt-3 mt-3 border-t border-forest-800/60">
+                        <button class="add-to-active-btn text-xs px-3 py-1.5 bg-[#d4af37] hover:bg-[#eacb67] text-[#0b1814] font-bold rounded-md flex items-center gap-1 transition-all shadow-md" title="Zu aktiven NPCs verschieben">➕ Zu Aktiv</button>
+                        <button class="duplicate-btn text-xs px-2.5 py-1.5 bg-[#132822] hover:bg-[#1f3f36] text-gray-300 rounded-md border border-gray-700/60 flex items-center gap-1 transition-all" title="Duplizieren">📋 Kopie</button>
+                        <button class="edit-btn text-xs px-2.5 py-1.5 bg-[#132822] hover:bg-[#1f3f36] text-[#eacb67] rounded-md border border-gray-700/60 flex items-center gap-1 transition-all" title="Bearbeiten">✏️ Bearbeiten</button>
+                        <button class="delete-btn text-xs p-1.5 text-gray-400 hover:text-red-400 transition-all" title="Löschen">🗑️</button>
+                    </div>
+
+                    <div class="npc-details ${isExpanded ? 'block' : 'hidden'} pt-3 border-t border-forest-800/40 mt-3 space-y-2 text-xs">
+                        ${(!n.visual && !n.voice && !n.secret) ? '<p class="text-gray-500 italic">Keine weiteren Details (Optik, Stimme, Geheimnis) hinterlegt.</p>' : ''}
+                        ${n.visual ? `<p><strong class="text-[#eacb67]">Optischer Anker:</strong> <span class="text-gray-300">${n.visual}</span></p>` : ''}
+                        ${n.voice ? `<p><strong class="text-[#eacb67]">Stimme:</strong> <span class="text-gray-300">${n.voice}</span></p>` : ''}
+                        ${n.secret ? `
+                            <div class="bg-[#081511] border border-[#1b3d32] rounded-lg p-2.5 mt-2">
+                                <h4 class="text-xs font-bold text-red-400 flex items-center gap-1 mb-0.5">GEHEIMNIS:</h4>
+                                <p class="text-xs text-gray-300 leading-relaxed">${n.secret}</p>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+
+                card.querySelector('.card-header-click').onclick = () => toggleNpcExpanded(n.id);
+                card.querySelector('.card-summary-click').onclick = () => toggleNpcExpanded(n.id);
+
+                card.querySelector('.add-to-active-btn').onclick = (e) => {
+                    e.stopPropagation();
+                    n.category = 'active';
                     saveState();
                     renderNPCsTab();
-                    showToast('NPC gelöscht', 'info');
+                    showToast(`"${n.name}" zu aktiven NPCs verschoben!`, 'success');
+                };
+
+                card.querySelector('.duplicate-btn').onclick = (e) => {
+                    e.stopPropagation();
+                    const dup = JSON.parse(JSON.stringify(n));
+                    dup.id = 'npc-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+                    dup.category = 'library';
+                    dup.name = getNextNpcName(n.name, 'library');
+                    state.npcs.splice(index + 1, 0, dup);
+                    saveState();
+                    renderNPCsTab();
+                    showToast(`"${dup.name}" erstellt!`, 'success');
+                };
+
+                card.querySelector('.edit-btn').onclick = (e) => {
+                    e.stopPropagation();
+                    openNpcModalForEdit(n);
+                };
+
+                card.querySelector('.delete-btn').onclick = (e) => {
+                    e.stopPropagation();
+                    if (confirm(`Möchtest du den NPC "${n.name}" wirklich aus der Bibliothek löschen?`)) {
+                        state.npcs = state.npcs.filter(x => x.id !== n.id);
+                        expandedNpcIds.delete(n.id);
+                        saveState();
+                        renderNPCsTab();
+                        showToast('NPC aus Bibliothek gelöscht', 'info');
+                    }
+                };
+
+                libraryGrid.appendChild(card);
+            } else {
+                // Aktive NPCs Card
+                card.innerHTML = `
+                    <div class="flex justify-between items-start gap-2 cursor-pointer card-header-click" title="Klicken, um NPC ${isExpanded ? 'einzuklappen' : 'vollständig anzuzeigen'}">
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <h3 class="font-cinzel text-lg font-bold tracking-wide text-[#eacb67] uppercase truncate">${n.name}</h3>
+                                <span class="text-[10px] text-[#eacb67] bg-[#1a382d] border border-gold-500/30 px-2 py-0.5 rounded font-sans">${isExpanded ? '▲ Einklappen' : '▼ Details'}</span>
+                            </div>
+                            <div class="flex items-center gap-1.5 mt-1.5 flex-wrap text-xs">
+                                <span class="px-2 py-0.5 rounded bg-gold-500/15 text-gold-300 font-semibold border border-gold-500/30">👤 ${rasseText}</span>
+                                <span class="px-2 py-0.5 rounded bg-forest-950 text-gray-200 border border-forest-800">${berufText}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-2.5 space-y-1 text-xs cursor-pointer card-summary-click" title="Klicken, um Details ${isExpanded ? 'einzuklappen' : 'anzuzeigen'}">
+                        <p class="text-gray-300"><strong class="text-[#eacb67]">Ort:</strong> ${n.location || '—'}</p>
+                        <p class="text-gray-300"><strong class="text-[#eacb67]">Ziel:</strong> ${n.goal || '—'}</p>
+                    </div>
+
+                    <div class="flex flex-wrap items-center justify-end gap-1.5 pt-3 mt-3 border-t border-[#1b3d32]/60">
+                        <button class="move-to-lib-btn text-xs px-2.5 py-1.5 bg-[#18362b] hover:bg-[#254d3e] text-[#97c7b2] hover:text-[#eacb67] font-medium rounded-md border border-forest-700/60 flex items-center gap-1 transition-all" title="Als Kopie in Bibliothek (Archiv) speichern">📚 Zur Bibliothek</button>
+                        <button class="duplicate-btn text-xs px-2.5 py-1.5 bg-[#132822] hover:bg-[#1f3f36] text-gray-300 rounded-md border border-gray-700/60 flex items-center gap-1 transition-all" title="Duplizieren">📋 Kopie</button>
+                        <button class="edit-btn text-xs px-2.5 py-1.5 bg-[#132822] hover:bg-[#1f3f36] text-[#eacb67] rounded-md border border-gray-700/60 flex items-center gap-1 transition-all" title="Bearbeiten">✏️</button>
+                        <button class="delete-btn text-xs p-1.5 text-gray-400 hover:text-red-400 transition-all" title="Löschen">🗑️</button>
+                    </div>
+
+                    <div class="npc-details ${isExpanded ? 'block' : 'hidden'} pt-3 border-t border-forest-800/40 mt-3 space-y-2 text-xs">
+                        ${(!n.visual && !n.voice && !n.secret) ? '<p class="text-gray-500 italic">Keine weiteren Details (Optik, Stimme, Geheimnis) hinterlegt.</p>' : ''}
+                        ${n.visual ? `<p><strong class="text-[#eacb67]">Optischer Anker:</strong> <span class="text-gray-200">${n.visual}</span></p>` : ''}
+                        ${n.voice ? `<p><strong class="text-[#eacb67]">Stimme:</strong> <span class="text-gray-200">${n.voice}</span></p>` : ''}
+                        ${n.secret ? `
+                            <div class="bg-[#081511] border border-[#1b3d32] rounded-lg p-2.5 mt-2">
+                                <h4 class="text-xs font-bold text-red-400 flex items-center gap-1 mb-0.5">GEHEIMNIS:</h4>
+                                <p class="text-xs text-gray-300 leading-relaxed">${n.secret}</p>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+
+                card.querySelector('.card-header-click').onclick = () => toggleNpcExpanded(n.id);
+                card.querySelector('.card-summary-click').onclick = () => toggleNpcExpanded(n.id);
+
+                card.querySelector('.move-to-lib-btn').onclick = (e) => {
+                    e.stopPropagation();
+                    n.category = 'library';
+                    saveState();
+                    renderNPCsTab();
+                    showToast(`"${n.name}" zur Bibliothek hinzugefügt!`, 'success');
+                };
+
+                card.querySelector('.duplicate-btn').onclick = (e) => {
+                    e.stopPropagation();
+                    const dup = JSON.parse(JSON.stringify(n));
+                    dup.id = 'npc-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+                    dup.category = 'active';
+                    dup.name = getNextNpcName(n.name, 'active');
+                    state.npcs.splice(index + 1, 0, dup);
+                    saveState();
+                    renderNPCsTab();
+                    showToast(`"${dup.name}" erstellt!`, 'success');
+                };
+
+                card.querySelector('.edit-btn').onclick = (e) => {
+                    e.stopPropagation();
+                    openNpcModalForEdit(n);
+                };
+
+                card.querySelector('.delete-btn').onclick = (e) => {
+                    e.stopPropagation();
+                    if (confirm(`Möchtest du den NPC "${n.name}" wirklich löschen?`)) {
+                        state.npcs = state.npcs.filter(x => x.id !== n.id);
+                        expandedNpcIds.delete(n.id);
+                        saveState();
+                        renderNPCsTab();
+                        showToast('NPC gelöscht', 'info');
+                    }
+                };
+
+                activeGrid.appendChild(card);
+            }
+
+            // Drag & Drop reordering and moving
+            card.ondragstart = (e) => { e.dataTransfer.setData('text/plain', 'npc:' + index); e.dataTransfer.setData('application/x-dnd-npc', index); card.classList.add('dragging'); };
+            card.ondragend = () => { card.classList.remove('dragging'); };
+            card.ondragover = (e) => { e.preventDefault(); };
+            card.ondrop = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const rawData = e.dataTransfer.getData('application/x-dnd-npc') || e.dataTransfer.getData('text/plain');
+                const cleanIdx = rawData.startsWith('npc:') ? rawData.substring(4) : rawData;
+                const fromIdx = parseInt(cleanIdx);
+                const toIdx = index;
+                if (!isNaN(fromIdx) && fromIdx !== toIdx && state.npcs[fromIdx]) {
+                    const moved = state.npcs.splice(fromIdx, 1)[0];
+                    moved.category = n.category;
+                    state.npcs.splice(toIdx, 0, moved);
+                    saveState();
+                    renderNPCsTab();
                 }
             };
-            grid.appendChild(card);
         });
+    }
+
+    function dropNpcContainer(e, category) {
+        e.preventDefault();
+        e.currentTarget.classList.remove('drag-over');
+        const rawData = e.dataTransfer.getData('application/x-dnd-npc') || e.dataTransfer.getData('text/plain');
+        const cleanIdx = rawData.startsWith('npc:') ? rawData.substring(4) : rawData;
+        if (cleanIdx !== '') {
+            const fromIdx = parseInt(cleanIdx);
+            if (!isNaN(fromIdx) && state.npcs[fromIdx]) {
+                const moved = state.npcs.splice(fromIdx, 1)[0];
+                moved.category = category;
+                state.npcs.push(moved);
+                saveState();
+                renderNPCsTab();
+            }
+        }
     }
 
     function openNpcModalForEdit(n = null) {
         document.getElementById('npcModalTitle').textContent = n ? 'NPC bearbeiten' : 'Neuen NPC anlegen';
         document.getElementById('npcIdInput').value = n ? n.id : '';
         document.getElementById('npcNameInput').value = n ? n.name : '';
-        document.getElementById('npcRoleInput').value = n ? (n.role || '') : '';
+        document.getElementById('npcRaceInput').value = n ? (n.rasse || n.race || '') : '';
+        document.getElementById('npcRoleInput').value = n ? (n.beruf || n.role || '') : '';
         document.getElementById('npcLocationInput').value = n ? (n.location || '') : '';
         document.getElementById('npcVisualInput').value = n ? (n.visual || '') : '';
         document.getElementById('npcVoiceInput').value = n ? (n.voice || '') : '';
         document.getElementById('npcGoalInput').value = n ? (n.goal || '') : '';
         document.getElementById('npcSecretInput').value = n ? (n.secret || '') : '';
+        document.getElementById('npcCategorySelect').value = n ? (n.category || 'active') : 'active';
         document.getElementById('npcModal').classList.remove('hidden');
     }
 
@@ -1132,15 +1842,24 @@
     document.getElementById('npcForm').onsubmit = (e) => {
         e.preventDefault();
         const id = document.getElementById('npcIdInput').value;
+        const nameVal = document.getElementById('npcNameInput').value.trim();
+        const raceVal = document.getElementById('npcRaceInput').value.trim();
+        const roleVal = document.getElementById('npcRoleInput').value.trim();
+        const categoryVal = document.getElementById('npcCategorySelect').value;
+
         const npcObj = {
-            id: id || 'npc-'+Date.now(),
-            name: document.getElementById('npcNameInput').value,
-            role: document.getElementById('npcRoleInput').value,
-            location: document.getElementById('npcLocationInput').value,
-            visual: document.getElementById('npcVisualInput').value,
-            voice: document.getElementById('npcVoiceInput').value,
-            goal: document.getElementById('npcGoalInput').value,
-            secret: document.getElementById('npcSecretInput').value
+            id: id || 'npc-' + Date.now(),
+            name: nameVal,
+            rasse: raceVal,
+            race: raceVal, // backwards compatibility
+            beruf: roleVal,
+            role: roleVal, // backwards compatibility
+            location: document.getElementById('npcLocationInput').value.trim(),
+            visual: document.getElementById('npcVisualInput').value.trim(),
+            voice: document.getElementById('npcVoiceInput').value.trim(),
+            goal: document.getElementById('npcGoalInput').value.trim(),
+            secret: document.getElementById('npcSecretInput').value.trim(),
+            category: categoryVal
         };
         if (id) {
             const idx = state.npcs.findIndex(x => x.id === id);
@@ -1195,10 +1914,10 @@
     function getNextMonsterNameForActive(sourceName) {
         const baseName = getBaseMonsterName(sourceName);
         const activeMonsters = state.monsters.filter(x => x.category === 'active');
-        
+
         const existingNumbers = [];
         let hasBaseExact = false;
-        
+
         activeMonsters.forEach(m => {
             const mTrimmed = m.name.trim();
             const mBase = getBaseMonsterName(mTrimmed);
@@ -1245,12 +1964,12 @@
                 <h4 class="text-xs font-bold text-[#eacb67] tracking-wider uppercase mb-1">MERKMALE:</h4>
                 <div class="space-y-1">
                     ${m.traits.map(t => {
-                        const parts = t.split(':');
-                        if(parts.length > 1) {
-                            return `<p class="text-xs text-gray-200"><strong class="text-[#eacb67] font-semibold">${parts[0]}:</strong>${parts.slice(1).join(':')}</p>`;
-                        }
-                        return `<p class="text-xs text-gray-200">${t}</p>`;
-                    }).join('')}
+            const parts = t.split(':');
+            if(parts.length > 1) {
+                return `<p class="text-xs text-gray-200"><strong class="text-[#eacb67] font-semibold">${parts[0]}:</strong>${parts.slice(1).join(':')}</p>`;
+            }
+            return `<p class="text-xs text-gray-200">${t}</p>`;
+        }).join('')}
                 </div>
             </div>` : '';
 
@@ -1379,8 +2098,8 @@
         const row = document.createElement('div');
         row.className = 'flex gap-2 items-center';
         row.innerHTML = `
-            <input type="text" placeholder="Name" value="${nameVal}" class="dyn-name w-1/3 bg-forest-950 border border-forest-700 text-xs rounded p-1.5 text-gray-100 font-semibold">
-            <input type="text" placeholder="Beschreibung" value="${descVal}" class="dyn-desc flex-1 bg-forest-950 border border-forest-700 text-xs rounded p-1.5 text-gray-100">
+            <input type="text" placeholder="Name" value="${escapeAttr(nameVal)}" class="dyn-name w-1/3 bg-forest-950 border border-forest-700 text-xs rounded p-1.5 text-gray-100 font-semibold">
+            <input type="text" placeholder="Beschreibung" value="${escapeAttr(descVal)}" class="dyn-desc flex-1 bg-forest-950 border border-forest-700 text-xs rounded p-1.5 text-gray-100">
             <button type="button" onclick="this.parentElement.remove()" class="text-red-400 hover:text-red-300 px-2 text-xs">✕</button>
         `;
         container.appendChild(row);
@@ -1499,10 +2218,14 @@
 
                 card.querySelector('.move-to-lib-btn').onclick = (e) => {
                     e.stopPropagation();
-                    m.category = 'library';
+                    const libCopy = JSON.parse(JSON.stringify(m));
+                    libCopy.id = 'm-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+                    libCopy.category = 'library';
+                    libCopy.name = m.name;
+                    state.monsters.push(libCopy);
                     saveState();
                     renderMonstersTab();
-                    showToast(`"${m.name}" zur Bibliothek hinzugefügt!`, 'success');
+                    showToast(`Kopie von "${m.name}" in Bibliothek gespeichert!`, 'success');
                 };
 
                 card.querySelector('.duplicate-btn').onclick = (e) => {
@@ -1537,15 +2260,17 @@
             }
 
             // Drag & Drop
-            card.ondragstart = (e) => { e.dataTransfer.setData('text/plain', index); card.classList.add('dragging'); };
+            card.ondragstart = (e) => { e.dataTransfer.setData('text/plain', 'monster:' + index); e.dataTransfer.setData('application/x-dnd-monster', index); card.classList.add('dragging'); };
             card.ondragend = () => { card.classList.remove('dragging'); };
             card.ondragover = (e) => { e.preventDefault(); };
             card.ondrop = (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                const fromIdx = parseInt(e.dataTransfer.getData('text/plain'));
+                const rawData = e.dataTransfer.getData('application/x-dnd-monster') || e.dataTransfer.getData('text/plain');
+                const cleanIdx = rawData.startsWith('monster:') ? rawData.substring(8) : rawData;
+                const fromIdx = parseInt(cleanIdx);
                 const toIdx = index;
-                if (!isNaN(fromIdx) && fromIdx !== toIdx) {
+                if (!isNaN(fromIdx) && fromIdx !== toIdx && state.monsters[fromIdx]) {
                     const moved = state.monsters.splice(fromIdx, 1)[0];
                     moved.category = m.category;
                     state.monsters.splice(toIdx, 0, moved);
@@ -1558,14 +2283,29 @@
     function dropMonsterContainer(e, category) {
         e.preventDefault();
         e.currentTarget.classList.remove('drag-over');
-        const idxStr = e.dataTransfer.getData('text/plain');
-        if (idxStr !== '') {
-            const fromIdx = parseInt(idxStr);
+        const rawData = e.dataTransfer.getData('application/x-dnd-monster') || e.dataTransfer.getData('text/plain');
+        const cleanIdx = rawData.startsWith('monster:') ? rawData.substring(8) : rawData;
+        if (cleanIdx !== '') {
+            const fromIdx = parseInt(cleanIdx);
             if (!isNaN(fromIdx) && state.monsters[fromIdx]) {
-                const moved = state.monsters.splice(fromIdx, 1)[0];
-                moved.category = category;
-                state.monsters.push(moved);
-                saveState(); renderMonstersTab();
+                const moved = state.monsters[fromIdx];
+                if (category === 'library' && moved.category === 'active') {
+                    // Kopie in der Bibliothek anlegen, aktives Monster bleibt bestehen
+                    const libCopy = JSON.parse(JSON.stringify(moved));
+                    libCopy.id = 'm-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+                    libCopy.category = 'library';
+                    libCopy.name = moved.name;
+                    state.monsters.push(libCopy);
+                    saveState();
+                    renderMonstersTab();
+                    showToast(`Kopie von "${moved.name}" in Bibliothek gespeichert!`, 'success');
+                } else {
+                    const item = state.monsters.splice(fromIdx, 1)[0];
+                    item.category = category;
+                    state.monsters.push(item);
+                    saveState();
+                    renderMonstersTab();
+                }
             }
         }
     }
@@ -1654,12 +2394,12 @@
             init: document.getElementById('monsterInitInput').value || '+0',
             speed: document.getElementById('monsterSpeedInput').value || '9m',
             stats: {
-                sta: { val: parseInt(document.getElementById('m-sta-val').value)||10, mod: document.getElementById('m-sta-mod').value||'+0', rw: document.getElementById('m-sta-rw').value||'+0' },
-                ges: { val: parseInt(document.getElementById('m-ges-val').value)||10, mod: document.getElementById('m-ges-mod').value||'+0', rw: document.getElementById('m-ges-rw').value||'+0' },
-                kon: { val: parseInt(document.getElementById('m-kon-val').value)||10, mod: document.getElementById('m-kon-mod').value||'+0', rw: document.getElementById('m-kon-rw').value||'+0' },
-                int: { val: parseInt(document.getElementById('m-int-val').value)||10, mod: document.getElementById('m-int-mod').value||'+0', rw: document.getElementById('m-int-rw').value||'+0' },
-                wei: { val: parseInt(document.getElementById('m-wei-val').value)||10, mod: document.getElementById('m-wei-mod').value||'+0', rw: document.getElementById('m-wei-rw').value||'+0' },
-                cha: { val: parseInt(document.getElementById('m-cha-val').value)||10, mod: document.getElementById('m-cha-mod').value||'+0', rw: document.getElementById('m-cha-rw').value||'+0' }
+                sta: { val: parseStatVal('m-sta-val'), mod: document.getElementById('m-sta-mod').value||'+0', rw: document.getElementById('m-sta-rw').value||'+0' },
+                ges: { val: parseStatVal('m-ges-val'), mod: document.getElementById('m-ges-mod').value||'+0', rw: document.getElementById('m-ges-rw').value||'+0' },
+                kon: { val: parseStatVal('m-kon-val'), mod: document.getElementById('m-kon-mod').value||'+0', rw: document.getElementById('m-kon-rw').value||'+0' },
+                int: { val: parseStatVal('m-int-val'), mod: document.getElementById('m-int-mod').value||'+0', rw: document.getElementById('m-int-rw').value||'+0' },
+                wei: { val: parseStatVal('m-wei-val'), mod: document.getElementById('m-wei-mod').value||'+0', rw: document.getElementById('m-wei-rw').value||'+0' },
+                cha: { val: parseStatVal('m-cha-val'), mod: document.getElementById('m-cha-mod').value||'+0', rw: document.getElementById('m-cha-rw').value||'+0' }
             },
             skills: document.getElementById('monsterSkillsInput').value,
             equipment: document.getElementById('monsterEquipmentInput').value,
@@ -1713,15 +2453,17 @@
                 </div>
             `;
 
-            card.ondragstart = (e) => { e.dataTransfer.setData('text/plain', index); card.classList.add('dragging'); };
+            card.ondragstart = (e) => { e.dataTransfer.setData('text/plain', 'node:' + index); e.dataTransfer.setData('application/x-dnd-node', index); card.classList.add('dragging'); };
             card.ondragend = () => { card.classList.remove('dragging'); };
             card.ondragover = (e) => { e.preventDefault(); };
             card.ondrop = (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                const fromIdx = parseInt(e.dataTransfer.getData('text/plain'));
+                const rawData = e.dataTransfer.getData('application/x-dnd-node') || e.dataTransfer.getData('text/plain');
+                const cleanIdx = rawData.startsWith('node:') ? rawData.substring(5) : rawData;
+                const fromIdx = parseInt(cleanIdx);
                 const toIdx = index;
-                if (!isNaN(fromIdx) && fromIdx !== toIdx) {
+                if (!isNaN(fromIdx) && fromIdx !== toIdx && state.nodes[fromIdx]) {
                     const moved = state.nodes.splice(fromIdx, 1)[0];
                     state.nodes.splice(toIdx, 0, moved);
                     saveState(); renderNodesTab();
@@ -1797,7 +2539,7 @@
 
     function addCombatant(name = 'Neuer Held', init = 10, maxHp = 30, fullMonsterData = null) {
         if (!state.combatants) state.combatants = [];
-        const id = Date.now().toString();
+        const id = 'c-' + Date.now().toString() + '-' + Math.floor(Math.random() * 10000);
         state.combatants.push({ id, name, init: Number(init), hp: Number(maxHp), maxHp: Number(maxHp), tempHp: 0, img: '', conditions: [], history: ['Erstellt'], monsterData: fullMonsterData });
         sortCombatants(); state.activeId = id; saveState(); renderInitiativeTab();
     }
@@ -1813,20 +2555,28 @@
         }
         const totalInit = d20 + mod;
         const modDisplay = mod >= 0 ? `+${mod}` : `${mod}`;
-        
+
         addCombatant(m.name, totalInit, m.hp, m);
         showToast(`🎲 ${m.name}: 1W20 (${d20}) ${modDisplay} = ${totalInit} Initiative!`, 'success');
     }
 
-    function removeCombatant(id, e) { if(e) e.stopPropagation(); state.combatants = state.combatants.filter(c => c.id !== id); saveState(); renderInitiativeTab(); }
+    function removeCombatant(id, e) {
+        if (e) e.stopPropagation();
+        state.combatants = state.combatants.filter(c => c.id !== id);
+        if (state.activeId === id) {
+            state.activeId = state.combatants.length > 0 ? state.combatants[0].id : null;
+        }
+        saveState();
+        renderInitiativeTab();
+    }
     function setActive(id) { state.activeId = id; saveState(); renderInitiativeTab(); }
 
     function commitMaxHp(id, val) {
         const c = state.combatants.find(x => x.id === id);
         if (c) {
-            const newMax = Math.max(0, parseInt(val) || 0);
+            const newMax = Math.max(1, parseInt(val) || 1);
             c.maxHp = newMax;
-            c.hp = newMax;
+            if (c.hp > newMax) c.hp = newMax;
             saveState();
             renderInitiativeTab();
         }
@@ -1836,7 +2586,30 @@
     function handleInitInput(id, val) { const c = state.combatants.find(x => x.id === id); if(c){ c.init = parseInt(val)||0; saveState(); } }
     function finalizeInitChange() { sortCombatants(); saveState(); renderInitiativeTab(); }
     function resetToFullHp(id) { const c = state.combatants.find(x => x.id === id); if(c){ c.hp = c.maxHp; saveState(); renderInitiativeTab(); } }
-    function applyDamage(id) { const c = state.combatants.find(x => x.id === id); const v = parseInt(document.getElementById(`val-${id}`).value)||0; if(v>0){ c.hp = Math.max(0, c.hp - v); c.history.unshift(`-${v}`); saveState(); renderInitiativeTab(); } }
+    function applyDamage(id) {
+        const c = state.combatants.find(x => x.id === id);
+        const valInput = document.getElementById(`val-${id}`);
+        const v = parseInt(valInput ? valInput.value : 0) || 0;
+        if (v > 0 && c) {
+            let remainingDmg = v;
+            let tempDmg = 0;
+            if (c.tempHp && c.tempHp > 0) {
+                if (c.tempHp >= remainingDmg) {
+                    c.tempHp -= remainingDmg;
+                    tempDmg = remainingDmg;
+                    remainingDmg = 0;
+                } else {
+                    tempDmg = c.tempHp;
+                    remainingDmg -= c.tempHp;
+                    c.tempHp = 0;
+                }
+            }
+            c.hp = Math.max(0, c.hp - remainingDmg);
+            c.history.unshift(tempDmg > 0 ? `-${v} (${tempDmg} Temp)` : `-${v}`);
+            saveState();
+            renderInitiativeTab();
+        }
+    }
     function applyHeal(id) { const c = state.combatants.find(x => x.id === id); const v = parseInt(document.getElementById(`val-${id}`).value)||0; if(v>0){ c.hp = Math.min(c.maxHp, c.hp + v); c.history.unshift(`+${v}`); saveState(); renderInitiativeTab(); } }
     function addTempHp(id) { const c = state.combatants.find(x => x.id === id); const v = parseInt(document.getElementById(`val-${id}`).value)||0; if(v>0){ c.tempHp = v; c.history.unshift(`+${v} Temp`); saveState(); renderInitiativeTab(); } }
     function toggleCondition(cid, condId) { const c = state.combatants.find(x => x.id === cid); if(!c) return; if(!c.conditions) c.conditions=[]; const idx = c.conditions.indexOf(condId); if(idx>-1) c.conditions.splice(idx,1); else c.conditions.push(condId); saveState(); renderInitiativeTab(); }
@@ -1870,8 +2643,8 @@
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, width, height);
 
-                    // Als komprimiertes JPEG (80% Qualität) speichern
-                    const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+                    // Als PNG mit Alphakanal speichern (verhindert schwarzen Hintergrund bei transparenten PNGs)
+                    const compressedDataUrl = canvas.toDataURL('image/png');
 
                     const c = state.combatants.find(x => x.id === id);
                     if (c) {
@@ -1933,7 +2706,7 @@
                 </div>
                 <div class="hp-section" onclick="event.stopPropagation()">
                     <div class="hp-stats">
-                        <span class="hp-display">❤️ <input type="number" class="hp-number-input" value="${c.hp}" oninput="handleCurrentHpInput('${c.id}', this.value)"/> / <input type="number" class="max-hp-input" value="${c.maxHp}" onchange="commitMaxHp('${c.id}', this.value)" onkeydown="if(event.key==='Enter') this.blur()"/></span>
+                        <span class="hp-display">❤️ <input type="number" class="hp-number-input" value="${c.hp}" oninput="handleCurrentHpInput('${c.id}', this.value)"/> / <input type="number" class="max-hp-input" value="${c.maxHp}" onchange="commitMaxHp('${c.id}', this.value)" onkeydown="if(event.key==='Enter') this.blur()"/>${c.tempHp > 0 ? `<span class="text-purple-400 font-bold text-xs ml-1" title="Temporäre TP">(+${c.tempHp} Temp)</span>` : ''}</span>
                         <button class="btn-full-hp" onclick="resetToFullHp('${c.id}')">Full</button>
                     </div>
                     <div class="hp-inputs">
@@ -1956,11 +2729,630 @@
 
     document.getElementById('resetDataBtn').onclick = () => { if(confirm('Alles zurücksetzen?')){ localStorage.clear(); location.reload(); } };
 
+    
+    /* ==========================================================================
+       ORTE & WELTEN MODUL LOGIK
+       ========================================================================== */
+    const LEVEL_CONFIG = {
+        world: { title: 'Welt / Ebene', next: 'continent', badgeColor: 'bg-indigo-950 text-indigo-200 border border-indigo-500/40', icon: 'fa-globe' },
+        continent: { title: 'Kontinent', next: 'region', badgeColor: 'bg-blue-950 text-blue-200 border border-blue-500/40', icon: 'fa-earth-europe' },
+        region: { title: 'Land / Region', next: 'city', badgeColor: 'bg-emerald-950 text-emerald-200 border border-emerald-500/40', icon: 'fa-map' },
+        city: { title: 'Stadt / Dorf', next: 'building', badgeColor: 'bg-amber-950 text-amber-200 border border-amber-500/40', icon: 'fa-city' },
+        building: { title: 'Gebäude', next: 'room', badgeColor: 'bg-orange-950 text-orange-200 border border-orange-500/40', icon: 'fa-house-chimney' },
+        room: { title: 'Raum', next: 'npc', badgeColor: 'bg-purple-950 text-purple-200 border border-purple-500/40', icon: 'fa-door-open' },
+        npc: { title: 'NPC', next: 'note', badgeColor: 'bg-rose-950 text-rose-200 border border-rose-500/40', icon: 'fa-user' },
+        note: { title: 'Notiz', next: null, badgeColor: 'bg-red-950 text-red-200 border border-red-500/40', icon: 'fa-note-sticky' }
+    };
+
+    let orteSearchQuery = '';
+    let pendingOrteDeleteId = null;
+
+    function resetOrteToDefaultData() {
+        if (confirm('Möchtest du die Orte-Daten wirklich auf die Standard-Welten zurücksetzen?')) {
+            state.locations = JSON.parse(JSON.stringify(DEFAULT_LOCATIONS));
+            saveState();
+            renderOrteTree();
+            showToast('Standard-Orte wiederhergestellt', 'success');
+        }
+    }
+
+    function collapseAllOrte() {
+        if (state.locations) {
+            traverseOrteTree(state.locations, node => node.expanded = false);
+            saveState();
+            renderOrteTree();
+            showToast('Alle Orte zugeklappt', 'info');
+        }
+    }
+
+    function renderOrteTree() {
+        const container = document.getElementById('fullWidthTreeContainer');
+        const svg = document.getElementById('threadSvg');
+        if (!svg || !container) return;
+
+        svg.innerHTML = '';
+        Array.from(container.children).forEach(child => {
+            if (child.id !== 'threadSvg') child.remove();
+        });
+
+        if (!state.locations) state.locations = [];
+        let nodesToRender = state.locations;
+
+        if (orteSearchQuery !== '') {
+            nodesToRender = searchOrteTreeFilter(state.locations, orteSearchQuery);
+            if (nodesToRender.length === 0) {
+                const emptyDiv = document.createElement('div');
+                emptyDiv.className = 'text-center py-16 bg-forest-900/40 border border-gold-500/20 rounded-2xl w-full';
+                emptyDiv.innerHTML = `
+                    <i class="fa-solid fa-magnifying-glass text-4xl text-gold-500/40 mb-3"></i>
+                    <p class="font-cinzel text-gold-300">Keine Einträge für "${escapeHTML(orteSearchQuery)}" gefunden.</p>
+                `;
+                container.appendChild(emptyDiv);
+                return;
+            }
+        }
+
+        if (nodesToRender.length === 0) {
+            const emptyDiv = document.createElement('div');
+            emptyDiv.className = 'text-center py-16 bg-forest-900/40 border border-gold-500/20 rounded-2xl w-full';
+            emptyDiv.innerHTML = `
+                <i class="fa-solid fa-map text-4xl text-gold-400/50 mb-3"></i>
+                <p class="font-cinzel text-gold-300 mb-2">Noch keine Welten vorhanden.</p>
+                <p class="text-xs text-gray-400">Klicke oben auf „Welt erstellen“, um zu beginnen.</p>
+            `;
+            container.appendChild(emptyDiv);
+            return;
+        }
+
+        renderOrteHierarchyChain(container, nodesToRender);
+        setTimeout(drawOrteThreads, 50);
+    }
+
+    function searchOrteTreeFilter(nodes, query) {
+        let matchedNodes = [];
+        nodes.forEach(node => {
+            const matchesSelf = (node.name && node.name.toLowerCase().includes(query)) ||
+                (node.profession && node.profession.toLowerCase().includes(query)) ||
+                (node.description && node.description.toLowerCase().includes(query));
+
+            let matchingChildren = [];
+            if (node.children && node.children.length > 0) {
+                matchingChildren = searchOrteTreeFilter(node.children, query);
+            }
+
+            if (matchesSelf || matchingChildren.length > 0) {
+                const cloned = { ...node };
+                cloned.expanded = true;
+
+                if (matchingChildren.length > 0) {
+                    cloned.children = matchingChildren;
+                    let hasSelectedChild = false;
+                    cloned.children.forEach(child => {
+                        if (!hasSelectedChild && ((child.name && child.name.toLowerCase().includes(query)) || (child.profession && child.profession.toLowerCase().includes(query)) || (child.description && child.description.toLowerCase().includes(query)))) {
+                            child.expanded = true;
+                            hasSelectedChild = true;
+                        } else if (!hasSelectedChild && child.expanded) {
+                            hasSelectedChild = true;
+                        } else {
+                            child.expanded = false;
+                        }
+                    });
+                }
+                matchedNodes.push(cloned);
+            }
+        });
+
+        if (matchedNodes.length > 1) {
+            let exactMatchIndex = matchedNodes.findIndex(n =>
+                (n.name && n.name.toLowerCase().includes(query)) ||
+                (n.profession && n.profession.toLowerCase().includes(query))
+            );
+            if (exactMatchIndex !== -1) {
+                matchedNodes.forEach((n, idx) => {
+                    n.expanded = (idx === exactMatchIndex);
+                });
+            } else {
+                matchedNodes.forEach((n, idx) => {
+                    n.expanded = (idx === 0);
+                });
+            }
+        }
+
+        return matchedNodes;
+    }
+
+    function renderOrteHierarchyChain(container, currentNodes, expectedType = null, parentNodeId = null) {
+        const firstNodeType = currentNodes && currentNodes.length > 0 ? currentNodes[0].type : expectedType;
+        if (!firstNodeType) return;
+
+        const config = LEVEL_CONFIG[firstNodeType];
+        const isNoteLevel = firstNodeType === 'note';
+
+        const levelWrapper = document.createElement('div');
+        levelWrapper.className = 'w-full space-y-3 level-section';
+        levelWrapper.dataset.levelType = firstNodeType;
+
+        const sectionHeader = document.createElement('div');
+        sectionHeader.className = 'flex items-center justify-between border-b border-gold-500/20 pb-2';
+
+        let correctParentId = parentNodeId;
+        if (!correctParentId && firstNodeType !== 'world') {
+            correctParentId = getActiveOrteParentId(firstNodeType);
+        }
+
+        const count = currentNodes ? currentNodes.length : 0;
+
+        sectionHeader.innerHTML = `
+            <div class="flex items-center space-x-3">
+                <span class="badge-type ${config.badgeColor}"><i class="fa-solid ${config.icon} mr-1.5"></i> ${config.title}</span>
+                <span class="text-xs text-gray-400 font-sans">(${count} ${count === 1 ? 'Eintrag' : 'Einträge'})</span>
+
+                ${config.next !== null || firstNodeType === 'world' || isNoteLevel ? `
+                    <button onclick="openOrteAddModal('${firstNodeType}', '${correctParentId || ''}')"
+                            title="${config.title} hinzufügen"
+                            class="w-6 h-6 rounded-full bg-gold-500/20 hover:bg-gold-500/40 text-gold-300 border border-gold-500/40 flex items-center justify-center transition shadow-md">
+                        <i class="fa-solid fa-plus text-xs"></i>
+                    </button>
+                ` : ''}
+            </div>
+        `;
+        levelWrapper.appendChild(sectionHeader);
+
+        const grid = document.createElement('div');
+        grid.className = isNoteLevel
+            ? 'grid grid-cols-1 gap-4 w-full'
+            : 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full';
+
+        let expandedNodeOnThisLevel = null;
+
+        if (count === 0) {
+            const emptyCard = document.createElement('div');
+            emptyCard.className = 'col-span-full py-8 text-center bg-forest-900/30 border border-gold-500/20 rounded-xl';
+            emptyCard.innerHTML = `
+                <p class="text-xs text-gold-300/70 font-sans">Keine ${config.title.toLowerCase()} vorhanden. Klicke auf das <b>+</b> oben, um einen Eintrag hinzuzufügen.</p>
+            `;
+            grid.appendChild(emptyCard);
+        } else {
+            currentNodes.forEach(node => {
+                const hasChildren = node.children && node.children.length > 0;
+                const card = document.createElement('div');
+                card.className = `origami-card rounded-2xl p-4 flex flex-col justify-between cursor-pointer ${node.expanded ? (isNoteLevel ? 'active-card-note' : 'active-card') : ''}`;
+                card.dataset.nodeId = node.id;
+                card.dataset.nodeType = node.type;
+
+                card.onclick = (e) => {
+                    if (e.target.closest('button')) return;
+                    toggleOrteNodeExpansion(node, currentNodes);
+                };
+
+                let noteContentFormatted = '';
+                if (isNoteLevel) {
+                    const fullText = (node.description || node.name || '').trim();
+                    const lines = fullText.split('\n');
+
+                    noteContentFormatted = lines.map(line => {
+                        let trimmed = line.trim();
+                        if (!trimmed) return '<div class="h-2"></div>';
+
+                        const parseBold = (str) => {
+                            return escapeHTML(str)
+                                .replace(/\*\*(.*?)\*\*/g, '<strong class="font-extrabold text-red-950">$1</strong>')
+                                .replace(/__(.*?)__/g, '<strong class="font-extrabold text-red-950">$1</strong>');
+                        };
+
+                        if (/^#{3}\s*/.test(trimmed)) {
+                            const content = trimmed.replace(/^#{3}\s*/, '');
+                            return `<h4 class="font-cinzel font-bold text-base text-red-950 mt-3 mb-1 border-b border-red-900/30 pb-0.5">${parseBold(content)}</h4>`;
+                        } else if (/^#{2}\s*/.test(trimmed)) {
+                            const content = trimmed.replace(/^#{2}\s*/, '');
+                            return `<h3 class="font-cinzel font-bold text-lg text-red-950 mt-3 mb-1 border-b border-red-900/30 pb-0.5">${parseBold(content)}</h3>`;
+                        } else if (/^#{1}\s*/.test(trimmed)) {
+                            const content = trimmed.replace(/^#{1}\s*/, '');
+                            return `<h2 class="font-cinzel font-bold text-xl text-red-950 mt-4 mb-2 border-b border-red-900/40 pb-0.5">${parseBold(content)}</h2>`;
+                        } else {
+                            return `<p class="font-sans font-normal text-sm text-amber-950/90 leading-relaxed">${parseBold(trimmed)}</p>`;
+                        }
+                    }).join('');
+                }
+
+                card.innerHTML = `
+                    <div class="flex items-start justify-between">
+                        <div class="min-w-0 flex-1 pr-4">
+                            <div class="flex items-center space-x-2 mb-1">
+                                ${node.profession ? `<span class="text-[11px] bg-amber-950/40 text-amber-900 border border-amber-600/30 font-bold px-2 py-0.5 rounded-full">${escapeHTML(node.profession)}</span>` : ''}
+                                ${isNoteLevel ? `<span class="text-[11px] bg-red-950/20 text-red-900 border border-red-600/30 font-bold px-2 py-0.5 rounded-full"><i class="fa-solid fa-sticky-note mr-1"></i> Notiz</span>` : ''}
+                            </div>
+                            <h4 class="font-cinzel font-bold ${isNoteLevel ? 'text-xl text-red-950' : 'text-base text-gray-900'} break-words">${escapeHTML(node.name)}</h4>
+                        </div>
+                        <div class="flex items-center space-x-1 shrink-0">
+                            <button onclick="openOrteEditModal('${node.id}')" title="Bearbeiten" class="p-1.5 text-amber-900 hover:bg-amber-900/20 rounded-lg transition">
+                                <i class="fa-solid fa-pen-to-square text-xs"></i>
+                            </button>
+                            <button onclick="promptOrteDelete('${node.id}', '${escapeAttr(node.name)}')" title="Löschen" class="p-1.5 text-rose-800 hover:bg-rose-950/20 rounded-lg transition">
+                                <i class="fa-solid fa-trash-can text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    ${isNoteLevel ? `
+                        <div class="mt-3 pt-3 border-t border-amber-900/15 space-y-1">
+                            ${noteContentFormatted || '<p class="font-sans font-normal text-sm text-gray-500 italic">Keine weiteren Details erfasst.</p>'}
+                        </div>
+                    ` : ''}
+
+                    <div class="flex items-center justify-between mt-4 pt-2 border-t border-amber-900/15 text-xs font-sans text-amber-900">
+                        <span class="flex items-center gap-1 font-semibold">
+                            <i class="fa-solid fa-folder-open text-amber-700"></i> ${hasChildren ? `${node.children.length} Unterelemente` : 'Keine'}
+                        </span>
+                        <span class="font-bold flex items-center gap-1">
+                            ${node.expanded ? 'Schließen <i class="fa-solid fa-chevron-up"></i>' : 'Öffnen <i class="fa-solid fa-chevron-down"></i>'}
+                        </span>
+                    </div>
+                `;
+
+                grid.appendChild(card);
+
+                if (node.expanded) {
+                    expandedNodeOnThisLevel = node;
+                }
+            });
+        }
+
+        levelWrapper.appendChild(grid);
+        container.appendChild(levelWrapper);
+
+        if (expandedNodeOnThisLevel) {
+            const childType = LEVEL_CONFIG[expandedNodeOnThisLevel.type].next;
+            if (childType) {
+                const childNodes = expandedNodeOnThisLevel.children || [];
+                renderOrteHierarchyChain(container, childNodes, childType, expandedNodeOnThisLevel.id);
+            }
+        }
+    }
+
+    function drawOrteThreads() {
+        const svg = document.getElementById('threadSvg');
+        const container = document.getElementById('fullWidthTreeContainer');
+        if (!svg || !container) return;
+
+        svg.innerHTML = '';
+        const levelSections = container.querySelectorAll('.level-section');
+        if (levelSections.length < 2) return;
+
+        const containerRect = container.getBoundingClientRect();
+
+        for (let i = 0; i < levelSections.length - 1; i++) {
+            const parentLevel = levelSections[i];
+            const childLevel = levelSections[i+1];
+
+            const parentActiveCard = parentLevel.querySelector('.origami-card.active-card, .origami-card.active-card-note');
+            const childActiveCards = childLevel.querySelectorAll('.origami-card.active-card, .origami-card.active-card-note');
+
+            if (!parentActiveCard || childActiveCards.length === 0) continue;
+
+            const parentRect = parentActiveCard.getBoundingClientRect();
+            const x1 = parentRect.left + parentRect.width / 2 - containerRect.left + container.scrollLeft;
+            const y1 = parentRect.bottom - containerRect.top + container.scrollTop;
+
+            childActiveCards.forEach(childCard => {
+                const isChildNote = childCard.dataset.nodeType === 'note';
+                const childRect = childCard.getBoundingClientRect();
+
+                const x2 = childRect.left + childRect.width / 2 - containerRect.left + container.scrollLeft;
+                const y2 = childRect.top - containerRect.top + container.scrollTop;
+
+                const midY = (y1 + y2) / 2;
+                const pathData = `M ${x1} ${y1} C ${x1} ${midY}, ${x2} ${midY}, ${x2} ${y2}`;
+
+                const glowColor = isChildNote ? '#f87171' : '#34d399';
+                const lineColor = isChildNote ? '#ef4444' : '#10b981';
+
+                const glowLine = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                glowLine.setAttribute('d', pathData);
+                glowLine.setAttribute('stroke', glowColor);
+                glowLine.setAttribute('stroke-width', '5');
+                glowLine.setAttribute('fill', 'none');
+                glowLine.setAttribute('opacity', '0.5');
+                glowLine.setAttribute('stroke-linecap', 'round');
+                svg.appendChild(glowLine);
+
+                const mainLine = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                mainLine.setAttribute('d', pathData);
+                mainLine.setAttribute('stroke', lineColor);
+                mainLine.setAttribute('stroke-width', '2.5');
+                mainLine.setAttribute('fill', 'none');
+                mainLine.setAttribute('stroke-dasharray', '6 3');
+                mainLine.setAttribute('stroke-linecap', 'round');
+                svg.appendChild(mainLine);
+            });
+        }
+    }
+
+    function selectAndExpandPathToOrteNode(targetId) {
+        if (!state.locations) return;
+        traverseOrteTree(state.locations, node => node.expanded = false);
+
+        const path = [];
+        function findPath(nodes, id) {
+            for (let n of nodes) {
+                path.push(n);
+                if (n.id === id) return true;
+                if (n.children && n.children.length > 0) {
+                    if (findPath(n.children, id)) return true;
+                }
+                path.pop();
+            }
+            return false;
+        }
+
+        findPath(state.locations, targetId);
+        path.forEach(n => { n.expanded = true; });
+
+        const targetNode = findOrteNodeById(state.locations, targetId);
+        if (targetNode && targetNode.children) {
+            targetNode.children.forEach(c => {
+                if (c.type === 'note' || targetNode.type === 'npc') {
+                    c.expanded = true;
+                }
+            });
+        }
+
+        orteSearchQuery = '';
+        const searchInput = document.getElementById('orteSearchInput');
+        if (searchInput) searchInput.value = '';
+
+        saveState();
+        renderOrteTree();
+    }
+
+    function toggleOrteNodeExpansion(targetNode, siblingNodes) {
+        if (orteSearchQuery !== '') {
+            selectAndExpandPathToOrteNode(targetNode.id);
+            return;
+        }
+
+        const realNode = findOrteNodeById(state.locations, targetNode.id);
+        if (!realNode) return;
+
+        const willBeExpanded = !realNode.expanded;
+
+        siblingNodes.forEach(sibling => {
+            const realSibling = findOrteNodeById(state.locations, sibling.id);
+            if (realSibling && realSibling.id !== realNode.id) {
+                realSibling.expanded = false;
+                collapseAllOrteChildren(realSibling);
+            }
+        });
+
+        realNode.expanded = willBeExpanded;
+
+        if (realNode.expanded && realNode.children) {
+            realNode.children.forEach(treeChild => {
+                if (treeChild.type === 'note' || realNode.type === 'npc') {
+                    treeChild.expanded = true;
+                }
+            });
+        } else if (!realNode.expanded) {
+            collapseAllOrteChildren(realNode);
+        }
+
+        saveState();
+        renderOrteTree();
+    }
+
+    function collapseAllOrteChildren(node) {
+        if (node.children) {
+            node.children.forEach(child => {
+                child.expanded = false;
+                collapseAllOrteChildren(child);
+            });
+        }
+    }
+
+    function traverseOrteTree(nodes, callback) {
+        nodes.forEach(node => {
+            callback(node);
+            if (node.children) traverseOrteTree(node.children, callback);
+        });
+    }
+
+    function findOrteNodeById(nodes, id) {
+        for (let node of nodes) {
+            if (node.id === id) return node;
+            if (node.children) {
+                const found = findOrteNodeById(node.children, id);
+                if (found) return found;
+            }
+        }
+        return null;
+    }
+
+    function getActiveOrteParentId(targetLevelType) {
+        const parentTypeMap = {
+            continent: 'world',
+            region: 'continent',
+            city: 'region',
+            building: 'city',
+            room: 'building',
+            npc: 'room',
+            note: 'npc'
+        };
+        const requiredParentType = parentTypeMap[targetLevelType];
+        if (!requiredParentType) return null;
+
+        function searchActive(nodes) {
+            for (let node of nodes) {
+                if (node.type === requiredParentType && node.expanded) {
+                    return node.id;
+                }
+                if (node.children) {
+                    const found = searchActive(node.children);
+                    if (found) return found;
+                }
+            }
+            return null;
+        }
+        return searchActive(state.locations || []);
+    }
+
+    function closeOrteModal() {
+        document.getElementById('locationModal').classList.add('hidden');
+    }
+
+    function openOrteAddModal(type, parentId) {
+        document.getElementById('locationModalActionType').value = 'add';
+        document.getElementById('locationModalParentId').value = parentId || '';
+        document.getElementById('locationModalTargetId').value = type;
+
+        const config = LEVEL_CONFIG[type] || LEVEL_CONFIG['world'];
+        document.getElementById('locationModalTitle').innerHTML = `<i class="fa-solid ${config.icon} mr-2"></i> ${config.title} hinzufügen`;
+        document.getElementById('locationLabelName').innerText = type === 'note' ? 'Notiz-Titel' : `${config.title} Name`;
+        document.getElementById('locationLabelDescription').innerText = type === 'note' ? 'Notiztext / Details' : 'Notiz / Details';
+
+        document.getElementById('locationInputName').value = '';
+        document.getElementById('locationInputProfession').value = '';
+        document.getElementById('locationInputDescription').value = '';
+
+        const profContainer = document.getElementById('locationProfessionContainer');
+        const descContainer = document.getElementById('locationDescriptionContainer');
+
+        profContainer.classList.toggle('hidden', type !== 'npc');
+        descContainer.classList.toggle('hidden', type !== 'note');
+
+        document.getElementById('locationModal').classList.remove('hidden');
+        document.getElementById('locationInputName').focus();
+    }
+
+    function openOrteEditModal(id) {
+        const node = findOrteNodeById(state.locations, id);
+        if (!node) return;
+
+        document.getElementById('locationModalActionType').value = 'edit';
+        document.getElementById('locationModalTargetId').value = id;
+        document.getElementById('locationModalParentId').value = '';
+
+        const config = LEVEL_CONFIG[node.type];
+        document.getElementById('locationModalTitle').innerHTML = `<i class="fa-solid fa-pen-to-square mr-2"></i> ${config.title} bearbeiten`;
+        document.getElementById('locationLabelName').innerText = node.type === 'note' ? 'Notiz-Titel' : `${config.title} Name`;
+        document.getElementById('locationLabelDescription').innerText = node.type === 'note' ? 'Notiztext / Details' : 'Notiz / Details';
+
+        document.getElementById('locationInputName').value = node.name || '';
+        document.getElementById('locationInputProfession').value = node.profession || '';
+        document.getElementById('locationInputDescription').value = node.description || '';
+
+        const profContainer = document.getElementById('locationProfessionContainer');
+        const descContainer = document.getElementById('locationDescriptionContainer');
+
+        profContainer.classList.toggle('hidden', node.type !== 'npc');
+        descContainer.classList.toggle('hidden', node.type !== 'note');
+
+        document.getElementById('locationModal').classList.remove('hidden');
+        document.getElementById('locationInputName').focus();
+    }
+
+    function handleOrteFormSubmit(event) {
+        event.preventDefault();
+        const action = document.getElementById('locationModalActionType').value;
+        const targetId = document.getElementById('locationModalTargetId').value;
+        const parentId = document.getElementById('locationModalParentId').value;
+        const nameVal = document.getElementById('locationInputName').value.trim();
+        const professionVal = document.getElementById('locationInputProfession').value.trim();
+        const descriptionVal = document.getElementById('locationInputDescription').value.trim();
+
+        if (action === 'add') {
+            const targetNodeType = targetId || (parentId ? LEVEL_CONFIG[findOrteNodeById(state.locations, parentId).type].next : 'world');
+            const newId = 'loc_' + Math.random().toString(36).substr(2, 9);
+
+            const newItem = {
+                id: newId,
+                type: targetNodeType,
+                name: nameVal,
+                profession: targetNodeType === 'npc' ? professionVal : '',
+                description: targetNodeType === 'note' ? descriptionVal : '',
+                expanded: false,
+                children: []
+            };
+
+            const parentNode = parentId ? findOrteNodeById(state.locations, parentId) : null;
+            if (parentNode) {
+                if (!parentNode.children) parentNode.children = [];
+                parentNode.children.forEach(c => c.expanded = false);
+                parentNode.children.push(newItem);
+                parentNode.expanded = true;
+            } else {
+                state.locations.push(newItem);
+            }
+            showToast('Ort erfolgreich hinzugefügt!', 'success');
+        } else if (action === 'edit') {
+            const node = findOrteNodeById(state.locations, targetId);
+            if (node) {
+                node.name = nameVal;
+                node.description = descriptionVal;
+                if (node.type === 'npc') {
+                    node.profession = professionVal;
+                }
+                showToast('Ort erfolgreich aktualisiert!', 'success');
+            }
+        }
+
+        saveState();
+        renderOrteTree();
+        closeOrteModal();
+    }
+
+    function promptOrteDelete(id, name) {
+        pendingOrteDeleteId = id;
+        document.getElementById('locationConfirmText').innerHTML = `Möchtest du <b>"${name}"</b> und alle zugehörigen Unterelemente unwiderruflich löschen?`;
+        document.getElementById('locationConfirmModal').classList.remove('hidden');
+        document.getElementById('locationConfirmBtn').onclick = executeOrteDelete;
+    }
+
+    function closeOrteConfirmModal() {
+        pendingOrteDeleteId = null;
+        document.getElementById('locationConfirmModal').classList.add('hidden');
+    }
+
+    function executeOrteDelete() {
+        if (!pendingOrteDeleteId) return;
+        state.locations = removeOrteNodeRecursive(state.locations, pendingOrteDeleteId);
+        saveState();
+        renderOrteTree();
+        closeOrteConfirmModal();
+        showToast('Ort gelöscht', 'info');
+    }
+
+    function removeOrteNodeRecursive(nodes, id) {
+        return nodes.filter(node => {
+            if (node.id === id) return false;
+            if (node.children) {
+                node.children = removeOrteNodeRecursive(node.children, id);
+            }
+            return true;
+        });
+    }
+
+    function escapeHTML(str) {
+        return (str || '').toString().replace(/[&<>'"]/g,
+            tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+        );
+    }
+
     window.onload = function() {
         loadState();
         initTheme();
         initTabs();
         renderAuftaktTab();
+        renderOrteTree();
+        const orteSearch = document.getElementById('orteSearchInput');
+        if (orteSearch) {
+            orteSearch.addEventListener('input', (e) => {
+                orteSearchQuery = e.target.value.toLowerCase().trim();
+                renderOrteTree();
+            });
+        }
+        window.addEventListener('resize', () => {
+            if (state.activeTab === 'orte') drawOrteThreads();
+        });
         renderSecretsTab();
         fullNameGeneratorReset();
         renderNPCsTab();
