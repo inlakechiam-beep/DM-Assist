@@ -8,18 +8,19 @@
     <!-- Google Fonts: Cinzel for Headings & Inter for Body -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
     <script>
+    let currentDragItem = null;
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: {
-                        cinzel: ['Cinzel', 'serif'],
+                        cinzel: ['"IM Fell English"', 'serif'], fell: ['"IM Fell English"', 'serif'],
                         sans: ['Inter', 'sans-serif'],
                     },
                     colors: {
@@ -200,7 +201,7 @@
         .history-entry { margin-bottom: 2px; white-space: nowrap; }
 
         .conditions-section { flex: 1; display: flex; flex-direction: column; gap: 5px; min-width: 220px; }
-        .conditions-header { font-size: 0.62rem; font-weight: 800; color: var(--text-muted); letter-spacing: 0.8px; text-transform: uppercase; }
+        .conditions-header { font-size: 0.62rem; font-weight: 800; color: var(--text-muted); letter-spacing: 0.8px; /* text-transform: uppercase removed for lowercase support */ }
         .conditions-grid { display: flex; flex-wrap: wrap; gap: 4px; align-content: flex-start; }
         .condition-btn {
             background: var(--bg-input); border: 1px solid var(--border-subtle); color: #97c7b2;
@@ -319,6 +320,31 @@
         .animate-unfold {
             animation: unfold 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
+    
+        
+        /* ==========================================================================
+           ORTE & WELTEN: Kartentitel (h4 Cinzel)
+           Font-Weight: 400 (normal) statt 700 (bold)
+           Font-Size: 1.4rem (22.4px) statt 0.875rem (14px)
+           ========================================================================== */
+        .origami-card h4.font-cinzel,
+        .origami-card h4 {
+            font-family: 'IM Fell English', Georgia, serif !important;
+            font-weight: 400 !important;
+            font-size: 1.4rem !important;
+            line-height: 1.3 !important;
+        }
+
+        /* IM Fell English for authentic fantasy typography with true lower & upper case */
+        .font-cinzel, .font-fell {
+            font-family: 'IM Fell English', Georgia, serif !important;
+            letter-spacing: normal;
+        }
+        /* Ensure no forced uppercase on headings */
+        h1, h2, h3, h4, h5, h6 {
+            text-transform: none;
+        }
+
     </style>
     <!-- FontAwesome 6.4.0 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -336,7 +362,7 @@
             </div>
             <div>
                 <h1 class="font-cinzel text-lg sm:text-xl font-bold tracking-wider text-gold-400">Sylvanus</h1>
-                <p class="text-[10px] text-gray-300 dark:text-forest-300 font-medium tracking-widest uppercase">Spielleiter-Codex</p>
+                <p class="text-[10px] text-gray-300 dark:text-forest-300 font-medium tracking-widest">Spielleiter-Codex</p>
             </div>
         </div>
 
@@ -420,13 +446,25 @@
             </div>
 
             <!-- Aktionen -->
-            <div class="flex items-center space-x-2 w-full md:w-auto justify-end flex-wrap gap-y-2">
-                <button onclick="collapseAllOrte()" class="px-3 py-1.5 bg-forest-800 hover:bg-forest-700 text-gray-200 border border-gold-500/30 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 shadow">
+            <div class="flex items-center space-x-2 w-full md:w-auto justify-end flex-wrap gap-2">
+                <button onclick="collapseAllOrte()" class="px-3 py-1.5 bg-forest-800 hover:bg-forest-700 text-gray-200 border border-gold-500/30 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 shadow" title="Alle geöffneten Orte einklappen">
                     <i class="fa-solid fa-angles-up text-gold-400"></i> Alle schließen
                 </button>
-                <button onclick="openOrteAddModal('world', null)" class="px-3.5 py-1.5 bg-gold-500 hover:bg-gold-400 text-forest-950 font-bold text-xs rounded-lg shadow-md border border-gold-400 transition flex items-center gap-1.5">
-                    <i class="fa-solid fa-plus-circle"></i> Welt erstellen
-                </button>
+                <!-- 4 Schaltflächen zum Hinzufügen auf oberster Ebene (ohne Emojis, flache Icons) -->
+                <div class="inline-flex rounded-lg shadow-md border border-gold-500/40 overflow-hidden bg-forest-950/80">
+                    <button onclick="openOrteAddModal('ort', null)" title="Neuen Ort auf oberster Ebene erstellen" class="px-2.5 py-1.5 hover:bg-emerald-950/70 text-emerald-300 border-r border-gold-500/30 text-xs font-semibold flex items-center gap-1.5 transition">
+                        <i class="fa-solid fa-location-dot"></i> + Ort
+                    </button>
+                    <button onclick="openOrteAddModal('raum', null)" title="Neuen Raum auf oberster Ebene erstellen" class="px-2.5 py-1.5 hover:bg-purple-950/70 text-purple-300 border-r border-gold-500/30 text-xs font-semibold flex items-center gap-1.5 transition">
+                        <i class="fa-solid fa-door-open"></i> + Raum
+                    </button>
+                    <button onclick="openOrteAddModal('person', null)" title="Neue Person auf oberster Ebene erstellen" class="px-2.5 py-1.5 hover:bg-rose-950/70 text-rose-300 border-r border-gold-500/30 text-xs font-semibold flex items-center gap-1.5 transition">
+                        <i class="fa-solid fa-user"></i> + Person
+                    </button>
+                    <button onclick="openOrteAddModal('notiz', null)" title="Neue Notiz auf oberster Ebene erstellen" class="px-2.5 py-1.5 hover:bg-amber-950/70 text-amber-300 text-xs font-semibold flex items-center gap-1.5 transition">
+                        <i class="fa-solid fa-file-lines"></i> + Notiz
+                    </button>
+                </div>
                 <button onclick="resetOrteToDefaultData()" title="Standarddaten wiederherstellen" class="p-2 bg-forest-800/60 hover:bg-red-950/40 text-gold-400 hover:text-red-300 border border-gold-500/30 rounded-lg text-xs transition shadow">
                     <i class="fa-solid fa-rotate-right"></i>
                 </button>
@@ -462,7 +500,7 @@
                 </div>
                 <div class="flex items-center gap-4">
                     <div>
-                        <label class="block text-[10px] font-bold text-gray-400 tracking-wider uppercase mb-1">VOLK</label>
+                        <label class="block text-[10px] font-bold text-gray-400 tracking-wider mb-1">Volk</label>
                         <select id="nameGenRaceSelect" class="bg-[#081310] text-[#eacb67] border border-[#22483d] text-xs font-semibold rounded-lg px-4 py-2 focus:outline-none focus:border-gold-500">
                             <option value="mensch">Mensch</option>
                             <option value="elf">Elf</option>
@@ -474,7 +512,7 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-gray-400 tracking-wider uppercase mb-1">GESCHLECHT</label>
+                        <label class="block text-[10px] font-bold text-gray-400 tracking-wider mb-1">Geschlecht</label>
                         <select id="nameGenGenderSelect" class="bg-[#081310] text-[#eacb67] border border-[#22483d] text-xs font-semibold rounded-lg px-4 py-2 focus:outline-none focus:border-gold-500">
                             <option value="maennlich">Männlich</option>
                             <option value="weiblich">Weiblich</option>
@@ -485,7 +523,7 @@
 
             <div class="bg-[#071310] border border-[#1f4236] rounded-xl p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shadow-inner">
                 <div>
-                    <div class="text-[10px] font-bold text-[#eacb67] tracking-widest uppercase mb-1">AUSGEWÄHLTER VOLLER NAME</div>
+                    <div class="text-[10px] font-bold text-[#eacb67] tracking-widest mb-1">Ausgewählter voller Name</div>
                     <div id="fullGeneratedNameDisplay" class="font-cinzel text-2xl font-bold text-white tracking-wide">...</div>
                 </div>
                 <div class="flex items-center gap-2">
@@ -620,28 +658,51 @@
             </h3>
             <button onclick="closeOrteModal()" class="text-gray-400 hover:text-white transition">✕</button>
         </div>
-        <form id="locationForm" onsubmit="handleOrteFormSubmit(event)" class="space-y-3.5">
-            <input type="hidden" id="locationModalActionType">
-            <input type="hidden" id="locationModalTargetId">
-            <input type="hidden" id="locationModalParentId">
+        <form id="locationForm" onsubmit="handleOrteFormSubmit(event)" class="space-y-4">
+            <input type="hidden" id="locationModalActionType" value="add">
+            <input type="hidden" id="locationModalTargetId" value="">
+            <input type="hidden" id="locationModalParentId" value="">
 
+            <!-- Typ-Auswahl mit flachen FontAwesome-Icons (keine Emojis) -->
             <div>
+                <label class="block text-xs font-semibold text-gray-300 mb-1.5">Kategorie / Typ:</label>
+                <div class="grid grid-cols-4 gap-2">
+                    <button type="button" id="typeBtn_ort" onclick="setOrteModalType('ort')" class="orte-type-btn p-2 rounded-lg border text-xs font-semibold flex flex-col items-center justify-center gap-1 transition bg-emerald-950/80 border-emerald-500 text-emerald-200">
+                        <i class="fa-solid fa-location-dot text-base text-emerald-400"></i>
+                        <span>Ort</span>
+                    </button>
+                    <button type="button" id="typeBtn_raum" onclick="setOrteModalType('raum')" class="orte-type-btn p-2 rounded-lg border text-xs font-semibold flex flex-col items-center justify-center gap-1 transition bg-forest-950 border-forest-700 text-gray-300 hover:bg-forest-800">
+                        <i class="fa-solid fa-door-open text-base text-purple-400"></i>
+                        <span>Raum</span>
+                    </button>
+                    <button type="button" id="typeBtn_person" onclick="setOrteModalType('person')" class="orte-type-btn p-2 rounded-lg border text-xs font-semibold flex flex-col items-center justify-center gap-1 transition bg-forest-950 border-forest-700 text-gray-300 hover:bg-forest-800">
+                        <i class="fa-solid fa-user text-base text-rose-400"></i>
+                        <span>Person</span>
+                    </button>
+                    <button type="button" id="typeBtn_notiz" onclick="setOrteModalType('notiz')" class="orte-type-btn p-2 rounded-lg border text-xs font-semibold flex flex-col items-center justify-center gap-1 transition bg-forest-950 border-forest-700 text-gray-300 hover:bg-forest-800">
+                        <i class="fa-solid fa-file-lines text-base text-amber-400"></i>
+                        <span>Notiz</span>
+                    </button>
+                </div>
+            </div>
+
+            <div id="locationNameContainer">
                 <label id="locationLabelName" class="block text-xs font-semibold text-gray-300 mb-1">Name</label>
-                <input type="text" id="locationInputName" required placeholder="z. B. Tiefwasser, Falkenwacht..."
+                <input type="text" id="locationInputName" required placeholder="z. B. Tiefwasser, Falkenwacht, Taverne..."
                        class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100 focus:outline-none focus:border-gold-500 transition">
             </div>
 
             <div id="locationProfessionContainer" class="hidden">
-                <label class="block text-xs font-semibold text-gray-300 mb-1">Beruf / Rolle (für NPCs)</label>
-                <input type="text" id="locationInputProfession" placeholder="z. B. Graf, Leibwächter, Wirtin..."
+                <label class="block text-xs font-semibold text-gray-300 mb-1">Beruf / Rolle (für Personen)</label>
+                <input type="text" id="locationInputProfession" placeholder="z. B. Graf, Leibwächter, Wirtin, Magier..."
                        class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100 focus:outline-none focus:border-gold-500 transition">
             </div>
 
-            <div id="locationDescriptionContainer" class="hidden">
-                <label id="locationLabelDescription" class="block text-xs font-semibold text-gray-300 mb-1">Notiztext / Details</label>
-                <textarea id="locationInputDescription" rows="5" placeholder="Notiztext eingeben... Tipp: Du kannst '### Überschrift' nutzen oder einfache Textzeilen erfassen."
+            <div id="locationDescriptionContainer">
+                <label id="locationLabelDescription" class="block text-xs font-semibold text-gray-300 mb-1">Notiz / Beschreibung</label>
+                <textarea id="locationInputDescription" rows="5" placeholder="Details eingeben... Tipp: Du kannst '### Überschrift' nutzen oder **fett** schreiben."
                           class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2.5 text-gray-100 focus:outline-none focus:border-gold-500 transition"></textarea>
-                <p class="text-[11px] text-gray-400 mt-1">Zeilen mit <b>#</b> oder <b>##</b> werden automatisch als hervorgehobene Zwischenüberschriften formatiert.</p>
+                <p class="text-[11px] text-gray-400 mt-1">Zeilen mit <b>#</b> oder <b>##</b> werden als formatiertes Markdown angezeigt.</p>
             </div>
 
             <div class="flex justify-end space-x-2 pt-3 border-t border-forest-800">
@@ -662,7 +723,7 @@
         <p id="locationConfirmText" class="text-xs text-gray-300">Möchtest du diesen Ort und alle Unterelemente unwiderruflich entfernen?</p>
         <div class="flex justify-center space-x-3 pt-2">
             <button onclick="closeOrteConfirmModal()" class="px-4 py-2 bg-forest-800 text-gray-300 text-xs rounded-lg hover:bg-forest-700 transition">Abbrechen</button>
-            <button id="locationConfirmBtn" class="px-4 py-2 bg-red-600 hover:bg-red-500 text-white font-bold text-xs rounded-lg shadow-md transition">Löschen</button>
+            <button id="locationConfirmBtn" onclick="executeOrteDelete()" class="px-4 py-2 bg-red-600 hover:bg-red-500 text-white font-bold text-xs rounded-lg shadow-md transition">Löschen</button>
         </div>
     </div>
 </div>
@@ -1215,7 +1276,9 @@
 
     function loadState() {
         try {
-            let saved = localStorage.getItem('sylvanus_codex_data_v18');
+            let saved = localStorage.getItem('sylvanus_codex_data_v20');
+            if (!saved) saved = localStorage.getItem('sylvanus_codex_data_v19');
+            if (!saved) saved = localStorage.getItem('sylvanus_codex_data_v18');
             if (!saved) {
                 saved = localStorage.getItem('sylvanus_codex_data_v17');
             }
@@ -1243,6 +1306,8 @@
     function saveState() {
         try {
             const serialized = JSON.stringify(state);
+            localStorage.setItem('sylvanus_codex_data_v20', serialized);
+            localStorage.setItem('sylvanus_codex_data_v19', serialized);
             localStorage.setItem('sylvanus_codex_data_v18', serialized);
             localStorage.setItem('sylvanus_codex_data_v17', serialized);
             if (state.locations) {
@@ -1419,7 +1484,7 @@
         state.secrets.forEach(s => {
             const card = document.createElement('div');
             card.className = `p-4 rounded-xl border shadow-md flex flex-col justify-between ${s.status === 'revealed' ? 'bg-forest-950/40 border-forest-800 text-gray-400' : 'bg-forest-900/80 border-forest-700/60 text-gray-100'}`;
-            card.innerHTML = `<div><span class="px-2 py-0.5 rounded text-[10px] font-semibold uppercase bg-gold-500/20 text-gold-400">${s.tag}</span><p class="text-xs mt-2 ${s.status==='revealed'?'line-through':''}">${s.text}</p></div><div class="flex justify-end gap-2 pt-2"><button class="text-xs text-gold-300 px-2 py-1 bg-gold-500/20 rounded">${s.status==='revealed'?'Verbergen':'Enthüllen'}</button><button class="text-xs text-red-400">🗑️</button></div>`;
+            card.innerHTML = `<div><span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-gold-500/20 text-gold-400">${s.tag}</span><p class="text-xs mt-2 ${s.status==='revealed'?'line-through':''}">${s.text}</p></div><div class="flex justify-end gap-2 pt-2"><button class="text-xs text-gold-300 px-2 py-1 bg-gold-500/20 rounded">${s.status==='revealed'?'Verbergen':'Enthüllen'}</button><button class="text-xs text-red-400">🗑️</button></div>`;
             card.querySelector('button').onclick = () => { s.status = s.status==='revealed'?'hidden':'revealed'; saveState(); renderSecretsTab(); };
             card.querySelectorAll('button')[1].onclick = () => { state.secrets = state.secrets.filter(x => x.id !== s.id); saveState(); renderSecretsTab(); };
             grid.appendChild(card);
@@ -1620,7 +1685,7 @@
                     <div class="flex justify-between items-start gap-2 cursor-pointer card-header-click" title="Klicken, um NPC ${isExpanded ? 'einzuklappen' : 'vollständig anzuzeigen'}">
                         <div class="flex-1 min-w-0">
                             <div class="flex items-center gap-2 flex-wrap">
-                                <h3 class="font-cinzel text-lg font-bold tracking-wide text-gray-200 uppercase truncate">${n.name}</h3>
+                                <h3 class="font-cinzel text-lg font-bold tracking-wide text-gray-200 truncate">${n.name}</h3>
                                 <span class="text-[10px] text-gray-400 bg-forest-950/70 border border-forest-800 px-2 py-0.5 rounded font-sans">${isExpanded ? '▲ Einklappen' : '▼ Details'}</span>
                             </div>
                             <div class="flex items-center gap-1.5 mt-1.5 flex-wrap text-xs">
@@ -1704,7 +1769,7 @@
                     <div class="flex justify-between items-start gap-2 cursor-pointer card-header-click" title="Klicken, um NPC ${isExpanded ? 'einzuklappen' : 'vollständig anzuzeigen'}">
                         <div class="flex-1 min-w-0">
                             <div class="flex items-center gap-2 flex-wrap">
-                                <h3 class="font-cinzel text-lg font-bold tracking-wide text-[#eacb67] uppercase truncate">${n.name}</h3>
+                                <h3 class="font-cinzel text-lg font-bold tracking-wide text-[#eacb67] truncate">${n.name}</h3>
                                 <span class="text-[10px] text-[#eacb67] bg-[#1a382d] border border-gold-500/30 px-2 py-0.5 rounded font-sans">${isExpanded ? '▲ Einklappen' : '▼ Details'}</span>
                             </div>
                             <div class="flex items-center gap-1.5 mt-1.5 flex-wrap text-xs">
@@ -1781,21 +1846,43 @@
                 activeGrid.appendChild(card);
             }
 
-            // Drag & Drop reordering and moving
-            card.ondragstart = (e) => { e.dataTransfer.setData('text/plain', 'npc:' + index); e.dataTransfer.setData('application/x-dnd-npc', index); card.classList.add('dragging'); };
-            card.ondragend = () => { card.classList.remove('dragging'); };
-            card.ondragover = (e) => { e.preventDefault(); };
+            // Drag & Drop reordering and moving (ID-basiert & robust)
+            card.ondragstart = (e) => {
+                currentDragItem = { type: 'npc', id: n.id, category: n.category };
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/plain', String(n.id));
+                card.classList.add('dragging');
+            };
+            card.ondragend = () => {
+                currentDragItem = null;
+                card.classList.remove('dragging');
+                document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+            };
+            card.ondragover = (e) => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+            };
+            card.ondragenter = (e) => {
+                e.preventDefault();
+                card.classList.add('drag-over');
+            };
+            card.ondragleave = (e) => {
+                card.classList.remove('drag-over');
+            };
             card.ondrop = (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                const rawData = e.dataTransfer.getData('application/x-dnd-npc') || e.dataTransfer.getData('text/plain');
-                const cleanIdx = rawData.startsWith('npc:') ? rawData.substring(4) : rawData;
-                const fromIdx = parseInt(cleanIdx);
-                const toIdx = index;
-                if (!isNaN(fromIdx) && fromIdx !== toIdx && state.npcs[fromIdx]) {
+                card.classList.remove('drag-over');
+                const draggedId = (currentDragItem && currentDragItem.id) || e.dataTransfer.getData('text/plain');
+                if (!draggedId || draggedId === n.id) return;
+
+                const fromIdx = state.npcs.findIndex(x => x.id === draggedId);
+                const toIdx = state.npcs.findIndex(x => x.id === n.id);
+                if (fromIdx !== -1 && toIdx !== -1) {
                     const moved = state.npcs.splice(fromIdx, 1)[0];
                     moved.category = n.category;
-                    state.npcs.splice(toIdx, 0, moved);
+                    const insertIdx = state.npcs.findIndex(x => x.id === n.id);
+                    state.npcs.splice(insertIdx !== -1 ? insertIdx : toIdx, 0, moved);
                     saveState();
                     renderNPCsTab();
                 }
@@ -1806,17 +1893,16 @@
     function dropNpcContainer(e, category) {
         e.preventDefault();
         e.currentTarget.classList.remove('drag-over');
-        const rawData = e.dataTransfer.getData('application/x-dnd-npc') || e.dataTransfer.getData('text/plain');
-        const cleanIdx = rawData.startsWith('npc:') ? rawData.substring(4) : rawData;
-        if (cleanIdx !== '') {
-            const fromIdx = parseInt(cleanIdx);
-            if (!isNaN(fromIdx) && state.npcs[fromIdx]) {
-                const moved = state.npcs.splice(fromIdx, 1)[0];
-                moved.category = category;
-                state.npcs.push(moved);
-                saveState();
-                renderNPCsTab();
-            }
+        const draggedId = (currentDragItem && currentDragItem.id) || e.dataTransfer.getData('text/plain');
+        if (!draggedId) return;
+
+        const fromIdx = state.npcs.findIndex(x => x.id === draggedId);
+        if (fromIdx !== -1) {
+            const moved = state.npcs.splice(fromIdx, 1)[0];
+            moved.category = category;
+            state.npcs.push(moved);
+            saveState();
+            renderNPCsTab();
         }
     }
 
@@ -1961,7 +2047,7 @@
 
         const traitsHtml = m.traits && m.traits.length > 0 ? `
             <div class="mt-4">
-                <h4 class="text-xs font-bold text-[#eacb67] tracking-wider uppercase mb-1">MERKMALE:</h4>
+                <h4 class="text-xs font-bold text-[#eacb67] tracking-wider mb-1">Merkmale:</h4>
                 <div class="space-y-1">
                     ${m.traits.map(t => {
             const parts = t.split(':');
@@ -1975,7 +2061,7 @@
 
         const actionsHtml = m.actions && m.actions.length > 0 ? `
             <div class="mt-4">
-                <h4 class="text-xs font-bold text-[#eacb67] tracking-wider uppercase mb-1">AKTIONEN:</h4>
+                <h4 class="text-xs font-bold text-[#eacb67] tracking-wider mb-1">Aktionen:</h4>
                 <div class="space-y-1.5">
                     ${m.actions.map(a => `<p class="text-xs text-gray-200"><strong class="text-[#eacb67] font-semibold">${a.name}:</strong>${a.desc}</p>`).join('')}
                 </div>
@@ -1983,7 +2069,7 @@
 
         const bonusActionsHtml = m.bonusActions && m.bonusActions.length > 0 ? `
             <div class="mt-4">
-                <h4 class="text-xs font-bold text-[#eacb67] tracking-wider uppercase mb-1">BONUS-AKTIONEN:</h4>
+                <h4 class="text-xs font-bold text-[#eacb67] tracking-wider mb-1">Bonus-Aktionen:</h4>
                 <div class="space-y-1.5">
                     ${m.bonusActions.map(ba => `<p class="text-xs text-gray-200"><strong class="text-[#eacb67] font-semibold">${ba.name}:</strong>${ba.desc}</p>`).join('')}
                 </div>
@@ -1991,7 +2077,7 @@
 
         const reactionsHtml = m.reactions && m.reactions.length > 0 ? `
             <div class="mt-4">
-                <h4 class="text-xs font-bold text-[#eacb67] tracking-wider uppercase mb-1">REAKTIONEN:</h4>
+                <h4 class="text-xs font-bold text-[#eacb67] tracking-wider mb-1">Reaktionen:</h4>
                 <div class="space-y-1.5">
                     ${m.reactions.map(r => `<p class="text-xs text-gray-200"><strong class="text-[#eacb67] font-semibold">${r.name}:</strong>${r.desc}</p>`).join('')}
                 </div>
@@ -2082,7 +2168,7 @@
             ${outlinesHtml}
             <div class="flex justify-between items-start mb-1">
                 <div>
-                    <h3 class="font-cinzel text-xl font-bold tracking-wide text-[#eacb67] uppercase">${m.name}</h3>
+                    <h3 class="font-cinzel text-xl font-bold tracking-wide text-[#eacb67]">${m.name}</h3>
                     <p class="text-xs text-gray-400">${m.type}</p>
                 </div>
                 <div class="bg-[#213a30] text-[#eacb67] border border-[#385e50] text-xs font-bold px-3 py-1 rounded-md">
@@ -2128,7 +2214,7 @@
                     <div class="flex justify-between items-start gap-2 cursor-pointer card-header-click" title="Klicken, um Statblock ${isExpanded ? 'einzuklappen' : 'anzuzeigen'}">
                         <div class="flex-1 min-w-0">
                             <div class="flex items-center gap-2 flex-wrap">
-                                <h3 class="font-cinzel text-lg font-bold tracking-wide text-gray-200 uppercase truncate">${m.name}</h3>
+                                <h3 class="font-cinzel text-lg font-bold tracking-wide text-gray-200 truncate">${m.name}</h3>
                                 <span class="text-[10px] text-gray-400 bg-forest-950/70 border border-forest-800 px-2 py-0.5 rounded font-sans">${isExpanded ? '▲ Einklappen' : '▼ Details'}</span>
                             </div>
                             <p class="text-xs text-gray-400 truncate mt-0.5">${m.type || 'Kreatur'}</p>
@@ -2186,7 +2272,7 @@
                     <div class="flex justify-between items-start gap-2 cursor-pointer card-header-click" title="Klicken, um Statblock ${isExpanded ? 'einzuklappen' : 'anzuzeigen'}">
                         <div class="flex-1 min-w-0">
                             <div class="flex items-center gap-2 flex-wrap">
-                                <h3 class="font-cinzel text-lg font-bold tracking-wide text-[#eacb67] uppercase truncate">${m.name}</h3>
+                                <h3 class="font-cinzel text-lg font-bold tracking-wide text-[#eacb67] truncate">${m.name}</h3>
                                 <span class="text-[10px] text-[#eacb67] bg-[#1a382d] border border-gold-500/30 px-2 py-0.5 rounded font-sans">${isExpanded ? '▲ Einklappen' : '▼ Details'}</span>
                             </div>
                             <p class="text-xs text-gray-400 truncate mt-0.5">${m.type || 'Kreatur'}</p>
@@ -2259,22 +2345,58 @@
                 activeGrid.appendChild(card);
             }
 
-            // Drag & Drop
-            card.ondragstart = (e) => { e.dataTransfer.setData('text/plain', 'monster:' + index); e.dataTransfer.setData('application/x-dnd-monster', index); card.classList.add('dragging'); };
-            card.ondragend = () => { card.classList.remove('dragging'); };
-            card.ondragover = (e) => { e.preventDefault(); };
+            // Drag & Drop reordering and moving (ID-basiert & robust)
+            card.ondragstart = (e) => {
+                currentDragItem = { type: 'monster', id: m.id, category: m.category };
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/plain', String(m.id));
+                card.classList.add('dragging');
+            };
+            card.ondragend = () => {
+                currentDragItem = null;
+                card.classList.remove('dragging');
+                document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+            };
+            card.ondragover = (e) => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+            };
+            card.ondragenter = (e) => {
+                e.preventDefault();
+                card.classList.add('drag-over');
+            };
+            card.ondragleave = (e) => {
+                card.classList.remove('drag-over');
+            };
             card.ondrop = (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                const rawData = e.dataTransfer.getData('application/x-dnd-monster') || e.dataTransfer.getData('text/plain');
-                const cleanIdx = rawData.startsWith('monster:') ? rawData.substring(8) : rawData;
-                const fromIdx = parseInt(cleanIdx);
-                const toIdx = index;
-                if (!isNaN(fromIdx) && fromIdx !== toIdx && state.monsters[fromIdx]) {
-                    const moved = state.monsters.splice(fromIdx, 1)[0];
-                    moved.category = m.category;
-                    state.monsters.splice(toIdx, 0, moved);
-                    saveState(); renderMonstersTab();
+                card.classList.remove('drag-over');
+                const draggedId = (currentDragItem && currentDragItem.id) || e.dataTransfer.getData('text/plain');
+                if (!draggedId || draggedId === m.id) return;
+
+                const fromIdx = state.monsters.findIndex(x => x.id === draggedId);
+                const toIdx = state.monsters.findIndex(x => x.id === m.id);
+                if (fromIdx !== -1 && toIdx !== -1) {
+                    const draggedMon = state.monsters[fromIdx];
+                    if (m.category === 'library' && draggedMon.category === 'active') {
+                        // Aktives Monster auf Bibliotheks-Karte gezogen -> Kopie in Bibliothek einfügen
+                        const libCopy = JSON.parse(JSON.stringify(draggedMon));
+                        libCopy.id = 'm-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+                        libCopy.category = 'library';
+                        const insertIdx = state.monsters.findIndex(x => x.id === m.id);
+                        state.monsters.splice(insertIdx !== -1 ? insertIdx : toIdx, 0, libCopy);
+                        saveState();
+                        renderMonstersTab();
+                        showToast(`Kopie von "${draggedMon.name}" in Bibliothek gespeichert!`, 'success');
+                    } else {
+                        const moved = state.monsters.splice(fromIdx, 1)[0];
+                        moved.category = m.category;
+                        const insertIdx = state.monsters.findIndex(x => x.id === m.id);
+                        state.monsters.splice(insertIdx !== -1 ? insertIdx : toIdx, 0, moved);
+                        saveState();
+                        renderMonstersTab();
+                    }
                 }
             };
         });
@@ -2283,29 +2405,28 @@
     function dropMonsterContainer(e, category) {
         e.preventDefault();
         e.currentTarget.classList.remove('drag-over');
-        const rawData = e.dataTransfer.getData('application/x-dnd-monster') || e.dataTransfer.getData('text/plain');
-        const cleanIdx = rawData.startsWith('monster:') ? rawData.substring(8) : rawData;
-        if (cleanIdx !== '') {
-            const fromIdx = parseInt(cleanIdx);
-            if (!isNaN(fromIdx) && state.monsters[fromIdx]) {
-                const moved = state.monsters[fromIdx];
-                if (category === 'library' && moved.category === 'active') {
-                    // Kopie in der Bibliothek anlegen, aktives Monster bleibt bestehen
-                    const libCopy = JSON.parse(JSON.stringify(moved));
-                    libCopy.id = 'm-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
-                    libCopy.category = 'library';
-                    libCopy.name = moved.name;
-                    state.monsters.push(libCopy);
-                    saveState();
-                    renderMonstersTab();
-                    showToast(`Kopie von "${moved.name}" in Bibliothek gespeichert!`, 'success');
-                } else {
-                    const item = state.monsters.splice(fromIdx, 1)[0];
-                    item.category = category;
-                    state.monsters.push(item);
-                    saveState();
-                    renderMonstersTab();
-                }
+        const draggedId = (currentDragItem && currentDragItem.id) || e.dataTransfer.getData('text/plain');
+        if (!draggedId) return;
+
+        const fromIdx = state.monsters.findIndex(x => x.id === draggedId);
+        if (fromIdx !== -1) {
+            const draggedMon = state.monsters[fromIdx];
+            if (category === 'library' && draggedMon.category === 'active') {
+                // Kopie in der Bibliothek anlegen, aktives Monster bleibt bestehen
+                const libCopy = JSON.parse(JSON.stringify(draggedMon));
+                libCopy.id = 'm-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+                libCopy.category = 'library';
+                libCopy.name = draggedMon.name;
+                state.monsters.push(libCopy);
+                saveState();
+                renderMonstersTab();
+                showToast(`Kopie von "${draggedMon.name}" in Bibliothek gespeichert!`, 'success');
+            } else {
+                const item = state.monsters.splice(fromIdx, 1)[0];
+                item.category = category;
+                state.monsters.push(item);
+                saveState();
+                renderMonstersTab();
             }
         }
     }
@@ -2431,6 +2552,7 @@
             const card = document.createElement('div');
             card.className = `draggable-item p-4 rounded-xl border flex flex-col justify-between space-y-3 ${node.status==='active'?'border-gold-500 bg-forest-900 shadow-lg':node.status==='completed'?'border-green-800/80 bg-forest-950/60 opacity-80':'border-forest-700 bg-forest-900/60'}`;
             card.draggable = true;
+            card.dataset.id = node.id;
             card.dataset.index = index;
 
             card.innerHTML = `
@@ -2453,20 +2575,44 @@
                 </div>
             `;
 
-            card.ondragstart = (e) => { e.dataTransfer.setData('text/plain', 'node:' + index); e.dataTransfer.setData('application/x-dnd-node', index); card.classList.add('dragging'); };
-            card.ondragend = () => { card.classList.remove('dragging'); };
-            card.ondragover = (e) => { e.preventDefault(); };
+            // Drag & Drop reordering (ID-basiert & robust)
+            card.ondragstart = (e) => {
+                currentDragItem = { type: 'node', id: node.id };
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/plain', String(node.id));
+                card.classList.add('dragging');
+            };
+            card.ondragend = () => {
+                currentDragItem = null;
+                card.classList.remove('dragging');
+                document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+            };
+            card.ondragover = (e) => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+            };
+            card.ondragenter = (e) => {
+                e.preventDefault();
+                card.classList.add('drag-over');
+            };
+            card.ondragleave = (e) => {
+                card.classList.remove('drag-over');
+            };
             card.ondrop = (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                const rawData = e.dataTransfer.getData('application/x-dnd-node') || e.dataTransfer.getData('text/plain');
-                const cleanIdx = rawData.startsWith('node:') ? rawData.substring(5) : rawData;
-                const fromIdx = parseInt(cleanIdx);
-                const toIdx = index;
-                if (!isNaN(fromIdx) && fromIdx !== toIdx && state.nodes[fromIdx]) {
+                card.classList.remove('drag-over');
+                const draggedId = (currentDragItem && currentDragItem.id) || e.dataTransfer.getData('text/plain');
+                if (!draggedId || draggedId === node.id) return;
+
+                const fromIdx = state.nodes.findIndex(x => x.id === draggedId);
+                const toIdx = state.nodes.findIndex(x => x.id === node.id);
+                if (fromIdx !== -1 && toIdx !== -1) {
                     const moved = state.nodes.splice(fromIdx, 1)[0];
-                    state.nodes.splice(toIdx, 0, moved);
-                    saveState(); renderNodesTab();
+                    const insertIdx = state.nodes.findIndex(x => x.id === node.id);
+                    state.nodes.splice(insertIdx !== -1 ? insertIdx : toIdx, 0, moved);
+                    saveState();
+                    renderNodesTab();
                 }
             };
 
@@ -2474,7 +2620,8 @@
             card.querySelector('.delete-node').onclick = () => {
                 if (confirm(`Szene "${node.title}" wirklich löschen?`)) {
                     state.nodes = state.nodes.filter(n => n.id !== node.id);
-                    saveState(); renderNodesTab();
+                    saveState();
+                    renderNodesTab();
                 }
             };
             container.appendChild(card);
@@ -2485,21 +2632,23 @@
         const node = state.nodes.find(n => n.id === id);
         if (node) {
             node.status = newStatus;
-            saveState(); renderNodesTab();
+            saveState();
+            renderNodesTab();
         }
     }
 
     function dropNodeContainer(e) {
         e.preventDefault();
         e.currentTarget.classList.remove('drag-over');
-        const idxStr = e.dataTransfer.getData('text/plain');
-        if (idxStr !== '') {
-            const fromIdx = parseInt(idxStr);
-            if (!isNaN(fromIdx) && state.nodes[fromIdx]) {
-                const moved = state.nodes.splice(fromIdx, 1)[0];
-                state.nodes.push(moved);
-                saveState(); renderNodesTab();
-            }
+        const draggedId = (currentDragItem && currentDragItem.id) || e.dataTransfer.getData('text/plain');
+        if (!draggedId) return;
+
+        const fromIdx = state.nodes.findIndex(x => x.id === draggedId);
+        if (fromIdx !== -1) {
+            const moved = state.nodes.splice(fromIdx, 1)[0];
+            state.nodes.push(moved);
+            saveState();
+            renderNodesTab();
         }
     }
 
@@ -2733,19 +2882,111 @@
     /* ==========================================================================
        ORTE & WELTEN MODUL LOGIK
        ========================================================================== */
-    const LEVEL_CONFIG = {
-        world: { title: 'Welt / Ebene', next: 'continent', badgeColor: 'bg-indigo-950 text-indigo-200 border border-indigo-500/40', icon: 'fa-globe' },
-        continent: { title: 'Kontinent', next: 'region', badgeColor: 'bg-blue-950 text-blue-200 border border-blue-500/40', icon: 'fa-earth-europe' },
-        region: { title: 'Land / Region', next: 'city', badgeColor: 'bg-emerald-950 text-emerald-200 border border-emerald-500/40', icon: 'fa-map' },
-        city: { title: 'Stadt / Dorf', next: 'building', badgeColor: 'bg-amber-950 text-amber-200 border border-amber-500/40', icon: 'fa-city' },
-        building: { title: 'Gebäude', next: 'room', badgeColor: 'bg-orange-950 text-orange-200 border border-orange-500/40', icon: 'fa-house-chimney' },
-        room: { title: 'Raum', next: 'npc', badgeColor: 'bg-purple-950 text-purple-200 border border-purple-500/40', icon: 'fa-door-open' },
-        npc: { title: 'NPC', next: 'note', badgeColor: 'bg-rose-950 text-rose-200 border border-rose-500/40', icon: 'fa-user' },
-        note: { title: 'Notiz', next: null, badgeColor: 'bg-red-950 text-red-200 border border-red-500/40', icon: 'fa-note-sticky' }
+    // =========================================================================
+    // TAB: ORTE & WELTEN (4-TYPEN-SYSTEM: ORT, RAUM, PERSON, NOTIZ)
+    // =========================================================================
+    const ORTE_TYPE_CONFIG = {
+        ort: {
+            title: 'Ort',
+            badgeColor: 'bg-emerald-950 text-emerald-200 border border-emerald-500/40',
+            icon: 'fa-location-dot',
+            category: 'ort'
+        },
+        raum: {
+            title: 'Raum',
+            badgeColor: 'bg-purple-950 text-purple-200 border border-purple-500/40',
+            icon: 'fa-door-open',
+            category: 'raum'
+        },
+        person: {
+            title: 'Person',
+            badgeColor: 'bg-rose-950 text-rose-200 border border-rose-500/40',
+            icon: 'fa-user',
+            category: 'person'
+        },
+        notiz: {
+            title: 'Notiz',
+            badgeColor: 'bg-amber-950 text-amber-200 border border-amber-500/40',
+            icon: 'fa-file-lines',
+            category: 'notiz'
+        },
+        // Abwärtskompatibilität für bestehende / ältere Backups:
+        world: { title: 'Welt / Ort', badgeColor: 'bg-emerald-950 text-emerald-200 border border-emerald-500/40', icon: 'fa-location-dot', category: 'ort' },
+        continent: { title: 'Kontinent / Ort', badgeColor: 'bg-emerald-950 text-emerald-200 border border-emerald-500/40', icon: 'fa-location-dot', category: 'ort' },
+        region: { title: 'Region / Ort', badgeColor: 'bg-emerald-950 text-emerald-200 border border-emerald-500/40', icon: 'fa-location-dot', category: 'ort' },
+        city: { title: 'Stadt / Ort', badgeColor: 'bg-emerald-950 text-emerald-200 border border-emerald-500/40', icon: 'fa-location-dot', category: 'ort' },
+        building: { title: 'Gebäude / Ort', badgeColor: 'bg-emerald-950 text-emerald-200 border border-emerald-500/40', icon: 'fa-location-dot', category: 'ort' },
+        room: { title: 'Raum', badgeColor: 'bg-purple-950 text-purple-200 border border-purple-500/40', icon: 'fa-door-open', category: 'raum' },
+        npc: { title: 'Person', badgeColor: 'bg-rose-950 text-rose-200 border border-rose-500/40', icon: 'fa-user', category: 'person' },
+        note: { title: 'Notiz', badgeColor: 'bg-amber-950 text-amber-200 border border-amber-500/40', icon: 'fa-file-lines', category: 'notiz' }
     };
+
+    function getOrteConfig(type) {
+        return ORTE_TYPE_CONFIG[type] || ORTE_TYPE_CONFIG['ort'];
+    }
 
     let orteSearchQuery = '';
     let pendingOrteDeleteId = null;
+    let currentOrteModalType = 'ort';
+
+    function setOrteModalType(type) {
+        currentOrteModalType = type;
+
+        // Button Highlights
+        ['ort', 'raum', 'person', 'notiz'].forEach(t => {
+            const btn = document.getElementById(`typeBtn_${t}`);
+            if (!btn) return;
+            const isSel = (t === type);
+            btn.className = `orte-type-btn p-2 rounded-lg border text-xs font-semibold flex flex-col items-center justify-center gap-1 transition ${
+                isSel
+                    ? (t === 'ort' ? 'bg-emerald-950/80 border-emerald-500 text-emerald-200 ring-1 ring-emerald-400' :
+                       t === 'raum' ? 'bg-purple-950/80 border-purple-500 text-purple-200 ring-1 ring-purple-400' :
+                       t === 'person' ? 'bg-rose-950/80 border-rose-500 text-rose-200 ring-1 ring-rose-400' :
+                       'bg-amber-950/80 border-amber-500 text-amber-200 ring-1 ring-amber-400')
+                    : 'bg-forest-950 border-forest-700 text-gray-300 hover:bg-forest-800'
+            }`;
+        });
+
+        const cfg = getOrteConfig(type);
+        const modalTitle = document.getElementById('locationModalTitle');
+        const action = document.getElementById('locationModalActionType').value;
+        if (modalTitle) {
+            modalTitle.innerHTML = `<i class="fa-solid ${cfg.icon} mr-2"></i> ${cfg.title} ${action === 'edit' ? 'bearbeiten' : 'hinzufügen'}`;
+        }
+
+        const lblName = document.getElementById('locationLabelName');
+        const inpName = document.getElementById('locationInputName');
+        if (lblName && inpName) {
+            if (type === 'notiz' || type === 'note') {
+                lblName.innerText = 'Notiz-Titel';
+                inpName.placeholder = 'z. B. Gerüchte im Hafen, Geheimgang-Hinweis...';
+            } else if (type === 'person' || type === 'npc') {
+                lblName.innerText = 'Name der Person';
+                inpName.placeholder = 'z. B. Alric von Falkenwacht, Gredlund Siegherz...';
+            } else if (type === 'raum' || type === 'room') {
+                lblName.innerText = 'Name des Raumes';
+                inpName.placeholder = 'z. B. Thronsaal, Weinkeller, Schlafzimmer...';
+            } else {
+                lblName.innerText = 'Name des Ortes';
+                inpName.placeholder = 'z. B. Baldurs Tor, Burg Falkenwacht, Finsterwald...';
+            }
+        }
+
+        const profContainer = document.getElementById('locationProfessionContainer');
+        if (profContainer) {
+            profContainer.classList.toggle('hidden', type !== 'person' && type !== 'npc');
+        }
+
+        const descContainer = document.getElementById('locationDescriptionContainer');
+        const lblDesc = document.getElementById('locationLabelDescription');
+        if (descContainer && lblDesc) {
+            if (type === 'notiz' || type === 'note') {
+                lblDesc.innerText = 'Notiztext / Details (Markdown)';
+            } else {
+                lblDesc.innerText = 'Beschreibung / Details';
+            }
+        }
+    }
 
     function resetOrteToDefaultData() {
         if (confirm('Möchtest du die Orte-Daten wirklich auf die Standard-Welten zurücksetzen?')) {
@@ -2794,114 +3035,79 @@
 
         if (nodesToRender.length === 0) {
             const emptyDiv = document.createElement('div');
-            emptyDiv.className = 'text-center py-16 bg-forest-900/40 border border-gold-500/20 rounded-2xl w-full';
+            emptyDiv.className = 'text-center py-16 bg-forest-900/40 border border-gold-500/20 rounded-2xl w-full space-y-4';
             emptyDiv.innerHTML = `
-                <i class="fa-solid fa-map text-4xl text-gold-400/50 mb-3"></i>
-                <p class="font-cinzel text-gold-300 mb-2">Noch keine Welten vorhanden.</p>
-                <p class="text-xs text-gray-400">Klicke oben auf „Welt erstellen“, um zu beginnen.</p>
+                <i class="fa-solid fa-compass text-5xl text-gold-500/30"></i>
+                <h3 class="font-cinzel text-lg text-gold-300">Noch keine Orte, Räume, Personen oder Notizen vorhanden</h3>
+                <p class="text-xs text-gray-400 max-w-md mx-auto">Erstelle jetzt ein Element auf der obersten Ebene:</p>
+                <div class="inline-flex rounded-lg shadow-md border border-gold-500/40 overflow-hidden bg-forest-950/80">
+                    <button onclick="openOrteAddModal('ort', null)" class="px-3 py-1.5 hover:bg-emerald-950/70 text-emerald-300 border-r border-gold-500/30 text-xs font-semibold flex items-center gap-1.5 transition">
+                        <i class="fa-solid fa-location-dot"></i> + Ort
+                    </button>
+                    <button onclick="openOrteAddModal('raum', null)" class="px-3 py-1.5 hover:bg-purple-950/70 text-purple-300 border-r border-gold-500/30 text-xs font-semibold flex items-center gap-1.5 transition">
+                        <i class="fa-solid fa-door-open"></i> + Raum
+                    </button>
+                    <button onclick="openOrteAddModal('person', null)" class="px-3 py-1.5 hover:bg-rose-950/70 text-rose-300 border-r border-gold-500/30 text-xs font-semibold flex items-center gap-1.5 transition">
+                        <i class="fa-solid fa-user"></i> + Person
+                    </button>
+                    <button onclick="openOrteAddModal('notiz', null)" class="px-3 py-1.5 hover:bg-amber-950/70 text-amber-300 text-xs font-semibold flex items-center gap-1.5 transition">
+                        <i class="fa-solid fa-file-lines"></i> + Notiz
+                    </button>
+                </div>
             `;
             container.appendChild(emptyDiv);
             return;
         }
 
-        renderOrteHierarchyChain(container, nodesToRender);
-        setTimeout(drawOrteThreads, 50);
-    }
+        renderOrteHierarchyChain(container, nodesToRender, null);
 
-    function searchOrteTreeFilter(nodes, query) {
-        let matchedNodes = [];
-        nodes.forEach(node => {
-            const matchesSelf = (node.name && node.name.toLowerCase().includes(query)) ||
-                (node.profession && node.profession.toLowerCase().includes(query)) ||
-                (node.description && node.description.toLowerCase().includes(query));
-
-            let matchingChildren = [];
-            if (node.children && node.children.length > 0) {
-                matchingChildren = searchOrteTreeFilter(node.children, query);
-            }
-
-            if (matchesSelf || matchingChildren.length > 0) {
-                const cloned = { ...node };
-                cloned.expanded = true;
-
-                if (matchingChildren.length > 0) {
-                    cloned.children = matchingChildren;
-                    let hasSelectedChild = false;
-                    cloned.children.forEach(child => {
-                        if (!hasSelectedChild && ((child.name && child.name.toLowerCase().includes(query)) || (child.profession && child.profession.toLowerCase().includes(query)) || (child.description && child.description.toLowerCase().includes(query)))) {
-                            child.expanded = true;
-                            hasSelectedChild = true;
-                        } else if (!hasSelectedChild && child.expanded) {
-                            hasSelectedChild = true;
-                        } else {
-                            child.expanded = false;
-                        }
-                    });
-                }
-                matchedNodes.push(cloned);
-            }
+        // SVG Verbindungslinien zeichnen
+        requestAnimationFrame(() => {
+            setTimeout(drawOrteThreads, 40);
         });
-
-        if (matchedNodes.length > 1) {
-            let exactMatchIndex = matchedNodes.findIndex(n =>
-                (n.name && n.name.toLowerCase().includes(query)) ||
-                (n.profession && n.profession.toLowerCase().includes(query))
-            );
-            if (exactMatchIndex !== -1) {
-                matchedNodes.forEach((n, idx) => {
-                    n.expanded = (idx === exactMatchIndex);
-                });
-            } else {
-                matchedNodes.forEach((n, idx) => {
-                    n.expanded = (idx === 0);
-                });
-            }
-        }
-
-        return matchedNodes;
     }
 
-    function renderOrteHierarchyChain(container, currentNodes, expectedType = null, parentNodeId = null) {
-        const firstNodeType = currentNodes && currentNodes.length > 0 ? currentNodes[0].type : expectedType;
-        if (!firstNodeType) return;
-
-        const config = LEVEL_CONFIG[firstNodeType];
-        const isNoteLevel = firstNodeType === 'note';
+    function renderOrteHierarchyChain(container, currentNodes, parentNode = null) {
+        const parentNodeId = parentNode ? parentNode.id : null;
+        const count = currentNodes ? currentNodes.length : 0;
 
         const levelWrapper = document.createElement('div');
         levelWrapper.className = 'w-full space-y-3 level-section';
-        levelWrapper.dataset.levelType = firstNodeType;
+        levelWrapper.dataset.parentId = parentNodeId || 'root';
 
         const sectionHeader = document.createElement('div');
-        sectionHeader.className = 'flex items-center justify-between border-b border-gold-500/20 pb-2';
+        sectionHeader.className = 'flex items-center justify-between border-b border-gold-500/20 pb-2.5 flex-wrap gap-2';
 
-        let correctParentId = parentNodeId;
-        if (!correctParentId && firstNodeType !== 'world') {
-            correctParentId = getActiveOrteParentId(firstNodeType);
-        }
-
-        const count = currentNodes ? currentNodes.length : 0;
+        const parentTitle = parentNode ? `Unterelemente von "${escapeHTML(parentNode.name)}"` : 'Oberste Ebene';
+        const parentIcon = parentNode ? getOrteConfig(parentNode.type).icon : 'fa-compass';
 
         sectionHeader.innerHTML = `
-            <div class="flex items-center space-x-3">
-                <span class="badge-type ${config.badgeColor}"><i class="fa-solid ${config.icon} mr-1.5"></i> ${config.title}</span>
+            <div class="flex items-center space-x-2">
+                <span class="font-cinzel text-sm font-bold text-gold-400 flex items-center gap-1.5">
+                    <i class="fa-solid ${parentIcon} text-gold-400/80"></i> ${parentTitle}
+                </span>
                 <span class="text-xs text-gray-400 font-sans">(${count} ${count === 1 ? 'Eintrag' : 'Einträge'})</span>
-
-                ${config.next !== null || firstNodeType === 'world' || isNoteLevel ? `
-                    <button onclick="openOrteAddModal('${firstNodeType}', '${correctParentId || ''}')"
-                            title="${config.title} hinzufügen"
-                            class="w-6 h-6 rounded-full bg-gold-500/20 hover:bg-gold-500/40 text-gold-300 border border-gold-500/40 flex items-center justify-center transition shadow-md">
-                        <i class="fa-solid fa-plus text-xs"></i>
-                    </button>
-                ` : ''}
+            </div>
+            <!-- Die 4 flachen Schaltflächen (ohne Emojis) zum Hinzufügen an dieser Stelle -->
+            <div class="inline-flex rounded-lg shadow-sm border border-gold-500/40 overflow-hidden bg-forest-950/80">
+                <button onclick="openOrteAddModal('ort', '${parentNodeId || ''}')" title="Ort hinzufügen" class="px-2 py-1 hover:bg-emerald-950/70 text-emerald-300 border-r border-gold-500/30 text-[11px] font-semibold flex items-center gap-1 transition">
+                    <i class="fa-solid fa-location-dot"></i> + Ort
+                </button>
+                <button onclick="openOrteAddModal('raum', '${parentNodeId || ''}')" title="Raum hinzufügen" class="px-2 py-1 hover:bg-purple-950/70 text-purple-300 border-r border-gold-500/30 text-[11px] font-semibold flex items-center gap-1 transition">
+                    <i class="fa-solid fa-door-open"></i> + Raum
+                </button>
+                <button onclick="openOrteAddModal('person', '${parentNodeId || ''}')" title="Person hinzufügen" class="px-2 py-1 hover:bg-rose-950/70 text-rose-300 border-r border-gold-500/30 text-[11px] font-semibold flex items-center gap-1 transition">
+                    <i class="fa-solid fa-user"></i> + Person
+                </button>
+                <button onclick="openOrteAddModal('notiz', '${parentNodeId || ''}')" title="Notiz hinzufügen" class="px-2 py-1 hover:bg-amber-950/70 text-amber-300 text-[11px] font-semibold flex items-center gap-1 transition">
+                    <i class="fa-solid fa-file-lines"></i> + Notiz
+                </button>
             </div>
         `;
         levelWrapper.appendChild(sectionHeader);
 
         const grid = document.createElement('div');
-        grid.className = isNoteLevel
-            ? 'grid grid-cols-1 gap-4 w-full'
-            : 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full';
+        grid.className = 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full';
 
         let expandedNodeOnThisLevel = null;
 
@@ -2909,14 +3115,17 @@
             const emptyCard = document.createElement('div');
             emptyCard.className = 'col-span-full py-8 text-center bg-forest-900/30 border border-gold-500/20 rounded-xl';
             emptyCard.innerHTML = `
-                <p class="text-xs text-gold-300/70 font-sans">Keine ${config.title.toLowerCase()} vorhanden. Klicke auf das <b>+</b> oben, um einen Eintrag hinzuzufügen.</p>
+                <p class="text-xs text-gold-300/80 font-sans">Noch keine Unterelemente vorhanden. Klicke oben auf einen der Buttons (+ Ort, + Raum, + Person, + Notiz), um ein Element hinzuzufügen.</p>
             `;
             grid.appendChild(emptyCard);
         } else {
             currentNodes.forEach(node => {
-                const hasChildren = node.children && node.children.length > 0;
+                const cfg = getOrteConfig(node.type);
+                const isNote = cfg.category === 'notiz' || node.type === 'notiz' || node.type === 'note';
+                const hasChildren = Array.isArray(node.children) && node.children.length > 0;
+
                 const card = document.createElement('div');
-                card.className = `origami-card rounded-2xl p-4 flex flex-col justify-between cursor-pointer ${node.expanded ? (isNoteLevel ? 'active-card-note' : 'active-card') : ''}`;
+                card.className = `origami-card rounded-2xl p-4 flex flex-col justify-between cursor-pointer ${node.expanded ? (isNote ? 'active-card-note' : 'active-card') : ''}`;
                 card.dataset.nodeId = node.id;
                 card.dataset.nodeType = node.type;
 
@@ -2926,61 +3135,62 @@
                 };
 
                 let noteContentFormatted = '';
-                if (isNoteLevel) {
-                    const fullText = (node.description || node.name || '').trim();
-                    const lines = fullText.split('\n');
-
-                    noteContentFormatted = lines.map(line => {
-                        let trimmed = line.trim();
-                        if (!trimmed) return '<div class="h-2"></div>';
-
-                        const parseBold = (str) => {
-                            return escapeHTML(str)
-                                .replace(/\*\*(.*?)\*\*/g, '<strong class="font-extrabold text-red-950">$1</strong>')
-                                .replace(/__(.*?)__/g, '<strong class="font-extrabold text-red-950">$1</strong>');
-                        };
-
-                        if (/^#{3}\s*/.test(trimmed)) {
-                            const content = trimmed.replace(/^#{3}\s*/, '');
-                            return `<h4 class="font-cinzel font-bold text-base text-red-950 mt-3 mb-1 border-b border-red-900/30 pb-0.5">${parseBold(content)}</h4>`;
-                        } else if (/^#{2}\s*/.test(trimmed)) {
-                            const content = trimmed.replace(/^#{2}\s*/, '');
-                            return `<h3 class="font-cinzel font-bold text-lg text-red-950 mt-3 mb-1 border-b border-red-900/30 pb-0.5">${parseBold(content)}</h3>`;
-                        } else if (/^#{1}\s*/.test(trimmed)) {
-                            const content = trimmed.replace(/^#{1}\s*/, '');
-                            return `<h2 class="font-cinzel font-bold text-xl text-red-950 mt-4 mb-2 border-b border-red-900/40 pb-0.5">${parseBold(content)}</h2>`;
-                        } else {
-                            return `<p class="font-sans font-normal text-sm text-amber-950/90 leading-relaxed">${parseBold(trimmed)}</p>`;
-                        }
-                    }).join('');
+                if (isNote || (node.description && String(node.description).trim() !== '')) {
+                    const fullText = (node.description || '').trim();
+                    if (fullText) {
+                        const lines = fullText.split('\n');
+                        noteContentFormatted = lines.map(line => {
+                            let trimmed = line.trim();
+                            if (!trimmed) return '<div class="h-1.5"></div>';
+                            const parseBold = (str) => {
+                                return escapeHTML(str)
+                                    .replace(/\*\*(.*?)\*\*/g, '<strong class="font-extrabold text-amber-950">$1</strong>')
+                                    .replace(/__(.*?)__/g, '<strong class="font-extrabold text-amber-950">$1</strong>');
+                            };
+                            if (/^#{3}\s*/.test(trimmed)) {
+                                const c = trimmed.replace(/^#{3}\s*/, '');
+                                return `<h4 class="font-cinzel font-bold text-sm text-amber-950 mt-2 mb-0.5 border-b border-amber-900/20 pb-0.5">${parseBold(c)}</h4>`;
+                            } else if (/^#{2}\s*/.test(trimmed)) {
+                                const c = trimmed.replace(/^#{2}\s*/, '');
+                                return `<h3 class="font-cinzel font-bold text-base text-amber-950 mt-2.5 mb-1 border-b border-amber-900/30 pb-0.5">${parseBold(c)}</h3>`;
+                            } else if (/^#{1}\s*/.test(trimmed)) {
+                                const c = trimmed.replace(/^#{1}\s*/, '');
+                                return `<h2 class="font-cinzel font-bold text-lg text-amber-950 mt-3 mb-1 border-b border-amber-900/40 pb-0.5">${parseBold(c)}</h2>`;
+                            } else {
+                                return `<p class="font-sans font-normal text-xs text-amber-950/90 leading-relaxed">${parseBold(trimmed)}</p>`;
+                            }
+                        }).join('');
+                    }
                 }
 
                 card.innerHTML = `
-                    <div class="flex items-start justify-between">
-                        <div class="min-w-0 flex-1 pr-4">
-                            <div class="flex items-center space-x-2 mb-1">
-                                ${node.profession ? `<span class="text-[11px] bg-amber-950/40 text-amber-900 border border-amber-600/30 font-bold px-2 py-0.5 rounded-full">${escapeHTML(node.profession)}</span>` : ''}
-                                ${isNoteLevel ? `<span class="text-[11px] bg-red-950/20 text-red-900 border border-red-600/30 font-bold px-2 py-0.5 rounded-full"><i class="fa-solid fa-sticky-note mr-1"></i> Notiz</span>` : ''}
+                    <div>
+                        <div class="flex items-start justify-between gap-2">
+                            <div class="min-w-0 flex-1">
+                                <div class="flex items-center space-x-1.5 mb-1.5 flex-wrap gap-y-1">
+                                    <span class="badge-type ${cfg.badgeColor} text-[10px]"><i class="fa-solid ${cfg.icon} mr-1"></i> ${cfg.title}</span>
+                                    ${node.profession ? `<span class="text-[10px] bg-amber-950/40 text-amber-900 border border-amber-600/30 font-bold px-2 py-0.5 rounded-full">${escapeHTML(node.profession)}</span>` : ''}
+                                </div>
+                                <h4 class="font-cinzel font-normal text-[1.4rem] leading-snug ${isNote ? 'text-amber-950' : 'text-gray-900'} break-words">${escapeHTML(node.name)}</h4>
                             </div>
-                            <h4 class="font-cinzel font-bold ${isNoteLevel ? 'text-xl text-red-950' : 'text-base text-gray-900'} break-words">${escapeHTML(node.name)}</h4>
+                            <div class="flex items-center space-x-1 shrink-0" onclick="event.stopPropagation()">
+                                <button onclick="openOrteEditModal('${node.id}')" title="Bearbeiten" class="p-1 text-amber-900 hover:bg-amber-900/20 rounded transition">
+                                    <i class="fa-solid fa-pen-to-square text-xs"></i>
+                                </button>
+                                <button onclick="promptOrteDelete('${node.id}', '${escapeAttr(node.name)}')" title="Löschen" class="p-1 text-rose-800 hover:bg-rose-950/20 rounded transition">
+                                    <i class="fa-solid fa-trash-can text-xs"></i>
+                                </button>
+                            </div>
                         </div>
-                        <div class="flex items-center space-x-1 shrink-0">
-                            <button onclick="openOrteEditModal('${node.id}')" title="Bearbeiten" class="p-1.5 text-amber-900 hover:bg-amber-900/20 rounded-lg transition">
-                                <i class="fa-solid fa-pen-to-square text-xs"></i>
-                            </button>
-                            <button onclick="promptOrteDelete('${node.id}', '${escapeAttr(node.name)}')" title="Löschen" class="p-1.5 text-rose-800 hover:bg-rose-950/20 rounded-lg transition">
-                                <i class="fa-solid fa-trash-can text-xs"></i>
-                            </button>
-                        </div>
+
+                        ${noteContentFormatted ? `
+                            <div class="mt-2.5 pt-2 border-t border-amber-900/15 space-y-1 max-h-36 overflow-y-auto">
+                                ${noteContentFormatted}
+                            </div>
+                        ` : ''}
                     </div>
 
-                    ${isNoteLevel ? `
-                        <div class="mt-3 pt-3 border-t border-amber-900/15 space-y-1">
-                            ${noteContentFormatted || '<p class="font-sans font-normal text-sm text-gray-500 italic">Keine weiteren Details erfasst.</p>'}
-                        </div>
-                    ` : ''}
-
-                    <div class="flex items-center justify-between mt-4 pt-2 border-t border-amber-900/15 text-xs font-sans text-amber-900">
+                    <div class="flex items-center justify-between mt-3 pt-2 border-t border-amber-900/15 text-[11px] font-sans text-amber-900">
                         <span class="flex items-center gap-1 font-semibold">
                             <i class="fa-solid fa-folder-open text-amber-700"></i> ${hasChildren ? `${node.children.length} Unterelemente` : 'Keine'}
                         </span>
@@ -3002,11 +3212,8 @@
         container.appendChild(levelWrapper);
 
         if (expandedNodeOnThisLevel) {
-            const childType = LEVEL_CONFIG[expandedNodeOnThisLevel.type].next;
-            if (childType) {
-                const childNodes = expandedNodeOnThisLevel.children || [];
-                renderOrteHierarchyChain(container, childNodes, childType, expandedNodeOnThisLevel.id);
-            }
+            const childNodes = Array.isArray(expandedNodeOnThisLevel.children) ? expandedNodeOnThisLevel.children : [];
+            renderOrteHierarchyChain(container, childNodes, expandedNodeOnThisLevel);
         }
     }
 
@@ -3026,6 +3233,7 @@
             const childLevel = levelSections[i+1];
 
             const parentActiveCard = parentLevel.querySelector('.origami-card.active-card, .origami-card.active-card-note');
+            // Nur Karten verbinden, die aktiv/geöffnet sind (nur der ausgewählte Pfad!)
             const childActiveCards = childLevel.querySelectorAll('.origami-card.active-card, .origami-card.active-card-note');
 
             if (!parentActiveCard || childActiveCards.length === 0) continue;
@@ -3035,7 +3243,9 @@
             const y1 = parentRect.bottom - containerRect.top + container.scrollTop;
 
             childActiveCards.forEach(childCard => {
-                const isChildNote = childCard.dataset.nodeType === 'note';
+                const isChildNote = childCard.dataset.nodeType === 'note' ||
+                                    childCard.dataset.nodeType === 'notiz' ||
+                                    childCard.classList.contains('active-card-note');
                 const childRect = childCard.getBoundingClientRect();
 
                 const x2 = childRect.left + childRect.width / 2 - containerRect.left + container.scrollLeft;
@@ -3044,6 +3254,7 @@
                 const midY = (y1 + y2) / 2;
                 const pathData = `M ${x1} ${y1} C ${x1} ${midY}, ${x2} ${midY}, ${x2} ${y2}`;
 
+                // Grüner Faden für Pfadelemente, roter Faden für den letzten Faden, der zur Notiz führt
                 const glowColor = isChildNote ? '#f87171' : '#34d399';
                 const lineColor = isChildNote ? '#ef4444' : '#10b981';
 
@@ -3059,9 +3270,8 @@
                 const mainLine = document.createElementNS('http://www.w3.org/2000/svg', 'path');
                 mainLine.setAttribute('d', pathData);
                 mainLine.setAttribute('stroke', lineColor);
-                mainLine.setAttribute('stroke-width', '2.5');
+                mainLine.setAttribute('stroke-width', '2');
                 mainLine.setAttribute('fill', 'none');
-                mainLine.setAttribute('stroke-dasharray', '6 3');
                 mainLine.setAttribute('stroke-linecap', 'round');
                 svg.appendChild(mainLine);
             });
@@ -3069,9 +3279,10 @@
     }
 
     function selectAndExpandPathToOrteNode(targetId) {
-        if (!state.locations) return;
+        // Alle geöffneten Zustände im Baum zurücksetzen (collapsen)
         traverseOrteTree(state.locations, node => node.expanded = false);
 
+        // Den Pfad vom Root-Element zum ausgewählten Node finden
         const path = [];
         function findPath(nodes, id) {
             for (let n of nodes) {
@@ -3086,17 +3297,13 @@
         }
 
         findPath(state.locations, targetId);
-        path.forEach(n => { n.expanded = true; });
 
-        const targetNode = findOrteNodeById(state.locations, targetId);
-        if (targetNode && targetNode.children) {
-            targetNode.children.forEach(c => {
-                if (c.type === 'note' || targetNode.type === 'npc') {
-                    c.expanded = true;
-                }
-            });
-        }
+        // Alle Nodes entlang des Pfades expandieren
+        path.forEach(n => {
+            n.expanded = true;
+        });
 
+        // Suchfeld leeren und Suche zurücksetzen
         orteSearchQuery = '';
         const searchInput = document.getElementById('orteSearchInput');
         if (searchInput) searchInput.value = '';
@@ -3105,51 +3312,40 @@
         renderOrteTree();
     }
 
-    function toggleOrteNodeExpansion(targetNode, siblingNodes) {
+    function toggleOrteNodeExpansion(targetNode, currentLevelNodes) {
+        // Falls eine Suche aktiv ist: Klick auf Karte setzt die Suche zurück und öffnet den Pfad
         if (orteSearchQuery !== '') {
             selectAndExpandPathToOrteNode(targetNode.id);
             return;
         }
 
-        const realNode = findOrteNodeById(state.locations, targetNode.id);
-        if (!realNode) return;
-
-        const willBeExpanded = !realNode.expanded;
-
-        siblingNodes.forEach(sibling => {
-            const realSibling = findOrteNodeById(state.locations, sibling.id);
-            if (realSibling && realSibling.id !== realNode.id) {
-                realSibling.expanded = false;
-                collapseAllOrteChildren(realSibling);
-            }
-        });
-
-        realNode.expanded = willBeExpanded;
-
-        if (realNode.expanded && realNode.children) {
-            realNode.children.forEach(treeChild => {
-                if (treeChild.type === 'note' || realNode.type === 'npc') {
-                    treeChild.expanded = true;
+        const willExpand = !targetNode.expanded;
+        if (willExpand) {
+            currentLevelNodes.forEach(n => {
+                if (n.id !== targetNode.id) {
+                    n.expanded = false;
+                    collapseAllOrteChildren(n);
                 }
             });
-        } else if (!realNode.expanded) {
-            collapseAllOrteChildren(realNode);
+            targetNode.expanded = true;
+        } else {
+            targetNode.expanded = false;
+            collapseAllOrteChildren(targetNode);
         }
-
         saveState();
         renderOrteTree();
     }
 
     function collapseAllOrteChildren(node) {
-        if (node.children) {
-            node.children.forEach(child => {
-                child.expanded = false;
-                collapseAllOrteChildren(child);
-            });
-        }
+        if (!node || !node.children) return;
+        node.children.forEach(c => {
+            c.expanded = false;
+            collapseAllOrteChildren(c);
+        });
     }
 
     function traverseOrteTree(nodes, callback) {
+        if (!nodes) return;
         nodes.forEach(node => {
             callback(node);
             if (node.children) traverseOrteTree(node.children, callback);
@@ -3157,9 +3353,10 @@
     }
 
     function findOrteNodeById(nodes, id) {
-        for (let node of nodes) {
+        if (!nodes) return null;
+        for (const node of nodes) {
             if (node.id === id) return node;
-            if (node.children) {
+            if (node.children && node.children.length > 0) {
                 const found = findOrteNodeById(node.children, id);
                 if (found) return found;
             }
@@ -3167,57 +3364,42 @@
         return null;
     }
 
-    function getActiveOrteParentId(targetLevelType) {
-        const parentTypeMap = {
-            continent: 'world',
-            region: 'continent',
-            city: 'region',
-            building: 'city',
-            room: 'building',
-            npc: 'room',
-            note: 'npc'
-        };
-        const requiredParentType = parentTypeMap[targetLevelType];
-        if (!requiredParentType) return null;
+    function searchOrteTreeFilter(nodes, query) {
+        const result = [];
+        nodes.forEach(node => {
+            const nameMatch = (node.name || '').toLowerCase().includes(query);
+            const profMatch = (node.profession || '').toLowerCase().includes(query);
+            const descMatch = (node.description || '').toLowerCase().includes(query);
 
-        function searchActive(nodes) {
-            for (let node of nodes) {
-                if (node.type === requiredParentType && node.expanded) {
-                    return node.id;
-                }
-                if (node.children) {
-                    const found = searchActive(node.children);
-                    if (found) return found;
-                }
+            let matchingChildren = [];
+            if (node.children && node.children.length > 0) {
+                matchingChildren = searchOrteTreeFilter(node.children, query);
             }
-            return null;
-        }
-        return searchActive(state.locations || []);
+
+            if (nameMatch || profMatch || descMatch || matchingChildren.length > 0) {
+                const copy = JSON.parse(JSON.stringify(node));
+                copy.expanded = matchingChildren.length > 0;
+                copy.children = matchingChildren.length > 0 ? matchingChildren : (copy.children || []);
+                result.push(copy);
+            }
+        });
+        return result;
     }
 
     function closeOrteModal() {
         document.getElementById('locationModal').classList.add('hidden');
     }
 
-    function openOrteAddModal(type, parentId) {
+    function openOrteAddModal(type = 'ort', parentId = null) {
         document.getElementById('locationModalActionType').value = 'add';
         document.getElementById('locationModalParentId').value = parentId || '';
-        document.getElementById('locationModalTargetId').value = type;
+        document.getElementById('locationModalTargetId').value = '';
 
-        const config = LEVEL_CONFIG[type] || LEVEL_CONFIG['world'];
-        document.getElementById('locationModalTitle').innerHTML = `<i class="fa-solid ${config.icon} mr-2"></i> ${config.title} hinzufügen`;
-        document.getElementById('locationLabelName').innerText = type === 'note' ? 'Notiz-Titel' : `${config.title} Name`;
-        document.getElementById('locationLabelDescription').innerText = type === 'note' ? 'Notiztext / Details' : 'Notiz / Details';
+        setOrteModalType(type);
 
         document.getElementById('locationInputName').value = '';
         document.getElementById('locationInputProfession').value = '';
         document.getElementById('locationInputDescription').value = '';
-
-        const profContainer = document.getElementById('locationProfessionContainer');
-        const descContainer = document.getElementById('locationDescriptionContainer');
-
-        profContainer.classList.toggle('hidden', type !== 'npc');
-        descContainer.classList.toggle('hidden', type !== 'note');
 
         document.getElementById('locationModal').classList.remove('hidden');
         document.getElementById('locationInputName').focus();
@@ -3231,20 +3413,11 @@
         document.getElementById('locationModalTargetId').value = id;
         document.getElementById('locationModalParentId').value = '';
 
-        const config = LEVEL_CONFIG[node.type];
-        document.getElementById('locationModalTitle').innerHTML = `<i class="fa-solid fa-pen-to-square mr-2"></i> ${config.title} bearbeiten`;
-        document.getElementById('locationLabelName').innerText = node.type === 'note' ? 'Notiz-Titel' : `${config.title} Name`;
-        document.getElementById('locationLabelDescription').innerText = node.type === 'note' ? 'Notiztext / Details' : 'Notiz / Details';
+        setOrteModalType(node.type || 'ort');
 
         document.getElementById('locationInputName').value = node.name || '';
         document.getElementById('locationInputProfession').value = node.profession || '';
         document.getElementById('locationInputDescription').value = node.description || '';
-
-        const profContainer = document.getElementById('locationProfessionContainer');
-        const descContainer = document.getElementById('locationDescriptionContainer');
-
-        profContainer.classList.toggle('hidden', node.type !== 'npc');
-        descContainer.classList.toggle('hidden', node.type !== 'note');
 
         document.getElementById('locationModal').classList.remove('hidden');
         document.getElementById('locationInputName').focus();
@@ -3258,40 +3431,44 @@
         const nameVal = document.getElementById('locationInputName').value.trim();
         const professionVal = document.getElementById('locationInputProfession').value.trim();
         const descriptionVal = document.getElementById('locationInputDescription').value.trim();
+        const chosenType = currentOrteModalType || targetId || 'ort';
 
         if (action === 'add') {
-            const targetNodeType = targetId || (parentId ? LEVEL_CONFIG[findOrteNodeById(state.locations, parentId).type].next : 'world');
-            const newId = 'loc_' + Math.random().toString(36).substr(2, 9);
-
+            const newId = 'loc_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
             const newItem = {
                 id: newId,
-                type: targetNodeType,
+                type: chosenType,
                 name: nameVal,
-                profession: targetNodeType === 'npc' ? professionVal : '',
-                description: targetNodeType === 'note' ? descriptionVal : '',
+                profession: (chosenType === 'person' || chosenType === 'npc') ? professionVal : '',
+                description: descriptionVal,
                 expanded: false,
                 children: []
             };
 
-            const parentNode = parentId ? findOrteNodeById(state.locations, parentId) : null;
-            if (parentNode) {
-                if (!parentNode.children) parentNode.children = [];
-                parentNode.children.forEach(c => c.expanded = false);
-                parentNode.children.push(newItem);
-                parentNode.expanded = true;
+            if (parentId) {
+                const parentNode = findOrteNodeById(state.locations, parentId);
+                if (parentNode) {
+                    if (!parentNode.children) parentNode.children = [];
+                    parentNode.children.forEach(c => c.expanded = false);
+                    parentNode.children.push(newItem);
+                    parentNode.expanded = true;
+                } else {
+                    state.locations.push(newItem);
+                }
             } else {
                 state.locations.push(newItem);
             }
-            showToast('Ort erfolgreich hinzugefügt!', 'success');
+            showToast('Element erfolgreich hinzugefügt!', 'success');
         } else if (action === 'edit') {
             const node = findOrteNodeById(state.locations, targetId);
             if (node) {
+                node.type = chosenType;
                 node.name = nameVal;
                 node.description = descriptionVal;
-                if (node.type === 'npc') {
+                if (chosenType === 'person' || chosenType === 'npc') {
                     node.profession = professionVal;
                 }
-                showToast('Ort erfolgreich aktualisiert!', 'success');
+                showToast('Element erfolgreich aktualisiert!', 'success');
             }
         }
 
@@ -3302,14 +3479,13 @@
 
     function promptOrteDelete(id, name) {
         pendingOrteDeleteId = id;
-        document.getElementById('locationConfirmText').innerHTML = `Möchtest du <b>"${name}"</b> und alle zugehörigen Unterelemente unwiderruflich löschen?`;
+        document.getElementById('locationConfirmText').innerHTML = `Möchtest du <b>"${escapeHTML(name)}"</b> und alle zugehörigen Unterelemente unwiderruflich löschen?`;
         document.getElementById('locationConfirmModal').classList.remove('hidden');
-        document.getElementById('locationConfirmBtn').onclick = executeOrteDelete;
     }
 
     function closeOrteConfirmModal() {
-        pendingOrteDeleteId = null;
         document.getElementById('locationConfirmModal').classList.add('hidden');
+        pendingOrteDeleteId = null;
     }
 
     function executeOrteDelete() {
@@ -3318,7 +3494,7 @@
         saveState();
         renderOrteTree();
         closeOrteConfirmModal();
-        showToast('Ort gelöscht', 'info');
+        showToast('Element gelöscht.', 'info');
     }
 
     function removeOrteNodeRecursive(nodes, id) {
