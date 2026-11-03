@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sylvanus Spielleiter-Codex</title>
+    <title>Sylvanus Spielleiter-Codex v15</title>
 
     <!-- Google Fonts: Cinzel for Headings & Inter for Body -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -203,6 +203,235 @@
         .conditions-section { flex: 1; display: flex; flex-direction: column; gap: 5px; min-width: 220px; }
         .conditions-header { font-size: 0.62rem; font-weight: 800; color: var(--text-muted); letter-spacing: 0.8px; /* text-transform: uppercase removed for lowercase support */ }
         .conditions-grid { display: flex; flex-wrap: wrap; gap: 4px; align-content: flex-start; }
+        
+        /* ==========================================================================
+           INITIATIVE TRACKER: Vorteil & Nachteil Buttons (ER/SIE & ICH)
+           ========================================================================== */
+        .combatant-middle-section {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            border-right: 1px solid var(--border-subtle);
+            padding-right: 14px;
+        }
+        .combatant-main-row {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            gap: 14px;
+        }
+        .combatant-middle-section .hp-section {
+            border-right: none !important;
+            padding-right: 0 !important;
+        }
+
+        .adv-disadv-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding-top: 8px;
+            border-top: 1px dashed rgba(255, 255, 255, 0.08);
+            width: 100%;
+        }
+
+        .adv-top-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 8px 14px;
+        }
+
+        .adv-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .adv-label {
+            font-size: 0.65rem;
+            font-weight: 800;
+            letter-spacing: 0.6px;
+            user-select: none;
+        }
+        .vorteil-label {
+            color: #4ade80; /* emerald-400 */
+        }
+        .nachteil-label {
+            color: #f87171; /* red-400 */
+        }
+
+        /* Inaktive / Deaktivierte Buttons: unauffällig im Dark Fantasy Design, Schrift immer gut lesbar */
+        .adv-btn {
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.6px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            user-select: none;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: var(--bg-input);
+            color: #94a3b8; /* Klar lesbares Slate */
+        }
+
+        .adv-btn:hover {
+            border-color: #4a685c;
+            color: #f1f5f9;
+        }
+
+        /* Vorteil Aktiv: Kräftige grüne Hintergrundfläche + auffälliges Leuchten */
+        .adv-btn.adv-vorteil.is-active {
+            background: #16a34a !important; /* kräftiges Grün (green-600) */
+            border-color: #4ade80 !important;
+            color: #ffffff !important;
+            box-shadow: 0 0 16px 3px rgba(34, 197, 94, 0.85), inset 0 0 6px rgba(255, 255, 255, 0.3) !important;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+            font-weight: 800;
+        }
+        .adv-btn.adv-vorteil.is-active:hover {
+            background: #22c55e !important;
+            border-color: #86efac !important;
+        }
+
+        /* Nachteil Aktiv: Kräftige rote Hintergrundfläche + auffälliges Leuchten */
+        .adv-btn.adv-nachteil.is-active {
+            background: #dc2626 !important; /* kräftiges Rot (red-600) */
+            border-color: #f87171 !important;
+            color: #ffffff !important;
+            box-shadow: 0 0 16px 3px rgba(239, 68, 68, 0.85), inset 0 0 6px rgba(255, 255, 255, 0.3) !important;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+            font-weight: 800;
+        }
+        .adv-btn.adv-nachteil.is-active:hover {
+            background: #ef4444 !important;
+            border-color: #fca5a5 !important;
+        }
+
+        /* Konzentration Button: Rund, mittig unter Vorteil & Nachteil, links Text "Konzentration" */
+        .concentration-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding-top: 2px;
+        }
+
+        .concentration-label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: #cbd5e1;
+            user-select: none;
+        }
+
+        .concentration-btn {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            cursor: pointer;
+            background: #081511;
+            border: 2px solid #4a685c;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            user-select: none;
+            position: relative;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.6);
+            padding: 0;
+            outline: none;
+        }
+
+        .concentration-btn:hover {
+            border-color: #38bdf8;
+            box-shadow: 0 0 8px rgba(56, 189, 248, 0.5);
+            transform: scale(1.08);
+        }
+
+        .concentration-btn.is-active {
+            background: #0284c7 !important;
+            border-color: #38bdf8 !important;
+            box-shadow: 0 0 14px 3px rgba(56, 189, 248, 0.9), inset 0 0 6px rgba(255, 255, 255, 0.6) !important;
+            transform: scale(1.08);
+        }
+
+        .concentration-btn.is-active::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #ffffff;
+            box-shadow: 0 0 4px #ffffff;
+        }
+
+        /* Formatierung für Statblock Merkmale, Aktionen, Bonus-Aktionen & Reaktionen (senkrechte Linien-Ausrichtung) */
+        .statblock-entry {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 0.75rem; /* text-xs */
+            line-height: 1.45;
+            padding: 2.5px 4px;
+            border-radius: 4px;
+            transition: background-color 0.15s ease;
+        }
+        .statblock-entry:hover {
+            background: rgba(14, 33, 26, 0.65);
+        }
+        .statblock-header-col {
+            width: 140px;
+            min-width: 140px;
+            max-width: 140px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: baseline;
+            overflow: hidden;
+        }
+        @media (min-width: 640px) {
+            .statblock-header-col {
+                width: 165px;
+                min-width: 165px;
+                max-width: 165px;
+            }
+        }
+        .statblock-header {
+            flex-shrink: 0;
+            font-weight: 700;
+            font-size: 0.75rem; /* text-xs */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .statblock-dots {
+            flex-grow: 1;
+            border-bottom: 1px dotted currentColor;
+            opacity: 0.35;
+            margin: 0 4px 3px 6px;
+            min-width: 6px;
+        }
+        .statblock-body {
+            flex: 1;
+            min-width: 0;
+            color: #e2e8f0; /* slate-200 */
+            font-size: 0.75rem; /* text-xs */
+        }
+
+        /* Drag & Drop Styles für Aktionen ausschließlich in der Bearbeitungsmaske (Modal) */
+        .modal-drag-grip {
+            opacity: 0.45;
+            transition: opacity 0.15s ease;
+        }
+        .modal-drag-grip:hover {
+            opacity: 1;
+        }
+        .draggable-modal-action.drag-over-top {
+            border-top: 2px solid #d4af37 !important;
+        }
+
         .condition-btn {
             background: var(--bg-input); border: 1px solid var(--border-subtle); color: #97c7b2;
             padding: 3px 6px; border-radius: 6px; font-size: 0.7rem; font-weight: 500; cursor: pointer; transition: all 0.15s ease; user-select: none; white-space: nowrap;
@@ -938,18 +1167,18 @@
             </div>
 
             <div class="space-y-1 pt-2 border-t border-forest-700/50">
-                <div class="flex justify-between items-center"><label class="text-xs text-gold-400 font-bold">Aktionen</label><button type="button" onclick="addDynamicField('actionsContainer')" class="px-2 py-0.5 bg-gold-500/20 text-gold-400 text-xs rounded">+ Aktion</button></div>
-                <div id="actionsContainer" class="space-y-2 pt-1"></div>
+                <div class="flex justify-between items-center"><label class="text-xs text-red-400 font-bold">Aktionen</label><button type="button" onclick="addDynamicField('actionsContainer')" class="px-2 py-0.5 bg-red-500/20 text-red-400 hover:bg-red-500/30 font-semibold text-xs rounded transition-colors">+ Aktion</button></div>
+                <div id="actionsContainer" class="space-y-2 pt-1" ondragover="handleActionContainerDragOver(event, 'actionsContainer')" ondrop="handleActionContainerDrop(event, 'actionsContainer')"></div>
             </div>
 
             <div class="space-y-1 pt-2 border-t border-forest-700/50">
-                <div class="flex justify-between items-center"><label class="text-xs text-gold-400 font-bold">Bonus-Aktionen</label><button type="button" onclick="addDynamicField('bonusActionsContainer')" class="px-2 py-0.5 bg-gold-500/20 text-gold-400 text-xs rounded">+ Bonus-Aktion</button></div>
-                <div id="bonusActionsContainer" class="space-y-2 pt-1"></div>
+                <div class="flex justify-between items-center"><label class="text-xs text-orange-400 font-bold">Bonus-Aktionen</label><button type="button" onclick="addDynamicField('bonusActionsContainer')" class="px-2 py-0.5 bg-orange-500/20 text-orange-400 hover:bg-orange-500/30 font-semibold text-xs rounded transition-colors">+ Bonus-Aktion</button></div>
+                <div id="bonusActionsContainer" class="space-y-2 pt-1" ondragover="handleActionContainerDragOver(event, 'bonusActionsContainer')" ondrop="handleActionContainerDrop(event, 'bonusActionsContainer')"></div>
             </div>
 
             <div class="space-y-1 pt-2 border-t border-forest-700/50">
-                <div class="flex justify-between items-center"><label class="text-xs text-gold-400 font-bold">Reaktionen</label><button type="button" onclick="addDynamicField('reactionsContainer')" class="px-2 py-0.5 bg-gold-500/20 text-gold-400 text-xs rounded">+ Reaktion</button></div>
-                <div id="reactionsContainer" class="space-y-2 pt-1"></div>
+                <div class="flex justify-between items-center"><label class="text-xs text-blue-400 font-bold">Reaktionen</label><button type="button" onclick="addDynamicField('reactionsContainer')" class="px-2 py-0.5 bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 font-semibold text-xs rounded transition-colors">+ Reaktion</button></div>
+                <div id="reactionsContainer" class="space-y-2 pt-1" ondragover="handleActionContainerDragOver(event, 'reactionsContainer')" ondrop="handleActionContainerDrop(event, 'reactionsContainer')"></div>
             </div>
 
             <div>
@@ -1274,14 +1503,39 @@
         };
     }
 
+    function normalizeCombatant(c) {
+        if (!c) return null;
+        const maxHp = Math.max(1, parseInt(c.maxHp, 10) || 10);
+        const rawHp = parseInt(c.hp, 10);
+        const hp = isNaN(rawHp) ? maxHp : rawHp;
+        const init = parseInt(c.init, 10);
+        return {
+            id: c.id || 'c-' + Date.now() + '-' + Math.floor(Math.random() * 10000),
+            name: c.name || 'Charakter',
+            init: isNaN(init) ? 10 : init,
+            hp: hp,
+            maxHp: maxHp,
+            tempHp: Math.max(0, parseInt(c.tempHp, 10) || 0),
+            img: typeof c.img === 'string' ? c.img : '',
+            conditions: Array.isArray(c.conditions) ? c.conditions : [],
+            history: Array.isArray(c.history) ? c.history : [],
+            monsterData: (c.monsterData && typeof c.monsterData === 'object') ? c.monsterData : null,
+            v_ersie: Boolean(c.v_ersie),
+            v_ich: Boolean(c.v_ich),
+            n_ersie: Boolean(c.n_ersie),
+            n_ich: Boolean(c.n_ich),
+            concentration: Boolean(c.concentration)
+        };
+    }
+
     function loadState() {
         try {
-            let saved = localStorage.getItem('sylvanus_codex_data_v20');
+            let saved = localStorage.getItem('sylvanus_codex_data_v21');
+            if (!saved) saved = localStorage.getItem('sylvanus_codex_data_v20');
             if (!saved) saved = localStorage.getItem('sylvanus_codex_data_v19');
             if (!saved) saved = localStorage.getItem('sylvanus_codex_data_v18');
-            if (!saved) {
-                saved = localStorage.getItem('sylvanus_codex_data_v17');
-            }
+            if (!saved) saved = localStorage.getItem('sylvanus_codex_data_v17');
+
             if (saved) {
                 const parsed = JSON.parse(saved);
                 state = { ...state, ...parsed };
@@ -1289,9 +1543,16 @@
                     state.npcs = state.npcs.map(normalizeNpc).filter(Boolean);
                 }
                 if (Array.isArray(state.monsters)) {
-                    state.monsters = state.monsters.map(m => ({ ...m, category: m.category || 'active' }));
+                    state.monsters = state.monsters.map(m => ({
+                        ...m,
+                        category: m.category || 'active',
+                        outlines: Array.isArray(m.outlines) ? m.outlines : []
+                    }));
                 }
-                if (!state.locations || !Array.isArray(state.locations) || state.locations.length === 0) {
+                if (Array.isArray(state.combatants)) {
+                    state.combatants = state.combatants.map(normalizeCombatant).filter(Boolean);
+                }
+                if (!state.locations || !Array.isArray(state.locations)) {
                     const savedOrte = localStorage.getItem('dnd_dm_locations_v8');
                     if (savedOrte) {
                         try { state.locations = JSON.parse(savedOrte); } catch(e) { state.locations = DEFAULT_LOCATIONS; }
@@ -1300,59 +1561,191 @@
                     }
                 }
             }
-        } catch (e) { console.error(e); }
+        } catch (e) { console.error("Fehler beim Laden:", e); }
     }
 
     function saveState() {
         try {
             const serialized = JSON.stringify(state);
-            localStorage.setItem('sylvanus_codex_data_v20', serialized);
-            localStorage.setItem('sylvanus_codex_data_v19', serialized);
-            localStorage.setItem('sylvanus_codex_data_v18', serialized);
-            localStorage.setItem('sylvanus_codex_data_v17', serialized);
+            // Speichere synchron unter v21 und v20, damit DM-Assist und DM-Assistant kompatibel bleiben
+            try { localStorage.setItem('sylvanus_codex_data_v21', serialized); } catch (e) {}
+            try { localStorage.setItem('sylvanus_codex_data_v20', serialized); } catch (e) {}
+            // Ältere Keys aufräumen, um das 5MB localStorage-Limit nicht zu überschreiten
+            ['sylvanus_codex_data_v19', 'sylvanus_codex_data_v18', 'sylvanus_codex_data_v17'].forEach(k => {
+                try { localStorage.removeItem(k); } catch (e) {}
+            });
             if (state.locations) {
-                localStorage.setItem('dnd_dm_locations_v8', JSON.stringify(state.locations));
+                try { localStorage.setItem('dnd_dm_locations_v8', JSON.stringify(state.locations)); } catch(e) {}
             }
-        } catch (e) { console.error(e); }
+        } catch (e) { console.error("Fehler beim Speichern:", e); }
+    }
+
+    function flushDomToState() {
+        // Blur jedes aktiven Formularfeldes, um anstehende Events sofort auszulösen
+        if (document.activeElement && typeof document.activeElement.blur === 'function') {
+            document.activeElement.blur();
+        }
+        // Textfeld 'Einstieg für heute' (Auftakt) explizit sichern
+        const hook = document.getElementById('sessionHookInput');
+        if (hook) {
+            state.sessionHook = hook.value;
+        }
     }
 
     function exportData() {
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 2));
-        const a = document.createElement('a'); a.href = dataStr; a.download = `sylvanus_backup.json`;
-        document.body.appendChild(a); a.click(); a.remove(); showToast("Backup exportiert!", "success");
+        try {
+            flushDomToState();
+            saveState();
+
+            // Vollständiges Payload mit allen 7 Spielleiter-Bereichen
+            const exportPayload = {
+                app: "Sylvanus Spielleiter-Codex",
+                version: "12",
+                exportDate: new Date().toISOString(),
+                theme: state.theme || 'dark',
+                activeTab: state.activeTab || 'auftakt',
+                // 1. Auftakt & Rückblick
+                sessionHook: typeof state.sessionHook === 'string' ? state.sessionHook : '',
+                checklist: Array.isArray(state.checklist) ? state.checklist : [],
+                recap: Array.isArray(state.recap) ? state.recap : [],
+                // 2. Orte & Welten
+                locations: Array.isArray(state.locations) ? state.locations : [],
+                // 3. Geheimnisse
+                secrets: Array.isArray(state.secrets) ? state.secrets : [],
+                // 4. NPCs
+                npcs: Array.isArray(state.npcs) ? state.npcs.map(normalizeNpc).filter(Boolean) : [],
+                // 5. Monster & Kampf
+                monsters: Array.isArray(state.monsters) ? state.monsters : [],
+                // 6. Knoten-Ablaufplan
+                nodes: Array.isArray(state.nodes) ? state.nodes : [],
+                // 7. Initiative
+                combatants: Array.isArray(state.combatants) ? state.combatants.map(normalizeCombatant).filter(Boolean) : [],
+                activeId: state.activeId || (state.combatants && state.combatants[0] ? state.combatants[0].id : null)
+            };
+
+            const jsonStr = JSON.stringify(exportPayload, null, 2);
+
+            // Robuster Blob-Download (verhindert Größenbeschränkungen von Data-URLs bei Base64-Bildern)
+            const blob = new Blob([jsonStr], { type: "application/json;charset=utf-8" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            const dateStr = new Date().toISOString().slice(0, 10);
+            a.download = `sylvanus_backup_${dateStr}.json`;
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(() => {
+                a.remove();
+                URL.revokeObjectURL(url);
+            }, 1000);
+
+            showToast("Backup exportiert! Alle 7 Bereiche gesichert.", "success");
+        } catch (err) {
+            console.error("Export-Fehler:", err);
+            showToast("Fehler beim Exportieren!", "error");
+        }
+    }
+
+    function renderAllTabs() {
+        initTheme();
+        renderAuftaktTab();
+        renderOrteTree();
+        renderSecretsTab();
+        renderNPCsTab();
+        renderMonstersTab();
+        renderNodesTab();
+        renderInitiativeTab();
+        activateTab(state.activeTab || 'auftakt');
     }
 
     function importData(event) {
+        const file = event.target.files && event.target.files[0];
+        if (!file) return;
+
         const reader = new FileReader();
-        if (event.target.files[0]) {
-            reader.readAsText(event.target.files[0], "UTF-8");
-            reader.onload = function(e) {
-                try {
-                    const imported = JSON.parse(e.target.result);
-                    state = { ...state, ...imported };
-                    if (Array.isArray(state.npcs)) {
-                        state.npcs = state.npcs.map(normalizeNpc).filter(Boolean);
-                    }
-                    if (Array.isArray(state.monsters)) {
-                        state.monsters = state.monsters.map(m => ({ ...m, category: m.category || 'active' }));
-                    }
-                    if (imported.locations && Array.isArray(imported.locations)) {
-                        state.locations = imported.locations;
-                    } else if (imported.campaignData && Array.isArray(imported.campaignData)) {
-                        state.locations = imported.campaignData;
-                    }
-                    saveState();
-                    showToast("Import erfolgreich! Lade neu...", "success");
-                    setTimeout(() => {
-                        location.reload();
-                    }, 500); // Gibt iOS/WebKit 0,5 Sekunden Zeit zum Speichern
+        reader.onload = function(e) {
+            try {
+                const raw = JSON.parse(e.target.result);
+                if (!raw || typeof raw !== 'object') {
+                    throw new Error("Ungültige JSON-Struktur");
                 }
-                catch (err) { showToast("Import-Fehler!", "error"); }
-                finally {
-                    event.target.value = '';
+                const imported = raw.state || raw.data || raw;
+
+                // 1. Auftakt & Rückblick
+                if (typeof imported.sessionHook === 'string') {
+                    state.sessionHook = imported.sessionHook;
                 }
-            };
-        }
+                if (Array.isArray(imported.checklist)) {
+                    state.checklist = imported.checklist;
+                }
+                if (Array.isArray(imported.recap)) {
+                    state.recap = imported.recap;
+                }
+
+                // 2. Orte & Welten (unterstützt locations, campaignData, orte)
+                const locs = imported.locations || imported.campaignData || imported.orte;
+                if (Array.isArray(locs)) {
+                    state.locations = locs;
+                }
+
+                // 3. Geheimnisse
+                if (Array.isArray(imported.secrets)) {
+                    state.secrets = imported.secrets;
+                }
+
+                // 4. NPCs
+                if (Array.isArray(imported.npcs)) {
+                    state.npcs = imported.npcs.map(normalizeNpc).filter(Boolean);
+                }
+
+                // 5. Monster & Kampf
+                if (Array.isArray(imported.monsters)) {
+                    state.monsters = imported.monsters.map(m => ({
+                        ...m,
+                        category: m.category || 'active',
+                        outlines: Array.isArray(m.outlines) ? m.outlines : []
+                    }));
+                }
+
+                // 6. Knoten-Ablaufplan
+                if (Array.isArray(imported.nodes)) {
+                    state.nodes = imported.nodes;
+                }
+
+                // 7. Initiative
+                if (Array.isArray(imported.combatants)) {
+                    state.combatants = imported.combatants.map(normalizeCombatant).filter(Boolean);
+                    sortCombatants();
+                }
+                if (imported.activeId) {
+                    state.activeId = imported.activeId;
+                } else if (state.combatants && state.combatants.length > 0) {
+                    state.activeId = state.combatants[0].id;
+                }
+
+                // Einstellungen
+                if (imported.theme) {
+                    state.theme = imported.theme;
+                }
+                if (imported.activeTab) {
+                    state.activeTab = imported.activeTab;
+                }
+
+                saveState();
+                renderAllTabs();
+                showToast("Import erfolgreich! Alle Tabs aktualisiert.", "success");
+            } catch (err) {
+                console.error("Import-Fehler:", err);
+                showToast("Import-Fehler! Datei ungültig oder beschädigt.", "error");
+            } finally {
+                event.target.value = '';
+            }
+        };
+        reader.onerror = function() {
+            showToast("Fehler beim Lesen der Datei!", "error");
+            event.target.value = '';
+        };
+        reader.readAsText(file, "UTF-8");
     }
 
     function showToast(message, type = 'info') {
@@ -2045,41 +2438,84 @@
     function buildMonsterStatblockDetailsHTML(m) {
         const s = m.stats || {};
 
+        const formatStatName = (n) => {
+            const trimmed = String(n || '').trim();
+            return trimmed.endsWith(':') ? trimmed : trimmed + ':';
+        };
+
         const traitsHtml = m.traits && m.traits.length > 0 ? `
             <div class="mt-4">
-                <h4 class="text-xs font-bold text-[#eacb67] tracking-wider mb-1">Merkmale:</h4>
-                <div class="space-y-1">
+                <h4 class="text-[13px] font-bold text-[#eacb67] tracking-wider mb-2 border-b border-[#eacb67]/20 pb-0.5 flex items-center justify-between">
+                    <span>Merkmale:</span>
+                </h4>
+                <div class="space-y-1 pl-0.5">
                     ${m.traits.map(t => {
             const parts = t.split(':');
-            if(parts.length > 1) {
-                return `<p class="text-xs text-gray-200"><strong class="text-[#eacb67] font-semibold">${parts[0]}:</strong>${parts.slice(1).join(':')}</p>`;
-            }
-            return `<p class="text-xs text-gray-200">${t}</p>`;
+            const tName = parts.length > 1 ? parts[0] : 'Merkmal';
+            const tDesc = parts.length > 1 ? parts.slice(1).join(':') : t;
+            return `
+                    <div class="statblock-entry">
+                        <div class="statblock-header-col text-[#eacb67]">
+                            <strong class="statblock-header">${formatStatName(tName)}</strong>
+                            <span class="statblock-dots"></span>
+                        </div>
+                        <span class="statblock-body">${tDesc}</span>
+                    </div>`;
         }).join('')}
                 </div>
             </div>` : '';
 
         const actionsHtml = m.actions && m.actions.length > 0 ? `
             <div class="mt-4">
-                <h4 class="text-xs font-bold text-[#eacb67] tracking-wider mb-1">Aktionen:</h4>
-                <div class="space-y-1.5">
-                    ${m.actions.map(a => `<p class="text-xs text-gray-200"><strong class="text-[#eacb67] font-semibold">${a.name}:</strong>${a.desc}</p>`).join('')}
+                <h4 class="text-[13px] font-bold text-red-400 tracking-wider mb-2 border-b border-red-500/20 pb-0.5 flex items-center justify-between">
+                    <span>Aktionen:</span>
+                </h4>
+                <div class="space-y-1 pl-0.5">
+                    ${m.actions.map(a => `
+                        <div class="statblock-entry">
+                            <div class="statblock-header-col text-red-400">
+                                <strong class="statblock-header">${formatStatName(a.name)}</strong>
+                                <span class="statblock-dots"></span>
+                            </div>
+                            <span class="statblock-body">${a.desc}</span>
+                        </div>
+                    `).join('')}
                 </div>
             </div>` : '';
 
         const bonusActionsHtml = m.bonusActions && m.bonusActions.length > 0 ? `
             <div class="mt-4">
-                <h4 class="text-xs font-bold text-[#eacb67] tracking-wider mb-1">Bonus-Aktionen:</h4>
-                <div class="space-y-1.5">
-                    ${m.bonusActions.map(ba => `<p class="text-xs text-gray-200"><strong class="text-[#eacb67] font-semibold">${ba.name}:</strong>${ba.desc}</p>`).join('')}
+                <h4 class="text-[13px] font-bold text-orange-400 tracking-wider mb-2 border-b border-orange-500/20 pb-0.5 flex items-center justify-between">
+                    <span>Bonus-Aktionen:</span>
+                </h4>
+                <div class="space-y-1 pl-0.5">
+                    ${m.bonusActions.map(ba => `
+                        <div class="statblock-entry">
+                            <div class="statblock-header-col text-orange-400">
+                                <strong class="statblock-header">${formatStatName(ba.name)}</strong>
+                                <span class="statblock-dots"></span>
+                            </div>
+                            <span class="statblock-body">${ba.desc}</span>
+                        </div>
+                    `).join('')}
                 </div>
             </div>` : '';
 
         const reactionsHtml = m.reactions && m.reactions.length > 0 ? `
             <div class="mt-4">
-                <h4 class="text-xs font-bold text-[#eacb67] tracking-wider mb-1">Reaktionen:</h4>
-                <div class="space-y-1.5">
-                    ${m.reactions.map(r => `<p class="text-xs text-gray-200"><strong class="text-[#eacb67] font-semibold">${r.name}:</strong>${r.desc}</p>`).join('')}
+                <h4 class="text-[13px] font-bold text-blue-400 tracking-wider mb-2 border-b border-blue-500/20 pb-0.5 flex items-center justify-between">
+                    <span>Reaktionen:</span>
+                </h4>
+                <div class="space-y-1 pl-0.5">
+                    ${m.reactions.map(r => `
+                        <div class="statblock-entry">
+                            <div class="statblock-header-col text-blue-400">
+                                <strong class="statblock-header">${formatStatName(r.name)}</strong>
+                                <span class="statblock-dots"></span>
+                            </div>
+                            <span class="statblock-body">${r.desc}</span>
+                        </div>
+                    `).join('')}
                 </div>
             </div>` : '';
 
@@ -2179,15 +2615,88 @@
         `;
     }
 
+    let _draggedModalAction = null;
+
+    function handleActionContainerDragOver(e, containerId) {
+        if (_draggedModalAction && _draggedModalAction.containerId === containerId) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+        }
+    }
+
+    function handleActionContainerDrop(e, containerId) {
+        if (_draggedModalAction && _draggedModalAction.containerId === containerId) {
+            e.preventDefault();
+            const container = document.getElementById(containerId);
+            if (container && (e.target === container || e.target.parentElement === container)) {
+                container.appendChild(_draggedModalAction.el);
+            }
+        }
+    }
+
     function addDynamicField(containerId, nameVal = '', descVal = '') {
         const container = document.getElementById(containerId);
+        if (!container) return;
         const row = document.createElement('div');
-        row.className = 'flex gap-2 items-center';
+        row.className = 'draggable-modal-action flex gap-2 items-center group p-1 rounded bg-forest-950/40 border border-forest-800/40 transition-all';
+        row.draggable = true;
+        row.dataset.containerId = containerId;
+
+        const label = containerId === 'bonusActionsContainer' ? 'Bonus-Aktion' : (containerId === 'reactionsContainer' ? 'Reaktion' : 'Aktion');
+        const colorClass = containerId === 'bonusActionsContainer' ? 'text-orange-400' : (containerId === 'reactionsContainer' ? 'text-blue-400' : 'text-red-400');
+        const borderColor = containerId === 'bonusActionsContainer' ? 'border-orange-500/40' : (containerId === 'reactionsContainer' ? 'border-blue-500/40' : 'border-red-500/40');
+
         row.innerHTML = `
-            <input type="text" placeholder="Name" value="${escapeAttr(nameVal)}" class="dyn-name w-1/3 bg-forest-950 border border-forest-700 text-xs rounded p-1.5 text-gray-100 font-semibold">
+            <span class="modal-drag-grip cursor-grab text-gray-500 hover:${colorClass} select-none text-base px-1 leading-none" title="${label} verschieben">⋮⋮</span>
+            <input type="text" placeholder="Name" value="${escapeAttr(nameVal)}" class="dyn-name w-1/3 bg-forest-950 border ${borderColor} text-xs rounded p-1.5 ${colorClass} font-semibold focus:outline-none focus:ring-1">
             <input type="text" placeholder="Beschreibung" value="${escapeAttr(descVal)}" class="dyn-desc flex-1 bg-forest-950 border border-forest-700 text-xs rounded p-1.5 text-gray-100">
-            <button type="button" onclick="this.parentElement.remove()" class="text-red-400 hover:text-red-300 px-2 text-xs">✕</button>
+            <button type="button" class="dyn-delete-btn text-red-400 hover:text-red-300 px-2 text-xs transition-colors" title="${label} entfernen">✕</button>
         `;
+
+        const deleteBtn = row.querySelector('.dyn-delete-btn');
+        deleteBtn.onclick = () => {
+            const currentName = row.querySelector('.dyn-name').value.trim();
+            const promptText = currentName
+                ? `Bist du sicher, dass du die ${label} "${currentName}" entfernen möchtest?`
+                : `Bist du sicher, dass du diese ${label} entfernen möchtest?`;
+            if (confirm(promptText)) {
+                row.remove();
+            }
+        };
+
+        row.ondragstart = (e) => {
+            e.stopPropagation();
+            e.dataTransfer.effectAllowed = 'move';
+            _draggedModalAction = { el: row, containerId };
+            row.classList.add('opacity-40');
+        };
+        row.ondragend = (e) => {
+            e.stopPropagation();
+            _draggedModalAction = null;
+            row.classList.remove('opacity-40');
+            container.querySelectorAll('.draggable-modal-action').forEach(r => r.classList.remove('drag-over-top'));
+        };
+        row.ondragover = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (_draggedModalAction && _draggedModalAction.containerId === containerId && _draggedModalAction.el !== row) {
+                e.dataTransfer.dropEffect = 'move';
+                row.classList.add('drag-over-top');
+            }
+        };
+        row.ondragleave = (e) => {
+            e.stopPropagation();
+            row.classList.remove('drag-over-top');
+        };
+        row.ondrop = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            row.classList.remove('drag-over-top');
+            if (_draggedModalAction && _draggedModalAction.containerId === containerId && _draggedModalAction.el !== row) {
+                container.insertBefore(_draggedModalAction.el, row);
+            }
+        };
+
         container.appendChild(row);
     }
 
@@ -2689,7 +3198,11 @@
     function addCombatant(name = 'Neuer Held', init = 10, maxHp = 30, fullMonsterData = null) {
         if (!state.combatants) state.combatants = [];
         const id = 'c-' + Date.now().toString() + '-' + Math.floor(Math.random() * 10000);
-        state.combatants.push({ id, name, init: Number(init), hp: Number(maxHp), maxHp: Number(maxHp), tempHp: 0, img: '', conditions: [], history: ['Erstellt'], monsterData: fullMonsterData });
+        state.combatants.push({
+            id, name, init: Number(init), hp: Number(maxHp), maxHp: Number(maxHp), tempHp: 0,
+            img: '', conditions: [], history: ['Erstellt'], monsterData: fullMonsterData,
+            v_ersie: false, v_ich: false, n_ersie: false, n_ich: false, concentration: false
+        });
         sortCombatants(); state.activeId = id; saveState(); renderInitiativeTab();
     }
 
@@ -2719,6 +3232,17 @@
         renderInitiativeTab();
     }
     function setActive(id) { state.activeId = id; saveState(); renderInitiativeTab(); }
+
+    function handleMaxHpInput(id, val) {
+        const c = state.combatants.find(x => x.id === id);
+        if (c && val !== '') {
+            const parsed = parseInt(val, 10);
+            if (!isNaN(parsed) && parsed > 0) {
+                c.maxHp = parsed;
+                saveState();
+            }
+        }
+    }
 
     function commitMaxHp(id, val) {
         const c = state.combatants.find(x => x.id === id);
@@ -2770,7 +3294,7 @@
                 const img = new Image();
                 img.onload = function() {
                     const canvas = document.createElement('canvas');
-                    const MAX_SIZE = 300;
+                    const MAX_SIZE = 220;
                     let width = img.width;
                     let height = img.height;
 
@@ -2809,6 +3333,16 @@
         }
     }
     function updateName(id, val) { const c = state.combatants.find(x => x.id === id); if(c){ c.name = val; saveState(); } }
+    
+    function toggleCombatantAdv(id, key) {
+        const c = state.combatants.find(x => x.id === id);
+        if (c) {
+            c[key] = !c[key];
+            saveState();
+            renderInitiativeTab();
+        }
+    }
+
     function resetTracker() { if(confirm('Alles löschen?')){ state.combatants = []; state.activeId = null; saveState(); renderInitiativeTab(); } }
 
     function renderInitiativeTab() {
@@ -2849,25 +3383,51 @@
 
             card.innerHTML = `
                 <div class="init-badge" onclick="event.stopPropagation()"><label>INIT</label><input type="number" value="${c.init}" oninput="handleInitInput('${c.id}', this.value)" onchange="finalizeInitChange()" /></div>
-                <div class="character-square-container" onclick="event.stopPropagation()">
-                    <div class="character-square ${!c.img?'empty':''}">${c.img?`<img src="${c.img}"/>`:'<span>👤</span>'}<div class="upload-hint">📷 Bild</div><input type="file" accept="image/*" onchange="handleImageUpload('${c.id}', this)" onclick="event.stopPropagation()"/></div>
-                    <input type="text" class="name-input" value="${c.name}" oninput="updateName('${c.id}', this.value)" onclick="event.stopPropagation()"/>
-                </div>
-                <div class="hp-section" onclick="event.stopPropagation()">
-                    <div class="hp-stats">
-                        <span class="hp-display">❤️ <input type="number" class="hp-number-input" value="${c.hp}" oninput="handleCurrentHpInput('${c.id}', this.value)"/> / <input type="number" class="max-hp-input" value="${c.maxHp}" onchange="commitMaxHp('${c.id}', this.value)" onkeydown="if(event.key==='Enter') this.blur()"/>${c.tempHp > 0 ? `<span class="text-purple-400 font-bold text-xs ml-1" title="Temporäre TP">(+${c.tempHp} Temp)</span>` : ''}</span>
-                        <button class="btn-full-hp" onclick="resetToFullHp('${c.id}')">Full</button>
-                    </div>
-                    <div class="hp-inputs">
-                        <input type="number" id="val-${c.id}" placeholder="Wert" min="1"/>
-                        <div class="hp-buttons">
-                            <button onclick="applyDamage('${c.id}')" class="btn-dmg">- Dmg</button>
-                            <button onclick="applyHeal('${c.id}')" class="btn-heal">+ Heal</button>
-                            <button onclick="addTempHp('${c.id}')" class="btn-temp">+ Temp</button>
+                
+                <div class="combatant-middle-section" onclick="event.stopPropagation()">
+                    <div class="combatant-main-row">
+                        <div class="character-square-container" onclick="event.stopPropagation()">
+                            <div class="character-square ${!c.img?'empty':''}">${c.img?`<img src="${c.img}"/>`:'<span>👤</span>'}<div class="upload-hint">📷 Bild</div><input type="file" accept="image/*" onchange="handleImageUpload('${c.id}', this)" onclick="event.stopPropagation()"/></div>
+                            <input type="text" class="name-input" value="${c.name}" oninput="updateName('${c.id}', this.value)" onclick="event.stopPropagation()"/>
+                        </div>
+                        <div class="hp-section" onclick="event.stopPropagation()">
+                            <div class="hp-stats">
+                                <span class="hp-display">❤️ <input type="number" class="hp-number-input" value="${c.hp}" oninput="handleCurrentHpInput('${c.id}', this.value)"/> / <input type="number" class="max-hp-input" value="${c.maxHp}" oninput="handleMaxHpInput('${c.id}', this.value)" onchange="commitMaxHp('${c.id}', this.value)" onkeydown="if(event.key==='Enter') this.blur()"/>${c.tempHp > 0 ? `<span class="text-purple-400 font-bold text-xs ml-1" title="Temporäre TP">(+${c.tempHp} Temp)</span>` : ''}</span>
+                                <button class="btn-full-hp" onclick="resetToFullHp('${c.id}')">Full</button>
+                            </div>
+                            <div class="hp-inputs">
+                                <input type="number" id="val-${c.id}" placeholder="Wert" min="1"/>
+                                <div class="hp-buttons">
+                                    <button onclick="applyDamage('${c.id}')" class="btn-dmg">- Dmg</button>
+                                    <button onclick="applyHeal('${c.id}')" class="btn-heal">+ Heal</button>
+                                    <button onclick="addTempHp('${c.id}')" class="btn-temp">+ Temp</button>
+                                </div>
+                            </div>
+                            <div class="history-container"><div class="history-header">VERLAUF</div><div class="history-box">${c.history.map(h=>`<div class="history-entry">${h}</div>`).join('')}</div></div>
                         </div>
                     </div>
-                    <div class="history-container"><div class="history-header">VERLAUF</div><div class="history-box">${c.history.map(h=>`<div class="history-entry">${h}</div>`).join('')}</div></div>
+
+                    <!-- Vorteil, Nachteil (ER/SIE & ICH) & Konzentration -->
+                    <div class="adv-disadv-container" onclick="event.stopPropagation()">
+                        <div class="adv-top-row">
+                            <div class="adv-group vorteil-group">
+                                <span class="adv-label vorteil-label">Vorteil:</span>
+                                <button type="button" class="adv-btn adv-vorteil ${c.v_ersie ? 'is-active' : ''}" onclick="toggleCombatantAdv('${c.id}', 'v_ersie')">ER/SIE</button>
+                                <button type="button" class="adv-btn adv-vorteil ${c.v_ich ? 'is-active' : ''}" onclick="toggleCombatantAdv('${c.id}', 'v_ich')">ICH</button>
+                            </div>
+                            <div class="adv-group nachteil-group">
+                                <span class="adv-label nachteil-label">Nachteil:</span>
+                                <button type="button" class="adv-btn adv-nachteil ${c.n_ersie ? 'is-active' : ''}" onclick="toggleCombatantAdv('${c.id}', 'n_ersie')">ER/SIE</button>
+                                <button type="button" class="adv-btn adv-nachteil ${c.n_ich ? 'is-active' : ''}" onclick="toggleCombatantAdv('${c.id}', 'n_ich')">ICH</button>
+                            </div>
+                        </div>
+                        <div class="concentration-row">
+                            <span class="concentration-label">Konzentration</span>
+                            <button type="button" class="concentration-btn ${c.concentration ? 'is-active' : ''}" onclick="toggleCombatantAdv('${c.id}', 'concentration')" title="Konzentration an/aus"></button>
+                        </div>
+                    </div>
                 </div>
+
                 <div class="conditions-section" onclick="event.stopPropagation()"><div class="conditions-header">Zustände</div><div class="conditions-grid">${conditionsHtml}</div></div>
                 <div class="card-actions"><button onclick="removeCombatant('${c.id}', event)">✕</button></div>
             `;
