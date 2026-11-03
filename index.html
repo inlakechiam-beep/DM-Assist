@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sylvanus Spielleiter-Codex v18</title>
+    <title>Sylvanus Spielleiter-Codex v19</title>
 
     <!-- Google Fonts: Cinzel for Headings & Inter for Body -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -821,11 +821,20 @@
                     <div id="fullGeneratedNameDisplay" class="font-cinzel text-2xl font-bold text-white tracking-wide">...</div>
                 </div>
                 <div class="flex items-center gap-2">
-                    <button onclick="copyActiveGeneratedName()" class="px-4 py-2 bg-[#1b382e] hover:bg-[#284d40] border border-gold-500/30 text-gray-200 text-xs font-medium rounded-lg flex items-center gap-1.5 transition-all">
-                        📋 Kopieren
+                    <button onclick="fullNameGeneratorReset()" class="px-4 py-2 bg-[#18362b] hover:bg-[#254d3e] border border-gold-500/30 text-[#eacb67] text-xs font-semibold rounded-lg flex items-center gap-2 transition-all shadow-sm" title="Vor- und Nachnamen neu generieren">
+                        <svg class="w-4 h-4 text-[#eacb67]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                        </svg>
+                        <span>Beide neu generieren</span>
                     </button>
-                    <button onclick="transferNameToNPC()" class="px-4 py-2 bg-[#d4af37] hover:bg-[#eacb67] text-[#0b1814] text-xs font-bold rounded-lg flex items-center gap-1.5 transition-all shadow-md">
-                        👤+ Als NPC anlegen
+                    <button onclick="transferNameToNPC()" class="px-4 py-2 bg-[#d4af37] hover:bg-[#eacb67] text-[#0b1814] text-xs font-bold rounded-lg flex items-center gap-2 transition-all shadow-md">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                            <circle cx="8.5" cy="7" r="4" />
+                            <line x1="20" y1="8" x2="20" y2="14" stroke-linecap="round" />
+                            <line x1="23" y1="11" x2="17" y2="11" stroke-linecap="round" />
+                        </svg>
+                        <span>Als NPC anlegen</span>
                     </button>
                 </div>
             </div>
@@ -834,8 +843,11 @@
                 <div class="bg-[#071511] border border-[#1a382d] rounded-xl p-4 space-y-3">
                     <div class="flex justify-between items-center border-b border-[#1a382d] pb-2">
                         <h3 class="font-cinzel text-sm font-bold text-[#eacb67] tracking-wide">VORNAMEN</h3>
-                        <button onclick="generateNewFirstNames()" class="px-3 py-1 bg-[#18362b] hover:bg-[#254d3e] border border-gold-500/30 text-[#eacb67] text-xs font-semibold rounded-md flex items-center gap-1 transition-all">
-                            🔄 Neu
+                        <button onclick="generateNewFirstNames()" class="px-3 py-1 bg-[#18362b] hover:bg-[#254d3e] border border-gold-500/30 text-[#eacb67] text-xs font-semibold rounded-md flex items-center gap-1.5 transition-all" title="Neue Vornamen würfeln">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                            <span>Neu</span>
                         </button>
                     </div>
                     <div id="vornamenListContainer" class="space-y-2"></div>
@@ -844,8 +856,11 @@
                 <div class="bg-[#071511] border border-[#1a382d] rounded-xl p-4 space-y-3">
                     <div class="flex justify-between items-center border-b border-[#1a382d] pb-2">
                         <h3 class="font-cinzel text-sm font-bold text-[#eacb67] tracking-wide">NACHNAMEN & SIPPEN</h3>
-                        <button onclick="generateNewLastNames()" class="px-3 py-1 bg-[#18362b] hover:bg-[#254d3e] border border-gold-500/30 text-[#eacb67] text-xs font-semibold rounded-md flex items-center gap-1 transition-all">
-                            🔄 Neu
+                        <button onclick="generateNewLastNames()" class="px-3 py-1 bg-[#18362b] hover:bg-[#254d3e] border border-gold-500/30 text-[#eacb67] text-xs font-semibold rounded-md flex items-center gap-1.5 transition-all" title="Neue Nachnamen würfeln">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                            <span>Neu</span>
                         </button>
                     </div>
                     <div id="nachnamenListContainer" class="space-y-2"></div>
@@ -1489,52 +1504,52 @@
     const NAME_DATABASE = {
         mensch: {
             vornamen: {
-                maennlich: ['Valentin', 'Roderick', 'Wilhelm', 'Alaric', 'Henrik', 'Cedric', 'Gideon', 'Roland', 'Valerian', 'Wulfric', 'Bastian', 'Cassian', 'Kaelen', 'Leofric', 'Gareth', 'Aldous', 'Eldrin', 'Benedict', 'Godfrey', 'Caelen'],
-                weiblich: ['Clara', 'Helena', 'Isolde', 'Rowena', 'Thalia', 'Valeria', 'Beatrix', 'Rosalind', 'Eleanor', 'Genevieve', 'Aurelia', 'Lyra', 'Adelaide', 'Mireia', 'Evelyn', 'Caelia', 'Gwendolyn', 'Seraphina']
+                maennlich: ["Valentin","Roderick","Wilhelm","Alaric","Henrik","Cedric","Gideon","Roland","Valerian","Wulfric","Bastian","Cassian","Kaelen","Leofric","Gareth","Aldous","Eldrin","Benedict","Godfrey","Caelen","Damian","Eric","Fabian","Ian","Julian","Kai","Laurenz","Marlon","Niklas","Oscar","Pascal","Quinten","Richard","Silas","Tristan","Ulrich","Walter","Xaver","Yannick","Zacharias","Aaron","Benedikt","Caspar","Dominik","Emanuel","Florian","Gregor","Hannes","Jesper","Kilian","Leander","Magnus","Nathan","Oliver"],
+                weiblich: ["Clara","Helena","Isolde","Rowena","Thalia","Valeria","Beatrix","Rosalind","Eleanor","Genevieve","Aurelia","Lyra","Adelaide","Mireia","Evelyn","Caelia","Gwendolyn","Seraphina","Alina","Bianca","Diana","Emilia","Fiona","Greta","Hanna","Iris","Josefine","Katharina","Luisa","Mara","Nina","Olivia","Paula","Quirina","Rabea","Sophia","Talia","Ute","Valerie","Wanda","Xenia","Yvonne","Zara","Amelie","Charlotte","Elena","Franziska","Hannah","Isabella","Johanna","Kira","Laura","Marlene","Nora","Pia","Rosa","Selma"]
             },
-            nachnamen: ['Falkenhorst', 'Dornenwall', 'Eichenschild', 'Winterberg', 'Holzmann', 'Adlerstein', 'Brandt', 'Winterborn', 'Schwarzweber', 'Königsmark', 'Löwenherz', 'Sternenwall', 'Steinberger', 'Eisenhaag']
+            nachnamen: ["Falkenhorst","Dornenwall","Eichenschild","Winterberg","Holzmann","Adlerstein","Brandt","Winterborn","Schwarzweber","Königsmark","Löwenherz","Sternenwall","Steinberger","Eisenhaag","Adler","Bauer","Fischer","Gerber","Hoffmann","Jäger","Koch","Lehmann","Meyer","Neumann","Otto","Richter","Schmidt","Schneider","Schulz","Wagner","Weber","Wolf","Zimmermann","Becker","Braun","Hartmann","Klein","Lange","Roth","Schwarz","Vogel","Werner","Ziegler"]
         },
         elf: {
             vornamen: {
-                maennlich: ['Caelynn', 'Melandrach', 'Faelar', 'Therai', 'Aelar', 'Adran', 'Berrian', 'Erevan', 'Galinndan', 'Himo', 'Ivellios', 'Laucian', 'Mindartis', 'Paelias', 'Soveliss', 'Thamior', 'Tharivol', 'Vararis'],
-                weiblich: ['Althaea', 'Anastrianna', 'Andraste', 'Antinua', 'Bethrynna', 'Birel', 'Enna', 'Felosial', 'Ielenia', 'Leshanna', 'Lia', 'Meriele', 'Naivara', 'Quelenna', 'Sariel', 'Shanairra', 'Vadania', 'Xiloscient']
+                maennlich: ["Caelynn","Melandrach","Faelar","Therai","Aelar","Adran","Berrian","Erevan","Galinndan","Himo","Ivellios","Laucian","Mindartis","Paelias","Soveliss","Thamior","Tharivol","Vararis","Aramil","Carric","Enialis","Erdan","Hadarai","Heian","Immeral","Peren","Quarion","Riardon","Rolen","Theren","Varis","Aram","Aust","Beiro","Deleg","Eldeth","Farlan","Gennal","Halimath","Ilian","Laethan","Memil","Naal","Orndel"],
+                weiblich: ["Althaea","Anastrianna","Andraste","Antinua","Bethrynna","Birel","Enna","Felosial","Ielenia","Leshanna","Lia","Meriele","Naivara","Quelenna","Sariel","Shanairra","Vadania","Xiloscient","Adrie","Caelynn","Drusilia","Jelenneth","Keyleth","Mialee","Quillathe","Shava","Silaqui","Theirastra","Thia","Valanthe","Xanaphia","Amakiir","Belanor","Caladrel","Dara","Elana","Faya","Glynis","Halana","Ilyth","Jhaelen"]
             },
-            nachnamen: ['Galanodel', 'Amastacia', 'Liadon', 'Siannodel', 'Xiloscient', 'Holimion', 'Ilphelkiir', 'Meliamne', 'Nailo', 'Nae\'lo', 'Thimdral', 'Vaelis', 'Kaelenis', 'Faeril', 'Solas', 'Starling', 'Lothlorien', 'Oakenheel']
+            nachnamen: ["Galanodel","Amastacia","Liadon","Siannodel","Xiloscient","Holimion","Ilphelkiir","Meliamne","Nailo","Nae'lo","Thimdral","Vaelis","Kaelenis","Faeril","Solas","Starling","Lothlorien","Oakenheel","Amakiir","Alagost","Beryll","Caelum","Dular","Eilistra","Faelar","Glimmer","Haelen","Iathril","Jhaeros","Kelvyn","Lunari","Moonwhisper","Nightwind","Oakenshield","Silverfrond","Starfall","Sunbrand","Thalen","Vane"]
         },
         tiefling: {
             vornamen: {
-                maennlich: ['Akemenos', 'Barakas', 'Damien', 'Ekemon', 'Iados', 'Kairon', 'Leucis', 'Melech', 'Morthos', 'Pelaios', 'Skamos', 'Therai', 'Malakor', 'Zephyrus', 'Ignis', 'Xavier', 'Azazel', 'Malthus'],
-                weiblich: ['Aktaia', 'Anakis', 'Bryseis', 'Criella', 'Damaia', 'Ea', 'Kallista', 'Lerissa', 'Makaria', 'Nemeia', 'Orianna', 'Phelaia', 'Rieta', 'Sorrow', 'Havoc', 'Grief', 'Torment', 'Veritas']
+                maennlich: ["Akemenos","Barakas","Damien","Ekemon","Iados","Kairon","Leucis","Melech","Morthos","Pelaios","Skamos","Therai","Malakor","Zephyrus","Ignis","Xavier","Azazel","Malthus","Akmenos","Amnon","Damakos","Mordai","Zargon","Ankhar","Balthor","Cazzan","Drogan","Erebus","Forinth","Gorth","Hazzan","Ixion","Jareth","Kaelen","Neros","Pyroth","Quintus","Raze","Seth","Taran","Umbra","Vaelen","Xarxis","Yulth","Zarek","Belial"],
+                weiblich: ["Aktaia","Anakis","Bryseis","Criella","Damaia","Ea","Kallista","Lerissa","Makaria","Nemeia","Orianna","Phelaia","Rieta","Sorrow","Havoc","Grief","Torment","Veritas","Akta","Vespera","Xaphira","Zula","Amaris","Bellona","Cinder","Dusk","Evensong","Fury","Gloom","Helix","Ignis","Jade","Karma","Lilith","Malice","Nyx","Onyx","Pyre","Raven","Salem","Tenebris","Umbra","Vesper","Wrath","Xana","Zephyr"]
             },
-            nachnamen: ['Despair', 'Havoc', 'Lament', 'Malice', 'Vengeance', 'Zephyr', 'Ignis', 'Ashford', 'Brimstone', 'Dread', 'Shadowend', 'Netherwalker', 'Graveheart', 'Ruin', 'Obsidian', 'Ironwill']
+            nachnamen: ["Despair","Havoc","Lament","Malice","Vengeance","Zephyr","Ignis","Ashford","Brimstone","Dread","Shadowend","Netherwalker","Graveheart","Ruin","Obsidian","Ironwill","Achelos","Balthazar","Cinder","Doom","Eclipse","Ember","Fiend","Greed","Hellfire","Ignite","Nether","Oblivion","Pain","Pyre","Shadow","Sin","Sorrow","Torment","Umbra","Woe","Wrath","Zeal","Ash","Blood","Crypt","Dusk","Fear"]
         },
         zwerg: {
             vornamen: {
-                maennlich: ['Adrik', 'Baern', 'Brottor', 'Dain', 'Darrak', 'Eberk', 'Einkil', 'Fargrim', 'Flint', 'Harbek', 'Kildrak', 'Morgran', 'Orsik', 'Oskar', 'Rangrim', 'Thorin', 'Thoradin', 'Torgrim', 'Vondal'],
-                weiblich: ['Amber', 'Artin', 'Audhild', 'Bardryn', 'Dagnal', 'Diesa', 'Eldeth', 'Falkrunn', 'Finellen', 'Gurdis', 'Helja', 'Hlin', 'Kathra', 'Kristryd', 'Ilde', 'Liftrasa', 'Sannl', 'Torbera', 'Vistra']
+                maennlich: ["Adrik","Baern","Brottor","Dain","Darrak","Eberk","Einkil","Fargrim","Flint","Harbek","Kildrak","Morgran","Orsik","Oskar","Rangrim","Thorin","Thoradin","Torgrim","Vondal","Alberich","Barendd","Brogni","Delg","Gardain","Rurik","Taklinn","Tordek","Traubon","Travok","Ulfgar","Veit","Balin","Dwalin","Gloin","Bifur","Bofur","Bombur","Oin","Thror","Thrain","Fim"],
+                weiblich: ["Amber","Artin","Audhild","Bardryn","Dagnal","Diesa","Eldeth","Falkrunn","Finellen","Gurdis","Helja","Hlin","Kathra","Kristryd","Ilde","Liftrasa","Sannl","Torbera","Vistra","Gunnloda","Helga","Kristryn","Mardred","Riswynn","Torgga","Yurgund","Brunhild","Frida","Gerda","Hilde","Inge","Katja","Olga","Runa","Sigrid","Tove","Ulrike","Walburga","Astrid","Birgit","Ebba","Freya"]
             },
-            nachnamen: ['Ambossbrecher', 'Goldader', 'Eisenfaust', 'Steinbarts', 'Kupferkessel', 'Runenschmied', 'Granitbrecher', 'Tiefenritter', 'Erzkron', 'Felsenschild', 'Bergdrache', 'Silberhammer']
+            nachnamen: ["Ambossbrecher","Goldader","Eisenfaust","Steinbarts","Kupferkessel","Runenschmied","Granitbrecher","Tiefenritter","Erzkron","Felsenschild","Bergdrache","Silberhammer","Balderk","Battlehammer","Brawnanvil","Dankil","Fireforger","Frostbeard","Gorunn","Holderhek","Ironshield","Loderr","Lutgehr","Rumnaheim","Strakeln","Torunn","Ungart","Ammerhammer","Breitbart","Eisenfaxt","Feuerbart","Goldfinger","Granitfaust","Hammerklang","Steinhauser","Sturmschild","Tiefenstein","Eisenherz","Goldkrone","Silberbart"]
         },
         gnom: {
             vornamen: {
-                maennlich: ['Bimble', 'Zook', 'Nim', 'Boddyknock', 'Burgell', 'Dimble', 'Fonkin', 'Gimbl', 'Garrick', 'Gerbo', 'Jorclack', 'Kellen', 'Namfoodle', 'Orryn', 'Roondar', 'Seebo', 'Wrenn', 'Zook'],
-                weiblich: ['Bimpnottin', 'Ellywick', 'Loopmottin', 'Bree', 'Callie', 'Ellyjoybell', 'Lilli', 'Marna', 'Roywyn', 'Shamil', 'Tana', 'Waywocket', 'Zanna', 'Nissa', 'Nyx', 'Pippa', 'Tink']
+                maennlich: ["Bimble","Zook","Nim","Boddyknock","Burgell","Dimble","Fonkin","Gimbl","Garrick","Gerbo","Jorclack","Kellen","Namfoodle","Orryn","Roondar","Seebo","Wrenn","Alston","Alvyn","Boddynock","Brocc","Eldon","Erky","Frug","Gimble","Glim","Jebeddo","Sindri","Warryn","Wigginton","Barnabus","Pip","Fizzle","Tink","Cog","Sprock","Gizmo","Bix","Pips","Snick","Trix","Wobble","Fizz","Zix","Nab","Dab","Knob"],
+                weiblich: ["Bimpnottin","Ellywick","Loopmottin","Bree","Callie","Ellyjoybell","Lilli","Marna","Roywyn","Shamil","Tana","Waywocket","Zanna","Nissa","Nyx","Pippa","Tink","Breena","Caramip","Carlin","Donella","Duvamil","Ella","Ellyjobell","Lorilla","Mardnab","Othella","Othellissa","Elly","Fizzip","Glimmer","Trixie","Minx","Pibble","Tassia","Lix","Zizi","Kiki","Mips","Pipka","Snicka","Zada","Bixi","Tissa","Flicka","Zilla","Miri","Nala","Rixi","Viki","Ziva"]
             },
-            nachnamen: ['Scheppen', 'Folkor', 'Garrick', 'Nackle', 'Timbers', 'Beren', 'Daergel', 'Murnig', 'Turen', 'Sparklegem', 'Stumbleduck', 'Copperpot', 'Fiddlefen', 'Pocketsmith', 'Whistlewind']
+            nachnamen: ["Scheppen","Folkor","Garrick","Nackle","Timbers","Beren","Daergel","Murnig","Turen","Sparklegem","Stumbleduck","Copperpot","Fiddlefen","Pocketsmith","Whistlewind","Murnyethra","Ningel","Raulnor","Auenpaff","Buntglas","Dampfhammer","Feengold","Funkelsang","Klunkerkram","Knallfrosch","Rumpelzahn","Schnickschnack","Schwingen","Tausendschön","Zahnrad","Zappelbein","Blitzsprung","Flimmerbach","Koboldstreich","Rätselstein","Tüftelwahn","Wuselwind"]
         },
         ork: {
             vornamen: {
-                maennlich: ['Dench', 'Feng', 'Gell', 'Henk', 'Holg', 'Imsh', 'Keth', 'Krusk', 'Mhurren', 'Ront', 'Shump', 'Thokk', 'Grommash', 'Kargath', 'Muzgob', 'Durok', 'Krag', 'Ugarth', 'Brak'],
-                weiblich: ['Baggi', 'Emen', 'Engwer', 'Kansif', 'Myev', 'Neega', 'Ova', 'Ovell', 'Sutha', 'Vola', 'Volen', 'Gorgona', 'Zulka', 'Borka', 'Shagra', 'Urzula', 'Kraka', 'Morda']
+                maennlich: ["Dench","Feng","Gell","Henk","Holg","Imsh","Keth","Krusk","Mhurren","Ront","Shump","Thokk","Grommash","Kargath","Muzgob","Durok","Krag","Ugarth","Brak","Urtar","Yurk","Azog","Bolg","Gorbag","Grishnak","Lurtz","Mauhur","Shagrat","Ugluk","Brokk","Durg","Garl","Ghaash","Karg","Korag","Mog","Mord","Nargh","Othrog","Rakk","Thraka","Urg","Vrak","Zog","Drul","Grom"],
+                weiblich: ["Baggi","Emen","Engwer","Kansif","Myev","Neega","Ova","Ovell","Sutha","Vola","Volen","Gorgona","Zulka","Borka","Shagra","Urzula","Kraka","Morda","Engong","Ovak","Shautha","Yevelda","Zagka","Azra","Bree","Dakka","Fira","Ghal","Horg","Isha","Jula","Kaga","Loka","Murog","Nala","Ora","Paca","Raka","Siga","Thara","Uka","Vraka","Wurog","Xana","Yaga","Zana","Bira","Droma","Gunda","Kula"]
             },
-            nachnamen: ['Schädelspalter', 'Blutauge', 'Eisenkiefer', 'Kriegsschrei', 'Knochenbrecher', 'Felsbeisser', 'Nachtreisser', 'Dunkelzorn', 'Blutfaust', 'Sturmbrecher', 'Schattenkralle']
+            nachnamen: ["Schädelspalter","Blutauge","Eisenkiefer","Kriegsschrei","Knochenbrecher","Felsbeisser","Nachtreisser","Dunkelzorn","Blutfaust","Sturmbrecher","Schattenkralle","Blutschwert","Grauschädel","Mordfaust","Schwarzherz","Sturmbringer","Todesspeer","Wildauge","Bluthuf","Donnerfaust","Felsenschwur","Geisterwolf","Klingenbeisser","Schmetteraxt","Schwarzkralle","Stahlfaust","Teufelszahn","Wolfsblut","Axtschwinge","Blutdurst","Drachentöter","Feuerauge","Grimmfaust","Kriegshorn","Plünderer","Rachezahn","Schädelsammler","Wutentbrannt"]
         },
         halbling: {
             vornamen: {
-                maennlich: ['Alton', 'Ander', 'Cade', 'Corrin', 'Eldon', 'Errich', 'Finnan', 'Garret', 'Lindal', 'Lyle', 'Merric', 'Milo', 'Osborn', 'Perrin', 'Reed', 'Roscoe', 'Wellby', 'Barnaby'],
-                weiblich: ['Andry', 'Bree', 'Callacta', 'Cora', 'Euphemia', 'Jillian', 'Lavinia', 'Lidda', 'Merla', 'Nedda', 'Paela', 'Portia', 'Seraphina', 'Shaena', 'Trym', 'Vani', 'Verna', 'Marigold']
+                maennlich: ["Alton","Ander","Cade","Corrin","Eldon","Errich","Finnan","Garret","Lindal","Lyle","Merric","Milo","Osborn","Perrin","Reed","Roscoe","Wellby","Barnaby","Dannad","Bilbo","Frodo","Samweis","Pippin","Merry","Tobias","Cuthbert","Giles","Jasper","Peregrine","Rollo","Wilbert","Bodo","Drogo","Fosco","Otho","Podo","Rico","Sargo","Tolman","Wilcome","Zeno","Toby"],
+                weiblich: ["Andry","Bree","Callacta","Cora","Euphemia","Jillian","Lavinia","Lidda","Merla","Nedda","Paela","Portia","Seraphina","Shaena","Trym","Vani","Verna","Marigold","Callie","Kithri","Rosie","Belladonna","Esmeralda","Lobelia","Pansy","Peony","Pervinca","Prudence","Ruby","Salvia","Tansy","Amaryllis","Daisy","Hyacinth","Poppy","Primrose","Rose","Violet","Clara","Lena","Mia"]
             },
-            nachnamen: ['Grünflanke', 'Schnellfuss', 'Trommelstock', 'Fassbinder', 'Bauchklang', 'Unterberg', 'Kleintal', 'Sonnenglanz', 'Gartenfreund', 'Teekessel', 'Auenwind', 'Beutlin']
+            nachnamen: ["Grünflanke","Schnellfuss","Trommelstock","Fassbinder","Bauchklang","Unterberg","Kleintal","Sonnenglanz","Gartenfreund","Teekessel","Auenwind","Beutlin","Brushgather","Goodbarrel","Greenbottle","Highhill","Hilltopper","Leagallow","Tealeaf","Thorngage","Tossingle","Underbough","Stolzfuß","Gamdschie","Brandibock","Tuk","Sandmann","Stolzhelm","Teetasse","Honigwein","Apfelkern","Blumenfeld","Heckenkriecher","Kleeblatt","Müßiggang","Pfeifenkraut","Schwanenfuß","Wiesenblume","Wintergrün","Zottelpelz"]
         }
     };
 
@@ -1965,34 +1980,34 @@
         return shuffled.slice(0, count);
     }
 
-    function generateNewFirstNames() {
+    function generateNewFirstNames(forceNew = true) {
         const race = document.getElementById('nameGenRaceSelect').value;
         const gender = document.getElementById('nameGenGenderSelect').value;
         const rData = NAME_DATABASE[race] || NAME_DATABASE.mensch;
         const vs = rData.vornamen[gender] || rData.vornamen.maennlich;
 
         displayedFirstNames = getRandomItems(vs, 5);
-        if (!displayedFirstNames.includes(currentFirstName)) {
+        if (forceNew || !displayedFirstNames.includes(currentFirstName)) {
             currentFirstName = displayedFirstNames[0];
         }
         renderNameLists();
     }
 
-    function generateNewLastNames() {
+    function generateNewLastNames(forceNew = true) {
         const race = document.getElementById('nameGenRaceSelect').value;
         const rData = NAME_DATABASE[race] || NAME_DATABASE.mensch;
         const ns = rData.nachnamen;
 
         displayedLastNames = getRandomItems(ns, 5);
-        if (!displayedLastNames.includes(currentLastName)) {
+        if (forceNew || !displayedLastNames.includes(currentLastName)) {
             currentLastName = displayedLastNames[0];
         }
         renderNameLists();
     }
 
     function fullNameGeneratorReset() {
-        generateNewFirstNames();
-        generateNewLastNames();
+        generateNewFirstNames(true);
+        generateNewLastNames(true);
     }
 
     function renderNameLists() {
@@ -2007,7 +2022,11 @@
                         <span class="name-radio-dot"></span>
                         <span class="text-xs font-semibold ${isSelected ? 'text-[#eacb67]' : 'text-gray-200'}">${fn}</span>
                     </div>
-                    <button onclick="event.stopPropagation(); copySingleText('${fn}')" title="Vorname kopieren" class="text-gray-500 hover:text-gold-400 p-1 text-xs">📋</button>
+                    <button onclick="event.stopPropagation(); copySingleText('${fn}')" title="Vorname kopieren" class="text-gray-500 hover:text-[#eacb67] p-1 transition-colors flex items-center justify-center">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        </svg>
+                    </button>
                 </div>
             `;
         }).join('');
@@ -2020,7 +2039,11 @@
                         <span class="name-radio-dot"></span>
                         <span class="text-xs font-semibold ${isSelected ? 'text-[#eacb67]' : 'text-gray-200'}">${ln}</span>
                     </div>
-                    <button onclick="event.stopPropagation(); copySingleText('${ln}')" title="Nachname kopieren" class="text-gray-500 hover:text-gold-400 p-1 text-xs">📋</button>
+                    <button onclick="event.stopPropagation(); copySingleText('${ln}')" title="Nachname kopieren" class="text-gray-500 hover:text-[#eacb67] p-1 transition-colors flex items-center justify-center">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        </svg>
+                    </button>
                 </div>
             `;
         }).join('');
