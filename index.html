@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sylvanus Spielleiter-Codex v15</title>
+    <title>Sylvanus Spielleiter-Codex v16</title>
 
     <!-- Google Fonts: Cinzel for Headings & Inter for Body -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -368,28 +368,40 @@
             box-shadow: 0 0 4px #ffffff;
         }
 
-        /* Formatierung für Statblock Merkmale, Aktionen, Bonus-Aktionen & Reaktionen (senkrechte Linien-Ausrichtung) */
+        /* Formatierung für Statblock Merkmale, Aktionen, Bonus-Aktionen & Reaktionen (dünner Border + mehrzeilige Überschriften) */
         .statblock-entry {
             display: flex;
             align-items: flex-start;
-            gap: 8px;
+            gap: 10px;
             font-size: 0.75rem; /* text-xs */
             line-height: 1.45;
-            padding: 2.5px 4px;
-            border-radius: 4px;
-            transition: background-color 0.15s ease;
+            padding: 5px 8px;
+            border-radius: 6px;
+            border: 1px solid rgba(27, 61, 50, 0.7); /* Feiner dunkler Border um jeden Eintrag */
+            background: rgba(8, 21, 17, 0.45);
+            transition: all 0.15s ease;
+            position: relative;
         }
         .statblock-entry:hover {
-            background: rgba(14, 33, 26, 0.65);
+            background: rgba(14, 33, 26, 0.75);
+            border-color: rgba(74, 104, 92, 0.85);
         }
+
+        /* Legendäre Fähigkeiten: auffällige hellblaue/Cyan Outline & Glow */
+        .statblock-entry.is-legendary {
+            border: 1.5px solid #22d3ee !important; /* cyan-400 */
+            box-shadow: 0 0 10px rgba(34, 211, 238, 0.35), inset 0 0 6px rgba(34, 211, 238, 0.1) !important;
+            background: rgba(8, 40, 48, 0.35) !important;
+        }
+
         .statblock-header-col {
             width: 140px;
             min-width: 140px;
             max-width: 140px;
             flex-shrink: 0;
             display: flex;
-            align-items: baseline;
-            overflow: hidden;
+            flex-direction: column;
+            gap: 2px;
         }
         @media (min-width: 640px) {
             .statblock-header-col {
@@ -398,26 +410,73 @@
                 max-width: 165px;
             }
         }
+        /* Kein Abschneiden mehr: Lange Überschriften laufen in der nächsten Zeile weiter */
         .statblock-header {
-            flex-shrink: 0;
             font-weight: 700;
             font-size: 0.75rem; /* text-xs */
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            line-height: 1.35;
+            white-space: normal !important;
+            word-break: break-word !important;
+            overflow-wrap: break-word !important;
         }
-        .statblock-dots {
-            flex-grow: 1;
-            border-bottom: 1px dotted currentColor;
-            opacity: 0.35;
-            margin: 0 4px 3px 6px;
-            min-width: 6px;
+        .legendary-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+            font-size: 0.6rem;
+            font-weight: 800;
+            letter-spacing: 0.4px;
+            color: #22d3ee;
+            text-transform: uppercase;
         }
         .statblock-body {
             flex: 1;
             min-width: 0;
             color: #e2e8f0; /* slate-200 */
             font-size: 0.75rem; /* text-xs */
+            line-height: 1.45;
+        }
+
+        /* Drag & Drop Styles für Aktionen in der Bearbeitungsmaske (Modal) */
+        .modal-drag-grip {
+            opacity: 0.45;
+            transition: opacity 0.15s ease;
+        }
+        .modal-drag-grip:hover {
+            opacity: 1;
+        }
+        .draggable-modal-action.drag-over-top {
+            border-top: 2px solid #d4af37 !important;
+        }
+        /* Legendäre Fähigkeiten in der Bearbeitungsmaske: hell-blaue/Cyan Outline */
+        .draggable-modal-action.is-legendary {
+            border: 1.5px solid #22d3ee !important;
+            box-shadow: 0 0 10px rgba(34, 211, 238, 0.4) !important;
+            background: rgba(8, 40, 48, 0.45) !important;
+        }
+        .btn-legendary-toggle {
+            padding: 2px 7px;
+            border-radius: 4px;
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            user-select: none;
+            white-space: nowrap;
+            border: 1px solid rgba(74, 104, 92, 0.5);
+            background: rgba(8, 21, 17, 0.8);
+            color: #94a3b8;
+        }
+        .btn-legendary-toggle:hover {
+            border-color: #22d3ee;
+            color: #22d3ee;
+        }
+        .btn-legendary-toggle.active {
+            background: rgba(6, 182, 212, 0.25) !important;
+            border-color: #22d3ee !important;
+            color: #22d3ee !important;
+            box-shadow: 0 0 8px rgba(34, 211, 238, 0.45);
         }
 
         /* Drag & Drop Styles für Aktionen ausschließlich in der Bearbeitungsmaske (Modal) */
@@ -2448,18 +2507,19 @@
                 <h4 class="text-[13px] font-bold text-[#eacb67] tracking-wider mb-2 border-b border-[#eacb67]/20 pb-0.5 flex items-center justify-between">
                     <span>Merkmale:</span>
                 </h4>
-                <div class="space-y-1 pl-0.5">
+                <div class="space-y-1.5">
                     ${m.traits.map(t => {
             const parts = t.split(':');
             const tName = parts.length > 1 ? parts[0] : 'Merkmal';
             const tDesc = parts.length > 1 ? parts.slice(1).join(':') : t;
+            const isLeg = Boolean(tName.toUpperCase().includes('LEGENDÄR') || tDesc.toUpperCase().includes('LEGENDÄR'));
             return `
-                    <div class="statblock-entry">
+                    <div class="statblock-entry ${isLeg ? 'is-legendary' : ''}">
                         <div class="statblock-header-col text-[#eacb67]">
                             <strong class="statblock-header">${formatStatName(tName)}</strong>
-                            <span class="statblock-dots"></span>
+                            ${isLeg ? '<span class="legendary-badge">⚡ Legendär</span>' : ''}
                         </div>
-                        <span class="statblock-body">${tDesc}</span>
+                        <div class="statblock-body">${tDesc}</div>
                     </div>`;
         }).join('')}
                 </div>
@@ -2470,16 +2530,18 @@
                 <h4 class="text-[13px] font-bold text-red-400 tracking-wider mb-2 border-b border-red-500/20 pb-0.5 flex items-center justify-between">
                     <span>Aktionen:</span>
                 </h4>
-                <div class="space-y-1 pl-0.5">
-                    ${m.actions.map(a => `
-                        <div class="statblock-entry">
+                <div class="space-y-1.5">
+                    ${m.actions.map(a => {
+            const isLeg = Boolean(a.legendary || (a.name && a.name.toUpperCase().includes('LEGENDÄR')));
+            return `
+                        <div class="statblock-entry ${isLeg ? 'is-legendary' : ''}">
                             <div class="statblock-header-col text-red-400">
                                 <strong class="statblock-header">${formatStatName(a.name)}</strong>
-                                <span class="statblock-dots"></span>
+                                ${isLeg ? '<span class="legendary-badge">⚡ Legendär</span>' : ''}
                             </div>
-                            <span class="statblock-body">${a.desc}</span>
-                        </div>
-                    `).join('')}
+                            <div class="statblock-body">${a.desc}</div>
+                        </div>`;
+        }).join('')}
                 </div>
             </div>` : '';
 
@@ -2488,16 +2550,18 @@
                 <h4 class="text-[13px] font-bold text-orange-400 tracking-wider mb-2 border-b border-orange-500/20 pb-0.5 flex items-center justify-between">
                     <span>Bonus-Aktionen:</span>
                 </h4>
-                <div class="space-y-1 pl-0.5">
-                    ${m.bonusActions.map(ba => `
-                        <div class="statblock-entry">
+                <div class="space-y-1.5">
+                    ${m.bonusActions.map(ba => {
+            const isLeg = Boolean(ba.legendary || (ba.name && ba.name.toUpperCase().includes('LEGENDÄR')));
+            return `
+                        <div class="statblock-entry ${isLeg ? 'is-legendary' : ''}">
                             <div class="statblock-header-col text-orange-400">
                                 <strong class="statblock-header">${formatStatName(ba.name)}</strong>
-                                <span class="statblock-dots"></span>
+                                ${isLeg ? '<span class="legendary-badge">⚡ Legendär</span>' : ''}
                             </div>
-                            <span class="statblock-body">${ba.desc}</span>
-                        </div>
-                    `).join('')}
+                            <div class="statblock-body">${ba.desc}</div>
+                        </div>`;
+        }).join('')}
                 </div>
             </div>` : '';
 
@@ -2506,16 +2570,18 @@
                 <h4 class="text-[13px] font-bold text-blue-400 tracking-wider mb-2 border-b border-blue-500/20 pb-0.5 flex items-center justify-between">
                     <span>Reaktionen:</span>
                 </h4>
-                <div class="space-y-1 pl-0.5">
-                    ${m.reactions.map(r => `
-                        <div class="statblock-entry">
+                <div class="space-y-1.5">
+                    ${m.reactions.map(r => {
+            const isLeg = Boolean(r.legendary || (r.name && r.name.toUpperCase().includes('LEGENDÄR')));
+            return `
+                        <div class="statblock-entry ${isLeg ? 'is-legendary' : ''}">
                             <div class="statblock-header-col text-blue-400">
                                 <strong class="statblock-header">${formatStatName(r.name)}</strong>
-                                <span class="statblock-dots"></span>
+                                ${isLeg ? '<span class="legendary-badge">⚡ Legendär</span>' : ''}
                             </div>
-                            <span class="statblock-body">${r.desc}</span>
-                        </div>
-                    `).join('')}
+                            <div class="statblock-body">${r.desc}</div>
+                        </div>`;
+        }).join('')}
                 </div>
             </div>` : '';
 
@@ -2634,13 +2700,15 @@
         }
     }
 
-    function addDynamicField(containerId, nameVal = '', descVal = '') {
+    function addDynamicField(containerId, nameVal = '', descVal = '', isLegendaryVal = false) {
         const container = document.getElementById(containerId);
         if (!container) return;
         const row = document.createElement('div');
-        row.className = 'draggable-modal-action flex gap-2 items-center group p-1 rounded bg-forest-950/40 border border-forest-800/40 transition-all';
+        const isLegendary = Boolean(isLegendaryVal || (nameVal && nameVal.toUpperCase().includes('LEGENDÄR')));
+        row.className = `draggable-modal-action flex flex-wrap sm:flex-nowrap gap-2 items-center group p-1.5 rounded bg-forest-950/40 border transition-all ${isLegendary ? 'is-legendary' : 'border-forest-800/40'}`;
         row.draggable = true;
         row.dataset.containerId = containerId;
+        row.dataset.legendary = isLegendary ? 'true' : 'false';
 
         const label = containerId === 'bonusActionsContainer' ? 'Bonus-Aktion' : (containerId === 'reactionsContainer' ? 'Reaktion' : 'Aktion');
         const colorClass = containerId === 'bonusActionsContainer' ? 'text-orange-400' : (containerId === 'reactionsContainer' ? 'text-blue-400' : 'text-red-400');
@@ -2648,10 +2716,22 @@
 
         row.innerHTML = `
             <span class="modal-drag-grip cursor-grab text-gray-500 hover:${colorClass} select-none text-base px-1 leading-none" title="${label} verschieben">⋮⋮</span>
-            <input type="text" placeholder="Name" value="${escapeAttr(nameVal)}" class="dyn-name w-1/3 bg-forest-950 border ${borderColor} text-xs rounded p-1.5 ${colorClass} font-semibold focus:outline-none focus:ring-1">
-            <input type="text" placeholder="Beschreibung" value="${escapeAttr(descVal)}" class="dyn-desc flex-1 bg-forest-950 border border-forest-700 text-xs rounded p-1.5 text-gray-100">
+            <input type="text" placeholder="Name" value="${escapeAttr(nameVal)}" class="dyn-name w-1/3 min-w-[120px] bg-forest-950 border ${borderColor} text-xs rounded p-1.5 ${colorClass} font-semibold focus:outline-none focus:ring-1">
+            <input type="text" placeholder="Beschreibung" value="${escapeAttr(descVal)}" class="dyn-desc flex-1 min-w-[160px] bg-forest-950 border border-forest-700 text-xs rounded p-1.5 text-gray-100">
+            <button type="button" class="btn-legendary-toggle ${isLegendary ? 'active' : ''}" title="Als legendäre Fähigkeit hervorheben (hell-blaue/Cyan Outline)">⚡ Legendär</button>
             <button type="button" class="dyn-delete-btn text-red-400 hover:text-red-300 px-2 text-xs transition-colors" title="${label} entfernen">✕</button>
         `;
+
+        const legBtn = row.querySelector('.btn-legendary-toggle');
+        legBtn.onclick = () => {
+            const active = legBtn.classList.toggle('active');
+            row.dataset.legendary = active ? 'true' : 'false';
+            if (active) {
+                row.classList.add('is-legendary');
+            } else {
+                row.classList.remove('is-legendary');
+            }
+        };
 
         const deleteBtn = row.querySelector('.dyn-delete-btn');
         deleteBtn.onclick = () => {
@@ -2968,13 +3048,22 @@
         document.getElementById('monsterCategorySelect').value = m ? (m.category || 'active') : 'active';
 
         document.getElementById('actionsContainer').innerHTML = '';
-        if (m && m.actions) m.actions.forEach(a => addDynamicField('actionsContainer', a.name, a.desc));
+        if (m && m.actions) m.actions.forEach(a => {
+            const isLeg = Boolean(a.legendary || (a.name && a.name.toUpperCase().includes('LEGENDÄR')));
+            addDynamicField('actionsContainer', a.name, a.desc, isLeg);
+        });
 
         document.getElementById('bonusActionsContainer').innerHTML = '';
-        if (m && m.bonusActions) m.bonusActions.forEach(ba => addDynamicField('bonusActionsContainer', ba.name, ba.desc));
+        if (m && m.bonusActions) m.bonusActions.forEach(ba => {
+            const isLeg = Boolean(ba.legendary || (ba.name && ba.name.toUpperCase().includes('LEGENDÄR')));
+            addDynamicField('bonusActionsContainer', ba.name, ba.desc, isLeg);
+        });
 
         document.getElementById('reactionsContainer').innerHTML = '';
-        if (m && m.reactions) m.reactions.forEach(r => addDynamicField('reactionsContainer', r.name, r.desc));
+        if (m && m.reactions) m.reactions.forEach(r => {
+            const isLeg = Boolean(r.legendary || (r.name && r.name.toUpperCase().includes('LEGENDÄR')));
+            addDynamicField('reactionsContainer', r.name, r.desc, isLeg);
+        });
 
         const outlines = m ? (m.outlines || []) : [];
         document.querySelectorAll('#outlineColorCheckboxes input').forEach(chk => {
@@ -2997,21 +3086,24 @@
         document.querySelectorAll('#actionsContainer > div').forEach(row => {
             const name = row.querySelector('.dyn-name').value.trim();
             const desc = row.querySelector('.dyn-desc').value.trim();
-            if (name || desc) actionsArr.push({ name: name || 'Aktion', desc });
+            const isLeg = row.dataset.legendary === 'true';
+            if (name || desc) actionsArr.push({ name: name || 'Aktion', desc, legendary: isLeg });
         });
 
         const bonusActionsArr = [];
         document.querySelectorAll('#bonusActionsContainer > div').forEach(row => {
             const name = row.querySelector('.dyn-name').value.trim();
             const desc = row.querySelector('.dyn-desc').value.trim();
-            if (name || desc) bonusActionsArr.push({ name: name || 'Bonus-Aktion', desc });
+            const isLeg = row.dataset.legendary === 'true';
+            if (name || desc) bonusActionsArr.push({ name: name || 'Bonus-Aktion', desc, legendary: isLeg });
         });
 
         const reactionsArr = [];
         document.querySelectorAll('#reactionsContainer > div').forEach(row => {
             const name = row.querySelector('.dyn-name').value.trim();
             const desc = row.querySelector('.dyn-desc').value.trim();
-            if (name || desc) reactionsArr.push({ name: name || 'Reaktion', desc });
+            const isLeg = row.dataset.legendary === 'true';
+            if (name || desc) reactionsArr.push({ name: name || 'Reaktion', desc, legendary: isLeg });
         });
 
         const monsterObj = {
