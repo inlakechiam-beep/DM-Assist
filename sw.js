@@ -1,5 +1,5 @@
 // Sylvanus Spielleiter-Codex - Service Worker (PWA Offline Support)
-const CACHE_NAME = 'sylvanus-codex-v21';
+const CACHE_NAME = 'sylvanus-codex-v21.1';
 
 const STATIC_ASSETS = [
     './',
