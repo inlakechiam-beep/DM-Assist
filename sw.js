@@ -1,9 +1,10 @@
 // Sylvanus Spielleiter-Codex - Service Worker (PWA Offline Support)
-const CACHE_NAME = 'sylvanus-codex-v22.0';
+const CACHE_NAME = 'sylvanus-codex-v22.1';
 
 const STATIC_ASSETS = [
     './',
     './index.html',
+    './DM-assist_22.html',
     './manifest.webmanifest',
     './icons/icon-192.png',
     './icons/icon-512.png',
@@ -37,7 +38,7 @@ self.addEventListener('activate', (event) => {
     );
 });
 
-// Fetch interceptor with Cache-First strategy for assets & Stale-While-Revalidate for CDNs
+// Fetch interceptor: Network-First for HTML (always fresh), Cache-First for static assets
 self.addEventListener('fetch', (event) => {
     const request = event.request;
     const url = new URL(request.url);
@@ -50,16 +51,31 @@ self.addEventListener('fetch', (event) => {
         return;
     }
 
+    // 1. Network-First for HTML navigation / document requests (guarantees latest release when online)
+    const isHtml = request.mode === 'navigate' || (request.headers.get('accept') && request.headers.get('accept').includes('text/html'));
+    if (isHtml) {
+        event.respondWith(
+            fetch(request).then((networkResponse) => {
+                if (networkResponse && networkResponse.status === 200) {
+                    const clone = networkResponse.clone();
+                    caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+                }
+                return networkResponse;
+            }).catch(() => {
+                return caches.match(request).then((cached) => cached || caches.match('./DM-assist_22.html') || caches.match('./index.html'));
+            })
+        );
+        return;
+    }
+
+    // 2. Cache-First with Network fallback for static assets (icons, fonts, scripts)
     event.respondWith(
         caches.match(request).then((cachedResponse) => {
             if (cachedResponse) {
-                // Return cached asset immediately
                 return cachedResponse;
             }
 
-            // Otherwise fetch from network and dynamically cache
             return fetch(request).then((networkResponse) => {
-                // Only cache successful or opaque (cross-origin CDN) responses
                 if (networkResponse && (networkResponse.status === 200 || networkResponse.type === 'opaque')) {
                     const responseClone = networkResponse.clone();
                     caches.open(CACHE_NAME).then((cache) => {
@@ -68,11 +84,7 @@ self.addEventListener('fetch', (event) => {
                 }
                 return networkResponse;
             }).catch((err) => {
-                console.warn('[SW] Fetch failed offline:', request.url, err);
-                // If offline and requesting an HTML document, return index.html
-                if (request.headers.get('accept') && request.headers.get('accept').includes('text/html')) {
-                    return caches.match('./index.html');
-                }
+                console.warn('[SW] Asset fetch failed offline:', request.url, err);
             });
         })
     );
