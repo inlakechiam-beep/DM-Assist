@@ -1943,7 +1943,8 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
 
     function loadState() {
         try {
-            let saved = localStorage.getItem('sylvanus_codex_data_v22');
+            let saved = localStorage.getItem('sylvanus_codex_data_v23');
+            if (!saved) saved = localStorage.getItem('sylvanus_codex_data_v22');
             if (!saved) saved = localStorage.getItem('sylvanus_codex_data_v21');
             if (!saved) saved = localStorage.getItem('sylvanus_codex_data_v20');
             if (!saved) saved = localStorage.getItem('sylvanus_codex_data_v19');
@@ -2005,6 +2006,7 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
     function saveStateLocally() {
         try {
             const serialized = JSON.stringify(state);
+            try { localStorage.setItem('sylvanus_codex_data_v23', serialized); } catch (e) {}
             try { localStorage.setItem('sylvanus_codex_data_v22', serialized); } catch (e) {}
             try { localStorage.setItem('sylvanus_codex_data_v21', serialized); } catch (e) {}
             try { localStorage.setItem('sylvanus_codex_data_v20', serialized); } catch (e) {}
@@ -3805,6 +3807,7 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
             state.activeId = state.combatants.length > 0 ? state.combatants[0].id : null;
         }
         saveState();
+        queueSyncPush(true);
         renderInitiativeTab();
     }
     function setActive(id) { state.activeId = id; saveState(); renderInitiativeTab(); }
@@ -3927,6 +3930,7 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
             state.combatants = [];
             state.activeId = null;
             saveState();
+            queueSyncPush(true);
             renderInitiativeTab();
         }
     }
@@ -4785,6 +4789,8 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
     }
 
     // 3. Sync Configuration & State
+    let userHasMadeEdits = false;
+
     let syncConfig = {
         enabled: false,
         supabaseUrl: '',
@@ -4801,6 +4807,7 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
         isOnline: navigator.onLine,
         isSyncing: false,
         hasPendingUpload: false,
+        lastError: null,
         debounceTimer: null,
         pollInterval: null
     };
@@ -4815,7 +4822,9 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
                 syncConfig.deviceId = 'dev_' + Math.random().toString(36).substring(2, 9);
                 saveSyncConfig();
             }
-            syncRuntime.hasPendingUpload = !!syncConfig.hasPendingChanges;
+            // Beim Start niemals alte Upload-Flags übernehmen!
+            syncRuntime.hasPendingUpload = false;
+            syncConfig.hasPendingChanges = false;
         } catch (e) {}
     }
 
@@ -4840,7 +4849,7 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
                 : 'Noch nie';
         }
         if (modalPending) {
-            modalPending.textContent = syncRuntime.hasPendingUpload ? '1 Änderung ausstehend' : '0';
+            modalPending.textContent = (userHasMadeEdits || syncRuntime.hasPendingUpload) ? '1 Änderung ausstehend' : '0';
         }
 
         if (!syncConfig.enabled || !syncConfig.supabaseUrl || !syncConfig.campaignId) {
@@ -4852,8 +4861,12 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
 
         if (!isOnline) {
             if (dot) dot.className = 'w-2.5 h-2.5 rounded-full bg-amber-400';
-            if (text) text.textContent = syncRuntime.hasPendingUpload ? 'Offline (Ausstehend)' : 'Offline (Bereit)';
+            if (text) text.textContent = (userHasMadeEdits || syncRuntime.hasPendingUpload) ? 'Offline (Ausstehend)' : 'Offline (Bereit)';
             if (modalStatus) modalStatus.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-400"></span> Offline (Lokal gesichert)';
+        } else if (syncRuntime.lastError) {
+            if (dot) dot.className = 'w-2.5 h-2.5 rounded-full bg-red-500';
+            if (text) text.textContent = 'Sync: Fehler!';
+            if (modalStatus) modalStatus.innerHTML = `<span class="w-2 h-2 rounded-full bg-red-500"></span> Fehler: ${syncRuntime.lastError}`;
         } else if (syncRuntime.isSyncing) {
             if (dot) dot.className = 'w-2.5 h-2.5 rounded-full bg-blue-400 animate-pulse';
             if (text) text.textContent = 'Sync: Abgleich...';
@@ -4894,11 +4907,11 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
         syncConfig.supabaseUrl = url;
         syncConfig.supabaseKey = key;
         syncConfig.enabled = true;
-        // Bei Neukonfiguration: Setze Version zurück, damit Server-Stand Vorrang hat
         syncConfig.lastSyncedVersion = 0;
         syncConfig.lastSyncTime = null;
         syncConfig.hasPendingChanges = false;
         syncRuntime.hasPendingUpload = false;
+        userHasMadeEdits = false;
         saveSyncConfig();
         updateSyncUI();
         showToast('Sync-Einstellungen gespeichert! Verbinde mit Kampagne...', 'info');
@@ -4909,6 +4922,8 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
         syncConfig.enabled = false;
         syncConfig.hasPendingChanges = false;
         syncRuntime.hasPendingUpload = false;
+        userHasMadeEdits = false;
+        syncRuntime.lastError = null;
         saveSyncConfig();
         updateSyncUI();
         showToast('Cloud-Synchronisation deaktiviert (Lokaler Modus aktiv).', 'info');
@@ -4922,7 +4937,7 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
         syncWithCloud(true);
     }
 
-    // 4. Server-Push Helper Routine
+    // 4. Server-Push Helper Routine mit detailreicher Fehleranalyse
     async function pushStateToCloud(version) {
         const upsertEndpoint = `${syncConfig.supabaseUrl}/rest/v1/campaign_states?on_conflict=campaign_id`;
         const nowIso = new Date().toISOString();
@@ -4930,7 +4945,7 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
             'apikey': syncConfig.supabaseKey,
             'Authorization': `Bearer ${syncConfig.supabaseKey}`,
             'Content-Type': 'application/json',
-            'Prefer': 'resolution=merge-duplicates'
+            'Prefer': 'resolution=merge-duplicates,return=representation'
         };
 
         const pushPayload = {
@@ -4948,87 +4963,16 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
         });
 
         if (!pushRes.ok) {
-            throw new Error(`Push fehlgeschlagen: ${pushRes.status} ${pushRes.statusText}`);
+            let detail = '';
+            try {
+                const errData = await pushRes.json();
+                detail = errData.message || errData.hint || errData.details || '';
+            } catch (e) {}
+            throw new Error(`HTTP ${pushRes.status} ${pushRes.statusText}${detail ? ': ' + detail : ''}`);
         }
     }
 
-    // 5. Intelligente Konfliktzusammenführung (Kein Wiederauferstehen gelöschter Einträge)
-    function mergeStateWithRemote(remote) {
-        if (!remote || typeof remote !== 'object') return;
-
-        // 1. Gelöschte IDs von beiden Seiten zusammenführen
-        if (!state.deletedIds) state.deletedIds = {};
-        const rDel = remote.deletedIds || {};
-        const types = ['combatants', 'checklist', 'secrets', 'npcs', 'monsters', 'nodes', 'locations'];
-        types.forEach(t => {
-            const localList = Array.isArray(state.deletedIds[t]) ? state.deletedIds[t] : [];
-            const remoteList = Array.isArray(rDel[t]) ? rDel[t] : [];
-            state.deletedIds[t] = [...new Set([...localList, ...remoteList])].slice(-60);
-        });
-
-        // 2. Initiative: Alle gelöschten Gegner entfernen, eventuell neu erstellte von remote ergänzen
-        const delCombatants = state.deletedIds.combatants || [];
-        state.combatants = (state.combatants || []).filter(c => !delCombatants.includes(c.id));
-        if (Array.isArray(remote.combatants)) {
-            remote.combatants.forEach(rc => {
-                if (!delCombatants.includes(rc.id) && !state.combatants.some(c => c.id === rc.id)) {
-                    state.combatants.push(normalizeCombatant(rc));
-                }
-            });
-            sortCombatants();
-        }
-
-        // 3. Checklist
-        const delCheck = state.deletedIds.checklist || [];
-        state.checklist = (state.checklist || []).filter(item => !delCheck.includes(item.id));
-        if (Array.isArray(remote.checklist)) {
-            remote.checklist.forEach(ritem => {
-                if (!delCheck.includes(ritem.id) && !state.checklist.some(item => item.id === ritem.id)) {
-                    state.checklist.push(normalizeChecklistItem(ritem));
-                }
-            });
-        }
-
-        // 4. Geheimnisse
-        const delSecrets = state.deletedIds.secrets || [];
-        state.secrets = (state.secrets || []).filter(s => !delSecrets.includes(s.id));
-        if (Array.isArray(remote.secrets)) {
-            remote.secrets.forEach(rs => {
-                if (!delSecrets.includes(rs.id) && !state.secrets.some(s => s.id === rs.id)) {
-                    state.secrets.push(normalizeSecret(rs));
-                }
-            });
-        }
-
-        // 5. NPCs
-        const delNpcs = state.deletedIds.npcs || [];
-        state.npcs = (state.npcs || []).filter(n => !delNpcs.includes(n.id));
-        if (Array.isArray(remote.npcs)) {
-            remote.npcs.forEach(rn => {
-                if (!delNpcs.includes(rn.id) && !state.npcs.some(n => n.id === rn.id)) {
-                    state.npcs.push(normalizeNpc(rn));
-                }
-            });
-        }
-
-        // 6. Monster
-        const delMonsters = state.deletedIds.monsters || [];
-        state.monsters = (state.monsters || []).filter(m => !delMonsters.includes(m.id));
-        if (Array.isArray(remote.monsters)) {
-            remote.monsters.forEach(rm => {
-                if (!delMonsters.includes(rm.id) && !state.monsters.some(m => m.id === rm.id)) {
-                    state.monsters.push(normalizeMonster(rm));
-                }
-            });
-        }
-
-        // 7. Aktive Auswahl validieren
-        if (state.activeId && !state.combatants.some(c => c.id === state.activeId)) {
-            state.activeId = state.combatants.length > 0 ? state.combatants[0].id : null;
-        }
-    }
-
-    // 6. Exakte Übernahme des Remote-Zustands (inklusive aller Löschungen)
+    // 5. Exakte Übernahme des Remote-Zustands (Löschungen bleiben dauerhaft erhalten)
     function adoptRemoteState(remote) {
         if (!remote || typeof remote !== 'object') return;
 
@@ -5055,7 +4999,7 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
                 .filter(item => !delChecklist.includes(item.id));
         }
 
-        // 4. Initiative Tracker (gelöschte Gegner bleiben dauerhaft gelöscht)
+        // 4. Initiative Tracker (gelöschte Gegner bleiben dauerhaft gelöscht!)
         if (Array.isArray(remote.combatants)) {
             state.combatants = remote.combatants
                 .map(normalizeCombatant)
@@ -5104,7 +5048,7 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
         }
     }
 
-    // 7. Core Bidirectional Sync Routine (Fetch First, Pull First on Startup)
+    // 6. Core Sync Routine: Fetch First, niemals ungefragter Push beim Öffnen
     async function syncWithCloud(isManual = false) {
         if (!syncConfig.enabled || !syncConfig.supabaseUrl || !syncConfig.campaignId) return;
         if (!navigator.onLine) {
@@ -5127,77 +5071,86 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
             // Immer ZUERST aktuellen Serverstand abrufen
             const res = await fetch(endpoint, { method: 'GET', headers: headers });
             if (!res.ok) {
-                throw new Error(`Server-Fehler: ${res.status} ${res.statusText}`);
+                let detail = '';
+                try {
+                    const errData = await res.json();
+                    detail = errData.message || errData.hint || '';
+                } catch(e) {}
+                throw new Error(`Server-Abfrage fehlgeschlagen (HTTP ${res.status}): ${detail || res.statusText}`);
             }
+
             const data = await res.json();
             const remoteEntry = Array.isArray(data) && data.length > 0 ? data[0] : null;
 
-            const remoteVersion = remoteEntry ? (Number(remoteEntry.version) || (remoteEntry.updated_at ? new Date(remoteEntry.updated_at).getTime() : 0)) : 0;
-            const localVersion = Number(syncConfig.lastSyncedVersion) || (syncConfig.lastSyncTime ? new Date(syncConfig.lastSyncTime).getTime() : 0);
+            const remoteVersion = remoteEntry ? (Number(remoteEntry.version) || 0) : 0;
+            const localVersion = Number(syncConfig.lastSyncedVersion) || 0;
 
-            // FALL 1: Server hat noch keine Daten für diese Kampagne -> Initialer Push
+            // FALL 1: Server hat noch überhaupt keine Kampagnendaten -> Initialer Push
             if (!remoteEntry) {
-                const initVersion = Math.max(Date.now(), 1);
+                const initVersion = 1;
                 await pushStateToCloud(initVersion);
+                userHasMadeEdits = false;
                 syncRuntime.hasPendingUpload = false;
                 syncConfig.hasPendingChanges = false;
                 syncConfig.lastSyncedVersion = initVersion;
                 syncConfig.lastSyncTime = new Date().toISOString();
+                syncRuntime.lastError = null;
                 saveSyncConfig();
                 if (isManual) showToast('Initiale Kampagne in die Cloud hochgeladen!', 'success');
                 return;
             }
 
-            // FALL 2: Dieses Gerät hat KEINE ungesendeten Änderungen (z.B. Seitenaufruf, Polling, Tab-Wechsel)
-            if (!syncRuntime.hasPendingUpload) {
-                const isNewer = remoteVersion > localVersion || !syncConfig.lastSyncedVersion || (remoteEntry.updated_at && remoteEntry.updated_at !== syncConfig.lastSyncTime);
-                if (isNewer) {
-                    console.log(`[Sync] Remote-Stand (${remoteVersion}) übernommen (lokal war: ${localVersion})`);
+            // FALL 2: Dieses Gerät hat KEINE aktiven Änderungen vorgenommen (z.B. Seitenaufruf, Polling, Tab-Wechsel)
+            // WICHTIG: Wenn der Benutzer in dieser Sitzung nichts bearbeitet hat, wird NIEMALS hochgeladen!
+            if (!userHasMadeEdits && !syncRuntime.hasPendingUpload) {
+                const needsAdoption = remoteVersion !== localVersion || !syncConfig.lastSyncedVersion || isManual;
+                if (needsAdoption) {
+                    console.log(`[Sync] Cloud-Stand übernommen (Cloud-Version: ${remoteVersion}, Lokale Version war: ${localVersion})`);
                     adoptRemoteState(remoteEntry.payload);
                     saveStateLocally();
                     renderAllTabs();
                     syncConfig.lastSyncedVersion = remoteVersion;
                     syncConfig.lastSyncTime = remoteEntry.updated_at;
+                    syncRuntime.lastError = null;
                     saveSyncConfig();
-                    showToast('☁️ Aktualisierung vom anderen Gerät übernommen!', 'success');
+                    showToast('☁️ Aktueller Stand aus der Cloud übernommen!', 'success');
                 } else if (isManual) {
                     showToast('✓ Bereits auf dem neuesten Stand!', 'info');
                 }
                 return;
             }
 
-            // FALL 3: Benutzer hat lokale Änderungen vorgenommen (hasPendingUpload === true)
-            // Prüfen auf eventuellen Versionskonflikt (Server wurde zwischenzeitlich von anderem Gerät aktualisiert)
-            if (remoteVersion > localVersion) {
-                console.warn('[Sync] Gleichzeitige Änderungen erkannt! Führe Zusammenführung durch...');
-                mergeStateWithRemote(remoteEntry.payload);
-                saveStateLocally();
-                renderAllTabs();
-            }
-
-            // Neuen Stand mit inkrementierter Versionsnummer hochladen
-            const nextVersion = Math.max(Date.now(), remoteVersion + 1, localVersion + 1);
+            // FALL 3: Benutzer hat auf DIESEM Gerät aktiv Änderungen vorgenommen (z.B. Karte gelöscht, TP geändert)
+            // Version strikt monoton inkrementieren (Lamport Counter: 1, 2, 3...)
+            const nextVersion = Math.max(remoteVersion, localVersion) + 1;
             await pushStateToCloud(nextVersion);
+
+            userHasMadeEdits = false;
             syncRuntime.hasPendingUpload = false;
             syncConfig.hasPendingChanges = false;
             syncConfig.lastSyncedVersion = nextVersion;
             syncConfig.lastSyncTime = new Date().toISOString();
+            syncRuntime.lastError = null;
             saveSyncConfig();
+
             if (isManual) {
                 showToast('Änderungen erfolgreich in die Cloud übertragen!', 'success');
             }
 
         } catch (err) {
             console.error('[Sync-Fehler]', err);
-            if (isManual) showToast('Sync-Fehler: ' + (err.message || 'Verbindung fehlgeschlagen'), 'error');
+            syncRuntime.lastError = err.message || 'Verbindung fehlgeschlagen';
+            // Fehler immer sichtbar als Toast melden, damit Konfigurations- oder RLS-Fehler sofort erkennbar sind!
+            showToast('⚠️ Cloud-Sync Fehler: ' + syncRuntime.lastError, 'error');
         } finally {
             syncRuntime.isSyncing = false;
             updateSyncUI();
         }
     }
 
-    // 8. Debounce für Push bei Benutzeraktionen (500ms)
+    // 7. Debounce für Push bei Benutzeraktionen (sofort bei Löschung, 500ms bei Eingaben)
     function queueSyncPush(immediate = false) {
+        userHasMadeEdits = true;
         syncRuntime.hasPendingUpload = true;
         syncConfig.hasPendingChanges = true;
         saveSyncConfig();
@@ -5211,10 +5164,11 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
         }, delay);
     }
 
-    // 9. Netzwerk- und Lebenszyklus-Listener
+    // 8. Netzwerk- und Lebenszyklus-Listener
     window.addEventListener('online', () => {
         console.log('[Netzwerk] Online!');
         syncRuntime.isOnline = true;
+        syncRuntime.lastError = null;
         updateSyncUI();
         showToast('🌐 Internetverbindung hergestellt! Synchronisiere...', 'info');
         if (syncConfig.enabled) {
@@ -5229,7 +5183,6 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
         showToast('✈️ Offline-Modus: Alle Daten werden sicher auf dem Gerät gespeichert.', 'info');
     });
 
-    // Schnelle Synchronisation bei Tab-Wechsel & Bildschirm-Entsperrung
     document.addEventListener('visibilitychange', () => {
         if (!document.hidden && navigator.onLine && syncConfig.enabled && !syncRuntime.isSyncing) {
             syncWithCloud(false);
@@ -5242,15 +5195,15 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
         }
     });
 
-    // Auto-polling alle 12 Sekunden bei aktiver Nutzung
+    // Auto-polling alle 10 Sekunden bei aktiver Nutzung
     setInterval(() => {
         if (!document.hidden && navigator.onLine && syncConfig.enabled && !syncRuntime.isSyncing) {
             syncWithCloud(false);
         }
-    }, 12000);
+    }, 10000);
 
     window.onload = function() {
-        // Sicherstellen, dass beim Start KEIN unberechtigter Push ansteht
+        userHasMadeEdits = false;
         syncRuntime.hasPendingUpload = false;
 
         loadState();
@@ -5274,7 +5227,11 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
         renderMonstersTab();
         renderNodesTab();
         renderInitiativeTab();
+
         loadSyncConfig();
+        userHasMadeEdits = false;
+        syncRuntime.hasPendingUpload = false;
+        syncConfig.hasPendingChanges = false;
         updateSyncUI();
 
         // Beim Start IMMER zuerst Pull von Supabase durchführen!
