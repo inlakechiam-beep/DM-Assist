@@ -1,5 +1,5 @@
 // Sylvanus Spielleiter-Codex - Service Worker (PWA Offline Support)
-const CACHE_NAME = 'sylvanus-codex-v23.0';
+const CACHE_NAME = 'sylvanus-codex-v23.2';
 
 const STATIC_ASSETS = [
     './',
@@ -12,13 +12,21 @@ const STATIC_ASSETS = [
     './icons/icon.svg'
 ];
 
-// Pre-cache core shell during install
+// Pre-cache core shell during install (bypassing browser HTTP disk cache)
 self.addEventListener('install', (event) => {
+    self.skipWaiting(); // Sofort aktiv werden, nicht im Hintergrund warten
     event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
-            console.log('[SW] Pre-caching static assets');
-            return cache.addAll(STATIC_ASSETS);
-        }).then(() => self.skipWaiting())
+            console.log('[SW] Pre-caching static assets with cache: reload');
+            const cachePromises = STATIC_ASSETS.map((url) => {
+                return fetch(new Request(url, { cache: 'reload' }))
+                    .then((response) => {
+                        if (response.ok) return cache.put(url, response);
+                    })
+                    .catch((err) => console.warn('[SW] Pre-cache skip:', url, err));
+            });
+            return Promise.all(cachePromises);
+        })
     );
 });
 
@@ -51,11 +59,11 @@ self.addEventListener('fetch', (event) => {
         return;
     }
 
-    // 1. Network-First for HTML navigation / document requests (guarantees latest release when online)
+    // 1. Network-First für HTML-Seiten: Immer frische Version vom Server holen, Disk-Cache umgehen!
     const isHtml = request.mode === 'navigate' || (request.headers.get('accept') && request.headers.get('accept').includes('text/html'));
     if (isHtml) {
         event.respondWith(
-            fetch(request).then((networkResponse) => {
+            fetch(new Request(request.url, { cache: 'reload' })).then((networkResponse) => {
                 if (networkResponse && networkResponse.status === 200) {
                     const clone = networkResponse.clone();
                     caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
@@ -88,3 +96,4 @@ self.addEventListener('fetch', (event) => {
             });
         })
     );
+});
