@@ -3,6 +3,7 @@ const CACHE_NAME = 'sylvanus-codex-v23.0';
 
 const STATIC_ASSETS = [
     './',
+    './index.html',
     './DM-assist_23.html',
     './manifest.webmanifest',
     './icons/icon-192.png',
@@ -61,7 +62,7 @@ self.addEventListener('fetch', (event) => {
                 }
                 return networkResponse;
             }).catch(() => {
-                return caches.match(request).then((cached) => cached || caches.match('./DM-assist_23.html') || caches.match('./'));
+                return caches.match(request).then((cached) => cached || caches.match('./DM-assist_23.html') || caches.match('./index.html') || caches.match('./'));
             })
         );
         return;
@@ -87,4 +88,3 @@ self.addEventListener('fetch', (event) => {
             });
         })
     );
-});
