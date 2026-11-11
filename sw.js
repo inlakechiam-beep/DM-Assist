@@ -1,10 +1,9 @@
 // Sylvanus Spielleiter-Codex - Service Worker (PWA Offline Support)
-const CACHE_NAME = 'sylvanus-codex-v22.1';
+const CACHE_NAME = 'sylvanus-codex-v23.0';
 
 const STATIC_ASSETS = [
     './',
-    './index.html',
-    './DM-assist_22.html',
+    './DM-assist_23.html',
     './manifest.webmanifest',
     './icons/icon-192.png',
     './icons/icon-512.png',
@@ -62,7 +61,7 @@ self.addEventListener('fetch', (event) => {
                 }
                 return networkResponse;
             }).catch(() => {
-                return caches.match(request).then((cached) => cached || caches.match('./DM-assist_22.html') || caches.match('./index.html'));
+                return caches.match(request).then((cached) => cached || caches.match('./DM-assist_23.html') || caches.match('./'));
             })
         );
         return;
