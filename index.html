@@ -1988,6 +1988,19 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
         } catch (e) { console.error("Fehler beim Laden:", e); }
     }
 
+
+    function trackDeletion(type, id) {
+        if (!id) return;
+        if (!state.deletedIds) state.deletedIds = {};
+        if (!state.deletedIds[type]) state.deletedIds[type] = [];
+        if (!state.deletedIds[type].includes(id)) {
+            state.deletedIds[type].push(id);
+            if (state.deletedIds[type].length > 60) {
+                state.deletedIds[type].shift();
+            }
+        }
+    }
+
     function saveStateLocally() {
         try {
             const serialized = JSON.stringify(state);
@@ -2291,6 +2304,7 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
                 }
             };
             row.querySelector('.delete-item').onclick = () => {
+                trackDeletion('checklist', item.id);
                 state.checklist = state.checklist.filter(c => c.id !== item.id);
                 saveState();
                 renderAuftaktTab();
@@ -2336,7 +2350,7 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
             card.className = `p-4 rounded-xl border shadow-md flex flex-col justify-between ${s.status === 'revealed' ? 'bg-forest-950/40 border-forest-800 text-gray-400' : 'bg-forest-900/80 border-forest-700/60 text-gray-100'}`;
             card.innerHTML = `<div><span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-gold-500/20 text-gold-400">${s.tag}</span><p class="text-xs mt-2 ${s.status==='revealed'?'line-through':''}">${s.text}</p></div><div class="flex justify-end gap-2 pt-2"><button class="text-xs text-gold-300 px-2 py-1 bg-gold-500/20 rounded">${s.status==='revealed'?'Verbergen':'Enthüllen'}</button><button class="text-xs text-red-400">🗑️</button></div>`;
             card.querySelector('button').onclick = () => { s.status = s.status==='revealed'?'hidden':'revealed'; saveState(); renderSecretsTab(); };
-            card.querySelectorAll('button')[1].onclick = () => { state.secrets = state.secrets.filter(x => x.id !== s.id); saveState(); renderSecretsTab(); };
+            card.querySelectorAll('button')[1].onclick = () => { trackDeletion('secrets', s.id); state.secrets = state.secrets.filter(x => x.id !== s.id); saveState(); renderSecretsTab(); };
             grid.appendChild(card);
         });
     }
@@ -2612,6 +2626,7 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
                 card.querySelector('.delete-btn').onclick = (e) => {
                     e.stopPropagation();
                     if (confirm(`Möchtest du den NPC "${n.name}" wirklich aus der Bibliothek löschen?`)) {
+                        trackDeletion('npcs', n.id);
                         state.npcs = state.npcs.filter(x => x.id !== n.id);
                         expandedNpcIds.delete(n.id);
                         saveState();
@@ -2693,6 +2708,7 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
                 card.querySelector('.delete-btn').onclick = (e) => {
                     e.stopPropagation();
                     if (confirm(`Möchtest du den NPC "${n.name}" wirklich löschen?`)) {
+                        trackDeletion('npcs', n.id);
                         state.npcs = state.npcs.filter(x => x.id !== n.id);
                         expandedNpcIds.delete(n.id);
                         saveState();
@@ -3274,6 +3290,7 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
                 card.querySelector('.delete-btn').onclick = (e) => {
                     e.stopPropagation();
                     if (confirm(`Möchtest du das Monster "${m.name}" wirklich aus der Bibliothek löschen?`)) {
+                        trackDeletion('monsters', m.id);
                         state.monsters = state.monsters.filter(x => x.id !== m.id);
                         expandedMonsterIds.delete(m.id);
                         saveState();
@@ -3351,6 +3368,7 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
                 card.querySelector('.delete-btn').onclick = (e) => {
                     e.stopPropagation();
                     if (confirm(`Möchtest du das Monster "${m.name}" wirklich löschen?`)) {
+                        trackDeletion('monsters', m.id);
                         state.monsters = state.monsters.filter(x => x.id !== m.id);
                         expandedMonsterIds.delete(m.id);
                         saveState();
@@ -3670,6 +3688,7 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
             card.querySelector('.edit-node').onclick = () => openNodeModalForEdit(node);
             card.querySelector('.delete-node').onclick = () => {
                 if (confirm(`Szene "${node.title}" wirklich löschen?`)) {
+                    trackDeletion('nodes', node.id);
                     state.nodes = state.nodes.filter(n => n.id !== node.id);
                     saveState();
                     renderNodesTab();
@@ -3767,6 +3786,7 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
 
     function removeCombatant(id, e) {
         if (e) e.stopPropagation();
+        trackDeletion('combatants', id);
         state.combatants = state.combatants.filter(c => c.id !== id);
         if (state.activeId === id) {
             state.activeId = state.combatants.length > 0 ? state.combatants[0].id : null;
@@ -3886,7 +3906,17 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
         }
     }
 
-    function resetTracker() { if(confirm('Alles löschen?')){ state.combatants = []; state.activeId = null; saveState(); renderInitiativeTab(); } }
+    function resetTracker() {
+        if (confirm('Alles löschen?')) {
+            if (Array.isArray(state.combatants)) {
+                state.combatants.forEach(c => trackDeletion('combatants', c.id));
+            }
+            state.combatants = [];
+            state.activeId = null;
+            saveState();
+            renderInitiativeTab();
+        }
+    }
 
 
     const INITIATIVE_COLOR_PALETTE = [
@@ -4645,6 +4675,7 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
 
     function executeOrteDelete() {
         if (!pendingOrteDeleteId) return;
+        trackDeletion('locations', pendingOrteDeleteId);
         state.locations = removeOrteNodeRecursive(state.locations, pendingOrteDeleteId);
         saveState();
         renderOrteTree();
@@ -4863,7 +4894,7 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
         syncWithCloud(true);
     }
 
-    // 4. Core Bidirectional Sync Routine
+    // 4. Core Bidirectional Sync Routine (Echte Synchronisation inklusive Löschungen)
     async function syncWithCloud(force = false) {
         if (!syncConfig.enabled || !syncConfig.supabaseUrl || !syncConfig.campaignId) return;
         if (!navigator.onLine) {
@@ -4883,44 +4914,19 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
         };
 
         try {
-            // STEP A: PULL remote state
-            const res = await fetch(endpoint, { method: 'GET', headers: headers });
-            if (!res.ok) {
-                throw new Error(`Server-Fehler: ${res.status} ${res.statusText}`);
-            }
-            const data = await res.json();
-            const remoteEntry = Array.isArray(data) && data.length > 0 ? data[0] : null;
-
-            let shouldUpload = syncRuntime.hasPendingUpload || force;
-
-            if (remoteEntry && remoteEntry.payload) {
-                const remoteTime = new Date(remoteEntry.updated_at || 0).getTime();
-                const localLastSync = syncConfig.lastSyncTime ? new Date(syncConfig.lastSyncTime).getTime() : 0;
-
-                // If remote was updated by ANOTHER device and is newer than our last sync
-                if (remoteEntry.device_id !== syncConfig.deviceId && remoteTime > localLastSync) {
-                    console.log('[Sync] Remote-Änderung von anderem Gerät empfangen!');
-                    // Merge remote payload into local state
-                    mergeRemoteState(remoteEntry.payload);
-                    saveStateLocally();
-                    renderAllTabs();
-                    showToast('☁️ Daten vom anderen Gerät synchronisiert!', 'success');
-                    shouldUpload = false;
-                }
-            } else if (!remoteEntry) {
-                // First time on cloud: Push local state immediately
-                shouldUpload = true;
-            }
-
-            // STEP B: PUSH local state if we have pending changes or forced
-            if (shouldUpload) {
+            // SCHRITT 1: Hat dieses Gerät ungesendete lokale Änderungen (z.B. gelöschte Gegner, geänderte TP)?
+            // Dann MUSS dieser neue Stand in die Cloud übertragen werden, statt durch alte Serverdaten überschrieben zu werden!
+            if (syncRuntime.hasPendingUpload || force) {
                 const upsertEndpoint = `${syncConfig.supabaseUrl}/rest/v1/campaign_states?on_conflict=campaign_id`;
+                const newVersion = Date.now();
+                const nowIso = new Date().toISOString();
+
                 const pushPayload = {
                     campaign_id: syncConfig.campaignId,
                     payload: state,
-                    version: Date.now(),
+                    version: newVersion,
                     device_id: syncConfig.deviceId,
-                    updated_at: new Date().toISOString()
+                    updated_at: nowIso
                 };
 
                 const pushRes = await fetch(upsertEndpoint, {
@@ -4933,14 +4939,45 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
                 });
 
                 if (!pushRes.ok) {
-                    throw new Error(`Push fehlgeschlagen: ${pushRes.status}`);
+                    throw new Error(`Push fehlgeschlagen: ${pushRes.status} ${pushRes.statusText}`);
                 }
+
                 syncRuntime.hasPendingUpload = false;
+                syncConfig.lastSyncTime = nowIso;
+                syncConfig.lastSyncedVersion = newVersion;
+                saveSyncConfig();
+                if (force) showToast('Änderungen erfolgreich in die Cloud übertragen!', 'success');
+                return;
             }
 
-            syncConfig.lastSyncTime = new Date().toISOString();
-            saveSyncConfig();
-            if (force) showToast('Synchronisation erfolgreich!', 'success');
+            // SCHRITT 2: Keine lokalen Änderungen ausstehend -> Prüfe Cloud auf Neuerungen vom anderen Gerät
+            const res = await fetch(endpoint, { method: 'GET', headers: headers });
+            if (!res.ok) {
+                throw new Error(`Server-Fehler: ${res.status} ${res.statusText}`);
+            }
+            const data = await res.json();
+            const remoteEntry = Array.isArray(data) && data.length > 0 ? data[0] : null;
+
+            if (remoteEntry && remoteEntry.payload) {
+                const remoteTime = new Date(remoteEntry.updated_at || 0).getTime();
+                const localLastSync = syncConfig.lastSyncTime ? new Date(syncConfig.lastSyncTime).getTime() : 0;
+
+                // Wurde der Serverstand von einem ANDEREN Gerät aktualisiert und ist neuer als unser letzter Sync?
+                if (remoteEntry.device_id !== syncConfig.deviceId && remoteTime > localLastSync) {
+                    console.log('[Sync] Remote-Aktualisierung von anderem Gerät empfangen! Übernehme Stand...');
+                    adoptRemoteState(remoteEntry.payload);
+                    saveStateLocally();
+                    renderAllTabs();
+                    syncConfig.lastSyncTime = remoteEntry.updated_at;
+                    syncConfig.lastSyncedVersion = remoteEntry.version;
+                    saveSyncConfig();
+                    showToast('☁️ Aktualisierung vom anderen Gerät übernommen!', 'success');
+                }
+            } else if (!remoteEntry) {
+                // Initialer Upload für diese Kampagne
+                syncRuntime.hasPendingUpload = true;
+                return syncWithCloud(false);
+            }
         } catch (err) {
             console.error('[Sync-Fehler]', err);
             if (force) showToast('Sync-Fehler: ' + (err.message || 'Verbindung fehlgeschlagen'), 'error');
@@ -4950,8 +4987,8 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
         }
     }
 
-    // 5. Intelligent Entity-Level Merge (Prevents Overwriting)
-    function mergeRemoteState(remote) {
+    // 5. Exakte Übernahme des Remote-Zustands (inklusive aller Löschungen)
+    function adoptRemoteState(remote) {
         if (!remote || typeof remote !== 'object') return;
 
         // Session Hook & Recap
@@ -4959,54 +4996,43 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
         if (Array.isArray(remote.recap)) state.recap = remote.recap;
         if (Array.isArray(remote.checklist)) state.checklist = remote.checklist.map(normalizeChecklistItem).filter(Boolean);
 
-        // NPCs: Merge by ID
-        if (Array.isArray(remote.npcs)) {
-            const localMap = new Map((state.npcs || []).map(n => [n.id, n]));
-            remote.npcs.forEach(rn => {
-                const norm = normalizeNpc(rn);
-                if (norm) localMap.set(norm.id, norm);
-            });
-            state.npcs = Array.from(localMap.values());
-        }
-
-        // Monsters: Merge by ID
-        if (Array.isArray(remote.monsters)) {
-            const monMap = new Map((state.monsters || []).map(m => [m.id, m]));
-            remote.monsters.forEach(rm => {
-                const norm = normalizeMonster(rm);
-                if (norm) monMap.set(norm.id, norm);
-            });
-            state.monsters = Array.from(monMap.values());
-        }
-
-        // Combatants: Merge by ID
+        // Initiative: Vollständige Übernahme des Zustands (Gegner, die drüben gelöscht wurden, verschwinden auch hier!)
         if (Array.isArray(remote.combatants)) {
-            const comMap = new Map((state.combatants || []).map(c => [c.id, c]));
-            remote.combatants.forEach(rc => {
-                const norm = normalizeCombatant(rc);
-                if (norm) comMap.set(norm.id, norm);
-            });
-            state.combatants = Array.from(comMap.values());
+            state.combatants = remote.combatants.map(normalizeCombatant).filter(Boolean);
             sortCombatants();
+        }
+
+        // NPCs
+        if (Array.isArray(remote.npcs)) {
+            state.npcs = remote.npcs.map(normalizeNpc).filter(Boolean);
+        }
+
+        // Monsters
+        if (Array.isArray(remote.monsters)) {
+            state.monsters = remote.monsters.map(normalizeMonster).filter(Boolean);
         }
 
         // Locations, Secrets & Nodes
         if (Array.isArray(remote.locations)) state.locations = remote.locations.map(normalizeLocation).filter(Boolean);
         if (Array.isArray(remote.secrets)) state.secrets = remote.secrets.map(normalizeSecret).filter(Boolean);
         if (Array.isArray(remote.nodes)) state.nodes = remote.nodes.map(normalizeNode).filter(Boolean);
-        if (remote.activeId) state.activeId = remote.activeId;
+        if (remote.activeId !== undefined) state.activeId = remote.activeId;
+        if (remote.deletedIds && typeof remote.deletedIds === 'object') {
+            state.deletedIds = remote.deletedIds;
+        }
     }
 
-    // Debounced sync trigger on state changes
-    function queueSyncPush() {
+    // Schneller Debounce für unmittelbaren Push bei Änderungen (500ms statt 1500ms)
+    function queueSyncPush(immediate = false) {
         syncRuntime.hasPendingUpload = true;
         updateSyncUI();
         if (!syncConfig.enabled || !navigator.onLine) return;
 
         if (syncRuntime.debounceTimer) clearTimeout(syncRuntime.debounceTimer);
+        const delay = immediate ? 50 : 500;
         syncRuntime.debounceTimer = setTimeout(() => {
             syncWithCloud(false);
-        }, 1500);
+        }, delay);
     }
 
     // Network Status Listeners
@@ -5027,12 +5053,25 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
         showToast('✈️ Offline-Modus: Alle Daten werden sicher auf dem Gerät gespeichert.', 'info');
     });
 
-    // Auto-polling when tab is active (every 25 seconds)
+    // Schnelle Synchronisation bei Tab-Wechsel & Bildschirm-Entsperrung
+    document.addEventListener('visibilitychange', () => {
+        if (!document.hidden && navigator.onLine && syncConfig.enabled && !syncRuntime.isSyncing) {
+            syncWithCloud(false);
+        }
+    });
+
+    window.addEventListener('focus', () => {
+        if (navigator.onLine && syncConfig.enabled && !syncRuntime.isSyncing) {
+            syncWithCloud(false);
+        }
+    });
+
+    // Auto-polling alle 12 Sekunden bei aktiver Nutzung
     setInterval(() => {
         if (!document.hidden && navigator.onLine && syncConfig.enabled && !syncRuntime.isSyncing) {
             syncWithCloud(false);
         }
-    }, 25000);
+    }, 12000);
 
 
         window.onload = function() {
