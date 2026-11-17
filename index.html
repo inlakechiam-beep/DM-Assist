@@ -13,7 +13,7 @@
     <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
     <meta name="theme-color" content="#0b1814">
 
-    <title>Sylvanus Spielleiter-Codex v23 (PWA)</title>
+    <title>Sylvanus Spielleiter-Codex v24 (PWA)</title>
 
     <!-- Google Fonts: Cinzel for Headings & Inter for Body -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -709,7 +709,7 @@
             </div>
             <div>
                 <h1 class="font-cinzel text-lg sm:text-xl font-bold tracking-wider text-gold-400">Sylvanus</h1>
-                <p class="text-[10px] text-gray-300 dark:text-forest-300 font-medium tracking-widest">Spielleiter-Codex <span class="text-gold-400 font-bold">v23</span></p>
+                <p class="text-[10px] text-gray-300 dark:text-forest-300 font-medium tracking-widest">Spielleiter-Codex <span class="text-gold-400 font-bold">v24</span></p>
             </div>
         </div>
 
@@ -943,12 +943,12 @@
         </div>
 
         <div class="space-y-3">
-            <h3 class="font-cinzel text-md font-bold text-gold-400 border-b border-gold-500/20 pb-1">🎭 Aktive NPCs</h3>
+            <h3 class="font-cinzel text-md font-bold text-gold-400 border-b border-gold-500/20 pb-1">Aktive NPCs</h3>
             <div id="activeNpcCardsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 min-h-[120px] p-2 rounded-xl" ondragover="event.preventDefault(); event.currentTarget.classList.add('drag-over')" ondragenter="event.preventDefault(); event.currentTarget.classList.add('drag-over')" ondragleave="event.currentTarget.classList.remove('drag-over')" ondrop="dropNpcContainer(event, 'active')"></div>
         </div>
 
         <div class="space-y-3 pt-4">
-            <h3 class="font-cinzel text-md font-bold text-gray-400 border-b border-gray-700/40 pb-1">📚 Bibliothek (Archiv)</h3>
+            <h3 class="font-cinzel text-md font-bold text-gray-400 border-b border-gray-700/40 pb-1">Bibliothek (Archiv)</h3>
             <div id="libraryNpcCardsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 min-h-[120px] p-2 rounded-xl bg-forest-950/30 border border-dashed border-forest-800" ondragover="event.preventDefault(); event.currentTarget.classList.add('drag-over')" ondragenter="event.preventDefault(); event.currentTarget.classList.add('drag-over')" ondragleave="event.currentTarget.classList.remove('drag-over')" ondrop="dropNpcContainer(event, 'library')"></div>
         </div>
     </section>
@@ -964,12 +964,25 @@
         </div>
 
         <div class="space-y-3">
-            <h3 class="font-cinzel text-md font-bold text-gold-400 border-b border-gold-500/20 pb-1">⚡ Aktive Monster & Encounters</h3>
+            <h3 class="font-cinzel text-md font-bold text-gold-400 border-b border-gold-500/20 pb-1">Aktive Monster & Encounters</h3>
             <div id="activeMonstersGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6 min-h-[120px] p-2 rounded-xl" ondragover="event.preventDefault(); event.currentTarget.classList.add('drag-over')" ondragenter="event.preventDefault(); event.currentTarget.classList.add('drag-over')" ondragleave="event.currentTarget.classList.remove('drag-over')" ondrop="dropMonsterContainer(event, 'active')"></div>
         </div>
 
         <div class="space-y-3 pt-4">
-            <h3 class="font-cinzel text-md font-bold text-gray-400 border-b border-gray-700/40 pb-1">📚 Bibliothek (Archiv)</h3>
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-gray-700/40 pb-1">
+                <h3 class="font-cinzel text-md font-bold text-gray-400">Bibliothek (Archiv)</h3>
+                <div class="flex items-center gap-1.5 text-xs">
+                    <span class="text-gray-400 text-[11px] font-medium">Sortieren:</span>
+                    <button type="button" onclick="sortLibraryMonsters('name')" class="px-2.5 py-1 rounded border border-forest-700 bg-forest-950 hover:bg-forest-900 text-gray-300 transition-colors flex items-center gap-1 font-medium" title="Alphabetisch sortieren">
+                        <span>Name</span>
+                        <span id="libSortNameIndicator" class="text-[10px] text-gold-400"></span>
+                    </button>
+                    <button type="button" onclick="sortLibraryMonsters('xp')" class="px-2.5 py-1 rounded border border-forest-700 bg-forest-950 hover:bg-forest-900 text-gray-300 transition-colors flex items-center gap-1 font-medium" title="Nach Erfahrungspunkten (XP) sortieren">
+                        <span>XP</span>
+                        <span id="libSortXpIndicator" class="text-[10px] text-gold-400"></span>
+                    </button>
+                </div>
+            </div>
             <div id="libraryMonstersGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6 min-h-[120px] p-2 rounded-xl bg-forest-950/30 border border-dashed border-forest-800" ondragover="event.preventDefault(); event.currentTarget.classList.add('drag-over')" ondragenter="event.preventDefault(); event.currentTarget.classList.add('drag-over')" ondragleave="event.currentTarget.classList.remove('drag-over')" ondrop="dropMonsterContainer(event, 'library')"></div>
         </div>
     </section>
@@ -979,7 +992,10 @@
         <div class="bg-forest-900/60 border border-forest-700/40 rounded-xl p-5 space-y-4">
             <div class="flex justify-between items-center border-b border-gold-500/20 pb-3">
                 <h2 class="font-cinzel text-xl font-bold text-gold-400">Knoten-Ablaufplan (Drag & Drop)</h2>
-                <button id="addNodeBtn" class="px-3 py-1.5 rounded-lg bg-gold-500 text-forest-950 font-semibold text-xs">+ Szene hinzufügen</button>
+                <div class="flex items-center gap-2">
+                    <button id="clearAllNodesBtn" class="px-3 py-1.5 rounded-lg bg-red-950/70 hover:bg-red-900 border border-red-700/60 text-red-300 font-semibold text-xs transition-colors">Alle Löschen</button>
+                    <button id="addNodeBtn" class="px-3 py-1.5 rounded-lg bg-gold-500 hover:bg-gold-400 text-forest-950 font-semibold text-xs transition-colors">+ Szene hinzufügen</button>
+                </div>
             </div>
             <div id="nodesGraphContainer" class="grid grid-cols-1 md:grid-cols-3 gap-4 min-h-[300px]" ondragover="event.preventDefault(); event.currentTarget.classList.add('drag-over')" ondragenter="event.preventDefault(); event.currentTarget.classList.add('drag-over')" ondragleave="event.currentTarget.classList.remove('drag-over')" ondrop="dropNodeContainer(event)"></div>
         </div>
@@ -1235,8 +1251,8 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
             <div class="bg-forest-950/60 p-3 rounded-lg border border-forest-700/50">
                 <label class="block text-xs text-gold-400 font-bold mb-1">Kategorie</label>
                 <select id="npcCategorySelect" class="w-full bg-forest-900 text-gray-200 border border-forest-700 text-xs rounded p-2 focus:outline-none focus:border-gold-500">
-                    <option value="active">🎭 Aktiv</option>
-                    <option value="library">📚 Bibliothek (Archiv)</option>
+                    <option value="active">Aktiv</option>
+                    <option value="library">Bibliothek (Archiv)</option>
                 </select>
             </div>
 
@@ -1304,8 +1320,8 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
                 <div>
                     <label class="block text-xs text-gold-400 font-bold mb-1">Kategorie</label>
                     <select id="monsterCategorySelect" class="w-full bg-forest-900 text-gray-200 border border-forest-700 text-xs rounded p-2">
-                        <option value="active">⚡ Aktiv (Encounter)</option>
-                        <option value="library">📚 Bibliothek (Archiv)</option>
+                        <option value="active">Aktiv (Encounter)</option>
+                        <option value="library">Bibliothek (Archiv)</option>
                     </select>
                 </div>
                 <div>
@@ -1337,49 +1353,67 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
                 <label class="block text-xs text-gold-400 font-bold">Attribute, Modifikatoren & Rettungswürfe (Wert / Mod / RW)</label>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <div class="bg-forest-900 p-2 rounded border border-forest-800">
-                        <span class="text-[10px] text-gold-300 font-bold block mb-1">STÄRKE (STÄ)</span>
+                        <div class="flex items-center gap-1.5 mb-1">
+                            <button type="button" id="m-sta-prof-btn" onclick="toggleAttrProf('sta')" class="attr-prof-btn px-1.5 py-0.5 text-[9px] font-bold rounded border border-forest-700 bg-forest-950 text-gray-400 hover:border-gold-500 hover:text-gold-300 transition-colors" title="Übungsbonus anwenden">+Ü</button>
+                            <span class="text-[10px] text-gold-300 font-bold block">STÄRKE (STÄ)</span>
+                        </div>
                         <div class="grid grid-cols-3 gap-1">
-                            <div><label class="text-[9px] text-gray-400 block">Wert</label><input id="m-sta-val" type="number" value="10" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-200"></div>
+                            <div><label class="text-[9px] text-gray-400 block">Wert</label><input id="m-sta-val" type="number" value="10" oninput="onStatValInput('sta')" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-200"></div>
                             <div><label class="text-[9px] text-gray-400 block">Mod</label><input id="m-sta-mod" type="text" value="+0" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-200"></div>
                             <div><label class="text-[9px] text-gray-400 block">RW</label><input id="m-sta-rw" type="text" value="+0" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-200"></div>
                         </div>
                     </div>
                     <div class="bg-forest-900 p-2 rounded border border-forest-800">
-                        <span class="text-[10px] text-gold-300 font-bold block mb-1">GESCHICKLICHKEIT (GES)</span>
+                        <div class="flex items-center gap-1.5 mb-1">
+                            <button type="button" id="m-ges-prof-btn" onclick="toggleAttrProf('ges')" class="attr-prof-btn px-1.5 py-0.5 text-[9px] font-bold rounded border border-forest-700 bg-forest-950 text-gray-400 hover:border-gold-500 hover:text-gold-300 transition-colors" title="Übungsbonus anwenden">+Ü</button>
+                            <span class="text-[10px] text-gold-300 font-bold block">GESCHICKLICHKEIT (GES)</span>
+                        </div>
                         <div class="grid grid-cols-3 gap-1">
-                            <div><label class="text-[9px] text-gray-400 block">Wert</label><input id="m-ges-val" type="number" value="10" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-200"></div>
+                            <div><label class="text-[9px] text-gray-400 block">Wert</label><input id="m-ges-val" type="number" value="10" oninput="onStatValInput('ges')" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-200"></div>
                             <div><label class="text-[9px] text-gray-400 block">Mod</label><input id="m-ges-mod" type="text" value="+0" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-200"></div>
                             <div><label class="text-[9px] text-gray-400 block">RW</label><input id="m-ges-rw" type="text" value="+0" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-200"></div>
                         </div>
                     </div>
                     <div class="bg-forest-900 p-2 rounded border border-forest-800">
-                        <span class="text-[10px] text-gold-300 font-bold block mb-1">KONSTITUTION (KON)</span>
+                        <div class="flex items-center gap-1.5 mb-1">
+                            <button type="button" id="m-kon-prof-btn" onclick="toggleAttrProf('kon')" class="attr-prof-btn px-1.5 py-0.5 text-[9px] font-bold rounded border border-forest-700 bg-forest-950 text-gray-400 hover:border-gold-500 hover:text-gold-300 transition-colors" title="Übungsbonus anwenden">+Ü</button>
+                            <span class="text-[10px] text-gold-300 font-bold block">KONSTITUTION (KON)</span>
+                        </div>
                         <div class="grid grid-cols-3 gap-1">
-                            <div><label class="text-[9px] text-gray-400 block">Wert</label><input id="m-kon-val" type="number" value="10" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-200"></div>
+                            <div><label class="text-[9px] text-gray-400 block">Wert</label><input id="m-kon-val" type="number" value="10" oninput="onStatValInput('kon')" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-200"></div>
                             <div><label class="text-[9px] text-gray-400 block">Mod</label><input id="m-kon-mod" type="text" value="+0" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-200"></div>
                             <div><label class="text-[9px] text-gray-400 block">RW</label><input id="m-kon-rw" type="text" value="+0" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-200"></div>
                         </div>
                     </div>
                     <div class="bg-forest-900 p-2 rounded border border-forest-800">
-                        <span class="text-[10px] text-gold-300 font-bold block mb-1">INTELLIGENZ (INT)</span>
+                        <div class="flex items-center gap-1.5 mb-1">
+                            <button type="button" id="m-int-prof-btn" onclick="toggleAttrProf('int')" class="attr-prof-btn px-1.5 py-0.5 text-[9px] font-bold rounded border border-forest-700 bg-forest-950 text-gray-400 hover:border-gold-500 hover:text-gold-300 transition-colors" title="Übungsbonus anwenden">+Ü</button>
+                            <span class="text-[10px] text-gold-300 font-bold block">INTELLIGENZ (INT)</span>
+                        </div>
                         <div class="grid grid-cols-3 gap-1">
-                            <div><label class="text-[9px] text-gray-400 block">Wert</label><input id="m-int-val" type="number" value="10" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-200"></div>
+                            <div><label class="text-[9px] text-gray-400 block">Wert</label><input id="m-int-val" type="number" value="10" oninput="onStatValInput('int')" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-200"></div>
                             <div><label class="text-[9px] text-gray-400 block">Mod</label><input id="m-int-mod" type="text" value="+0" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-200"></div>
                             <div><label class="text-[9px] text-gray-400 block">RW</label><input id="m-int-rw" type="text" value="+0" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-200"></div>
                         </div>
                     </div>
                     <div class="bg-forest-900 p-2 rounded border border-forest-800">
-                        <span class="text-[10px] text-gold-300 font-bold block mb-1">WEISHEIT (WEI)</span>
+                        <div class="flex items-center gap-1.5 mb-1">
+                            <button type="button" id="m-wei-prof-btn" onclick="toggleAttrProf('wei')" class="attr-prof-btn px-1.5 py-0.5 text-[9px] font-bold rounded border border-forest-700 bg-forest-950 text-gray-400 hover:border-gold-500 hover:text-gold-300 transition-colors" title="Übungsbonus anwenden">+Ü</button>
+                            <span class="text-[10px] text-gold-300 font-bold block">WEISHEIT (WEI)</span>
+                        </div>
                         <div class="grid grid-cols-3 gap-1">
-                            <div><label class="text-[9px] text-gray-400 block">Wert</label><input id="m-wei-val" type="number" value="10" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-200"></div>
+                            <div><label class="text-[9px] text-gray-400 block">Wert</label><input id="m-wei-val" type="number" value="10" oninput="onStatValInput('wei')" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-200"></div>
                             <div><label class="text-[9px] text-gray-400 block">Mod</label><input id="m-wei-mod" type="text" value="+0" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-200"></div>
                             <div><label class="text-[9px] text-gray-400 block">RW</label><input id="m-wei-rw" type="text" value="+0" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-200"></div>
                         </div>
                     </div>
                     <div class="bg-forest-900 p-2 rounded border border-forest-800">
-                        <span class="text-[10px] text-gold-300 font-bold block mb-1">CHARISMA (CHA)</span>
+                        <div class="flex items-center gap-1.5 mb-1">
+                            <button type="button" id="m-cha-prof-btn" onclick="toggleAttrProf('cha')" class="attr-prof-btn px-1.5 py-0.5 text-[9px] font-bold rounded border border-forest-700 bg-forest-950 text-gray-400 hover:border-gold-500 hover:text-gold-300 transition-colors" title="Übungsbonus anwenden">+Ü</button>
+                            <span class="text-[10px] text-gold-300 font-bold block">CHARISMA (CHA)</span>
+                        </div>
                         <div class="grid grid-cols-3 gap-1">
-                            <div><label class="text-[9px] text-gray-400 block">Wert</label><input id="m-cha-val" type="number" value="10" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-200"></div>
+                            <div><label class="text-[9px] text-gray-400 block">Wert</label><input id="m-cha-val" type="number" value="10" oninput="onStatValInput('cha')" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-200"></div>
                             <div><label class="text-[9px] text-gray-400 block">Mod</label><input id="m-cha-mod" type="text" value="+0" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-200"></div>
                             <div><label class="text-[9px] text-gray-400 block">RW</label><input id="m-cha-rw" type="text" value="+0" class="w-full bg-forest-950 text-xs p-1 text-center border border-forest-700 rounded text-gray-200"></div>
                         </div>
@@ -1391,10 +1425,11 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
                 <div><label class="block text-[11px] text-gray-400 mb-1">Fähigkeiten / Fertigkeiten</label><input id="monsterSkillsInput" type="text" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100"></div>
                 <div><label class="block text-[11px] text-gray-400 mb-1">Ausrüstung</label><input id="monsterEquipmentInput" type="text" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100"></div>
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <div class="grid grid-cols-1 sm:grid-cols-4 gap-2">
                 <div><label class="block text-[11px] text-gray-400 mb-1">Resistenzen</label><input id="monsterResistancesInput" type="text" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100"></div>
                 <div><label class="block text-[11px] text-gray-400 mb-1">Sinne</label><input id="monsterSensesInput" type="text" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100"></div>
                 <div><label class="block text-[11px] text-gray-400 mb-1">Sprachen</label><input id="monsterLanguagesInput" type="text" class="w-full bg-forest-950 border border-forest-700 text-xs rounded-lg p-2 text-gray-100"></div>
+                <div><label class="block text-[11px] text-gold-300 font-semibold mb-1">Übungsbonus</label><input id="monsterProfBonusInput" type="text" value="+2" oninput="onProfBonusInput()" class="w-full bg-forest-950 border border-gold-500/40 text-xs rounded-lg p-2 text-gold-300 font-bold" placeholder="+2"></div>
             </div>
 
             <div class="space-y-1 pt-2 border-t border-forest-700/50">
@@ -1792,7 +1827,8 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
                 const val = parseInt(raw.val ?? raw.value ?? raw.score, 10) || 10;
                 const mod = raw.mod !== undefined ? String(raw.mod) : calcMod(val);
                 const rw = raw.rw !== undefined ? String(raw.rw) : mod;
-                return { val, mod, rw };
+                const prof = Boolean(raw.prof);
+                return { val, mod, rw, prof };
             }
             return defaultStats[deKey];
         };
@@ -1823,6 +1859,7 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
             resistances: m.resistances || m.resistenzen || '',
             senses: m.senses || m.sinne || '',
             languages: m.languages || m.sprachen || '',
+            profBonus: m.profBonus || m.uebungsbonus || m.proficiencyBonus || '+2',
             equipment: m.equipment || m.ausruestung || '',
             traits: normalizeActionList(m.traits),
             actions: normalizeActionList(m.actions),
@@ -1943,7 +1980,8 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
 
     function loadState() {
         try {
-            let saved = localStorage.getItem('sylvanus_codex_data_v23');
+            let saved = localStorage.getItem('sylvanus_codex_data_v24');
+            if (!saved) saved = localStorage.getItem('sylvanus_codex_data_v23');
             if (!saved) saved = localStorage.getItem('sylvanus_codex_data_v22');
             if (!saved) saved = localStorage.getItem('sylvanus_codex_data_v21');
             if (!saved) saved = localStorage.getItem('sylvanus_codex_data_v20');
@@ -2006,6 +2044,7 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
     function saveStateLocally() {
         try {
             const serialized = JSON.stringify(state);
+            try { localStorage.setItem('sylvanus_codex_data_v24', serialized); } catch (e) {}
             try { localStorage.setItem('sylvanus_codex_data_v23', serialized); } catch (e) {}
             try { localStorage.setItem('sylvanus_codex_data_v22', serialized); } catch (e) {}
             try { localStorage.setItem('sylvanus_codex_data_v21', serialized); } catch (e) {}
@@ -2304,8 +2343,8 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
                     <span class="${item.done ? 'line-through text-gray-500' : 'text-gray-200'}">${item.text}</span>
                 </div>
                 <div class="flex items-center space-x-1">
-                    <button class="text-gray-400 hover:text-gold-300 p-1 edit-item" title="Bearbeiten">✏️</button>
-                    <button class="text-gray-500 hover:text-red-400 p-1 delete-item" title="Löschen">✕</button>
+                    <button class="text-gray-400 hover:text-gold-300 p-1 edit-item font-medium text-xs" title="Bearbeiten">Bearbeiten</button>
+                    <button class="text-gray-500 hover:text-red-400 p-1 delete-item font-bold text-xs" title="Löschen">✕</button>
                 </div>
             `;
 
@@ -2348,9 +2387,98 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
         recapContainer.innerHTML = '';
         state.recap.forEach((pt, index) => {
             const card = document.createElement('div');
-            card.className = 'bg-forest-950/60 p-3 rounded-lg border border-forest-700/50 flex justify-between items-start text-xs text-gray-200';
-            card.innerHTML = `<span>• ${pt}</span><button class="text-gray-500 hover:text-red-400">✕</button>`;
-            card.querySelector('button').onclick = () => { state.recap.splice(index, 1); saveState(); renderAuftaktTab(); };
+            card.className = 'draggable-item bg-forest-950/70 p-3 rounded-lg border border-forest-700/60 hover:border-forest-600 flex flex-col justify-between text-xs text-gray-200 shadow-sm transition-all gap-2 cursor-grab';
+            card.draggable = true;
+            card.dataset.index = index;
+
+            card.innerHTML = `
+                <div class="flex items-start gap-2">
+                    <span class="text-gold-400 font-bold select-none cursor-grab" title="Ziehen zum Neuanordnen">⋮⋮</span>
+                    <span class="recap-text flex-1 break-words">${escapeHTML(pt)}</span>
+                </div>
+                <div class="flex items-center justify-end gap-1.5 pt-1.5 border-t border-forest-800/40">
+                    <button class="recap-move-up text-[11px] px-1.5 py-0.5 rounded text-gray-400 hover:text-gold-300 hover:bg-forest-900 transition-colors" title="Nach oben">▲</button>
+                    <button class="recap-move-down text-[11px] px-1.5 py-0.5 rounded text-gray-400 hover:text-gold-300 hover:bg-forest-900 transition-colors" title="Nach unten">▼</button>
+                    <button class="recap-edit-btn text-[11px] px-2 py-0.5 rounded text-gold-400 hover:text-gold-300 hover:bg-forest-900 transition-colors font-medium" title="Bearbeiten">Bearbeiten</button>
+                    <button class="recap-delete-btn text-[11px] px-2 py-0.5 rounded text-gray-400 hover:text-red-400 hover:bg-forest-900 transition-colors font-bold" title="Löschen">✕</button>
+                </div>
+            `;
+
+            // Drag & Drop reordering
+            card.ondragstart = (e) => {
+                currentDragItem = { type: 'recap', index: index };
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/plain', String(index));
+                card.classList.add('dragging');
+            };
+            card.ondragend = () => {
+                currentDragItem = null;
+                card.classList.remove('dragging');
+                document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+            };
+            card.ondragover = (e) => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+            };
+            card.ondragenter = (e) => {
+                e.preventDefault();
+                card.classList.add('drag-over');
+            };
+            card.ondragleave = () => {
+                card.classList.remove('drag-over');
+            };
+            card.ondrop = (e) => {
+                e.preventDefault();
+                card.classList.remove('drag-over');
+                const fromIdx = parseInt(e.dataTransfer.getData('text/plain'), 10);
+                const toIdx = index;
+                if (!isNaN(fromIdx) && fromIdx !== toIdx) {
+                    const moved = state.recap.splice(fromIdx, 1)[0];
+                    state.recap.splice(toIdx, 0, moved);
+                    saveState();
+                    renderAuftaktTab();
+                }
+            };
+
+            card.querySelector('.recap-move-up').onclick = (e) => {
+                e.stopPropagation();
+                if (index > 0) {
+                    const item = state.recap.splice(index, 1)[0];
+                    state.recap.splice(index - 1, 0, item);
+                    saveState();
+                    renderAuftaktTab();
+                }
+            };
+
+            card.querySelector('.recap-move-down').onclick = (e) => {
+                e.stopPropagation();
+                if (index < state.recap.length - 1) {
+                    const item = state.recap.splice(index, 1)[0];
+                    state.recap.splice(index + 1, 0, item);
+                    saveState();
+                    renderAuftaktTab();
+                }
+            };
+
+            card.querySelector('.recap-edit-btn').onclick = (e) => {
+                e.stopPropagation();
+                const newText = prompt('Rückblick bearbeiten:', pt);
+                if (newText !== null && newText.trim() !== '') {
+                    state.recap[index] = newText.trim();
+                    saveState();
+                    renderAuftaktTab();
+                    showToast('Rückblick aktualisiert.', 'success');
+                }
+            };
+
+            card.querySelector('.recap-delete-btn').onclick = (e) => {
+                e.stopPropagation();
+                state.recap.splice(index, 1);
+                saveState();
+                renderAuftaktTab();
+                showToast('Rückblick-Punkt entfernt.', 'info');
+            };
+
             recapContainer.appendChild(card);
         });
     }
@@ -2363,7 +2491,7 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
         state.secrets.forEach(s => {
             const card = document.createElement('div');
             card.className = `p-4 rounded-xl border shadow-md flex flex-col justify-between ${s.status === 'revealed' ? 'bg-forest-950/40 border-forest-800 text-gray-400' : 'bg-forest-900/80 border-forest-700/60 text-gray-100'}`;
-            card.innerHTML = `<div><span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-gold-500/20 text-gold-400">${s.tag}</span><p class="text-xs mt-2 ${s.status==='revealed'?'line-through':''}">${s.text}</p></div><div class="flex justify-end gap-2 pt-2"><button class="text-xs text-gold-300 px-2 py-1 bg-gold-500/20 rounded">${s.status==='revealed'?'Verbergen':'Enthüllen'}</button><button class="text-xs text-red-400">🗑️</button></div>`;
+            card.innerHTML = `<div><span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-gold-500/20 text-gold-400">${s.tag}</span><p class="text-xs mt-2 ${s.status==='revealed'?'line-through':''}">${s.text}</p></div><div class="flex justify-end gap-2 pt-2"><button class="text-xs text-gold-300 px-2 py-1 bg-gold-500/20 rounded">${s.status==='revealed'?'Verbergen':'Enthüllen'}</button><button class="text-xs text-red-400 font-bold px-1.5 py-0.5 hover:bg-forest-900 rounded">✕</button></div>`;
             card.querySelector('button').onclick = () => { s.status = s.status==='revealed'?'hidden':'revealed'; saveState(); renderSecretsTab(); };
             card.querySelectorAll('button')[1].onclick = () => { trackDeletion('secrets', s.id); state.secrets = state.secrets.filter(x => x.id !== s.id); saveState(); renderSecretsTab(); };
             grid.appendChild(card);
@@ -2591,10 +2719,10 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
                     </div>
 
                     <div class="flex flex-wrap items-center justify-end gap-1.5 pt-3 mt-3 border-t border-forest-800/60">
-                        <button class="add-to-active-btn text-xs px-3 py-1.5 bg-[#d4af37] hover:bg-[#eacb67] text-[#0b1814] font-bold rounded-md flex items-center gap-1 transition-all shadow-md" title="Zu aktiven NPCs verschieben">➕ Zu Aktiv</button>
-                        <button class="duplicate-btn text-xs px-2.5 py-1.5 bg-[#132822] hover:bg-[#1f3f36] text-gray-300 rounded-md border border-gray-700/60 flex items-center gap-1 transition-all" title="Duplizieren">📋 Kopie</button>
-                        <button class="edit-btn text-xs px-2.5 py-1.5 bg-[#132822] hover:bg-[#1f3f36] text-[#eacb67] rounded-md border border-gray-700/60 flex items-center gap-1 transition-all" title="Bearbeiten">✏️ Bearbeiten</button>
-                        <button class="delete-btn text-xs p-1.5 text-gray-400 hover:text-red-400 transition-all" title="Löschen">🗑️</button>
+                        <button class="add-to-active-btn text-xs px-3 py-1.5 bg-[#d4af37] hover:bg-[#eacb67] text-[#0b1814] font-bold rounded-md flex items-center gap-1 transition-all shadow-md" title="Zu aktiven NPCs verschieben">+ Zu Aktiv</button>
+                        <button class="duplicate-btn text-xs px-2.5 py-1.5 bg-[#132822] hover:bg-[#1f3f36] text-gray-300 rounded-md border border-gray-700/60 flex items-center gap-1 transition-all" title="Duplizieren">Kopie</button>
+                        <button class="edit-btn text-xs px-2.5 py-1.5 bg-[#132822] hover:bg-[#1f3f36] text-[#eacb67] rounded-md border border-gray-700/60 flex items-center gap-1 transition-all" title="Bearbeiten">Bearbeiten</button>
+                        <button class="delete-btn text-xs px-2 py-1.5 text-gray-400 hover:text-red-400 rounded hover:bg-forest-900 transition-all font-bold" title="Löschen">✕</button>
                     </div>
 
                     <div class="npc-details ${isExpanded ? 'block' : 'hidden'} pt-3 border-t border-forest-800/40 mt-3 space-y-2 text-xs">
@@ -2673,10 +2801,10 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
                     </div>
 
                     <div class="flex flex-wrap items-center justify-end gap-1.5 pt-3 mt-3 border-t border-[#1b3d32]/60">
-                        <button class="move-to-lib-btn text-xs px-2.5 py-1.5 bg-[#18362b] hover:bg-[#254d3e] text-[#97c7b2] hover:text-[#eacb67] font-medium rounded-md border border-forest-700/60 flex items-center gap-1 transition-all" title="Als Kopie in Bibliothek (Archiv) speichern">📚 Zur Bibliothek</button>
-                        <button class="duplicate-btn text-xs px-2.5 py-1.5 bg-[#132822] hover:bg-[#1f3f36] text-gray-300 rounded-md border border-gray-700/60 flex items-center gap-1 transition-all" title="Duplizieren">📋 Kopie</button>
-                        <button class="edit-btn text-xs px-2.5 py-1.5 bg-[#132822] hover:bg-[#1f3f36] text-[#eacb67] rounded-md border border-gray-700/60 flex items-center gap-1 transition-all" title="Bearbeiten">✏️</button>
-                        <button class="delete-btn text-xs p-1.5 text-gray-400 hover:text-red-400 transition-all" title="Löschen">🗑️</button>
+                        <button class="move-to-lib-btn text-xs px-2.5 py-1.5 bg-[#18362b] hover:bg-[#254d3e] text-[#97c7b2] hover:text-[#eacb67] font-medium rounded-md border border-forest-700/60 flex items-center gap-1 transition-all" title="Als Kopie in Bibliothek (Archiv) speichern">Zur Bibliothek</button>
+                        <button class="duplicate-btn text-xs px-2.5 py-1.5 bg-[#132822] hover:bg-[#1f3f36] text-gray-300 rounded-md border border-gray-700/60 flex items-center gap-1 transition-all" title="Duplizieren">Kopie</button>
+                        <button class="edit-btn text-xs px-2.5 py-1.5 bg-[#132822] hover:bg-[#1f3f36] text-[#eacb67] rounded-md border border-gray-700/60 flex items-center gap-1 transition-all" title="Bearbeiten">Bearbeiten</button>
+                        <button class="delete-btn text-xs px-2 py-1.5 text-gray-400 hover:text-red-400 rounded hover:bg-forest-900 transition-all font-bold" title="Löschen">✕</button>
                     </div>
 
                     <div class="npc-details ${isExpanded ? 'block' : 'hidden'} pt-3 border-t border-forest-800/40 mt-3 space-y-2 text-xs">
@@ -3096,6 +3224,7 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
                 ${m.resistances ? `<p><strong class="text-[#eacb67]">Resistenzen:</strong> <span class="text-gray-200">${m.resistances}</span></p>` : ''}
                 ${m.senses ? `<p><strong class="text-[#eacb67]">Sinne:</strong> <span class="text-gray-200">${m.senses}</span></p>` : ''}
                 ${m.languages ? `<p><strong class="text-[#eacb67]">Sprachen:</strong> <span class="text-gray-200">${m.languages}</span></p>` : ''}
+                <p><strong class="text-[#eacb67]">Übungsbonus:</strong> <span class="text-gray-200">${m.profBonus ? (m.profBonus.toString().startsWith('+') || m.profBonus.toString().startsWith('-') ? m.profBonus : '+' + m.profBonus) : '+2'}</span></p>
             </div>
 
             ${traitsHtml}
@@ -3239,10 +3368,48 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
         container.appendChild(row);
     }
 
+    let librarySortState = { field: null, dir: 'asc' };
+
+    function sortLibraryMonsters(field) {
+        if (librarySortState.field === field) {
+            librarySortState.dir = librarySortState.dir === 'asc' ? 'desc' : 'asc';
+        } else {
+            librarySortState.field = field;
+            librarySortState.dir = (field === 'xp') ? 'desc' : 'asc';
+        }
+
+        const activeMonsters = state.monsters.filter(m => m.category !== 'library');
+        const libMonsters = state.monsters.filter(m => m.category === 'library');
+
+        libMonsters.sort((a, b) => {
+            if (field === 'name') {
+                const nameA = (a.name || '').toLowerCase();
+                const nameB = (b.name || '').toLowerCase();
+                const cmp = nameA.localeCompare(nameB, 'de');
+                return librarySortState.dir === 'asc' ? cmp : -cmp;
+            } else if (field === 'xp') {
+                const xpA = parseInt(String(a.xp || 0).replace(/[^\d]/g, ''), 10) || 0;
+                const xpB = parseInt(String(b.xp || 0).replace(/[^\d]/g, ''), 10) || 0;
+                return librarySortState.dir === 'asc' ? (xpA - xpB) : (xpB - xpA);
+            }
+            return 0;
+        });
+
+        state.monsters = [...activeMonsters, ...libMonsters];
+        saveState();
+        renderMonstersTab();
+        showToast(`Bibliothek nach ${field === 'name' ? 'Name' : 'XP'} (${librarySortState.dir === 'asc' ? 'aufsteigend' : 'absteigend'}) sortiert`, 'info');
+    }
+
     function renderMonstersTab() {
         const activeGrid = document.getElementById('activeMonstersGrid');
         const libraryGrid = document.getElementById('libraryMonstersGrid');
         activeGrid.innerHTML = ''; libraryGrid.innerHTML = '';
+
+        const nameInd = document.getElementById('libSortNameIndicator');
+        const xpInd = document.getElementById('libSortXpIndicator');
+        if (nameInd) nameInd.textContent = librarySortState.field === 'name' ? (librarySortState.dir === 'asc' ? '▲ (A-Z)' : '▼ (Z-A)') : '';
+        if (xpInd) xpInd.textContent = librarySortState.field === 'xp' ? (librarySortState.dir === 'asc' ? '▲' : '▼') : '';
 
         state.monsters.forEach((m, index) => {
             const isLib = m.category === 'library';
@@ -3273,9 +3440,9 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
                     </div>
 
                     <div class="flex flex-wrap items-center justify-end gap-1.5 pt-3 mt-3 border-t border-forest-800/60">
-                        <button class="add-to-active-btn text-xs px-3 py-1.5 bg-[#d4af37] hover:bg-[#eacb67] text-[#0b1814] font-bold rounded-md flex items-center gap-1 transition-all shadow-md" title="Als eigenständige Kreatur zu Aktive Monster hinzufügen">➕ Zu Aktiv</button>
-                        <button class="edit-btn text-xs px-2.5 py-1.5 bg-[#132822] hover:bg-[#1f3f36] text-[#eacb67] rounded-md border border-gray-700/60 flex items-center gap-1 transition-all" title="Bearbeiten">✏️ Bearbeiten</button>
-                        <button class="delete-btn text-xs p-1.5 text-gray-400 hover:text-red-400 transition-all" title="Löschen">🗑️</button>
+                        <button class="add-to-active-btn text-xs px-3 py-1.5 bg-[#d4af37] hover:bg-[#eacb67] text-[#0b1814] font-bold rounded-md flex items-center gap-1 transition-all shadow-md" title="Als eigenständige Kreatur zu Aktive Monster hinzufügen">+ Zu Aktiv</button>
+                        <button class="edit-btn text-xs px-2.5 py-1.5 bg-[#132822] hover:bg-[#1f3f36] text-[#eacb67] rounded-md border border-gray-700/60 flex items-center gap-1 transition-all" title="Bearbeiten">Bearbeiten</button>
+                        <button class="delete-btn text-xs px-2 py-1.5 text-gray-400 hover:text-red-400 rounded hover:bg-forest-900 transition-all font-bold" title="Löschen">✕</button>
                     </div>
 
                     <div class="monster-details ${isExpanded ? 'block' : 'hidden'} pt-2 border-t border-forest-800/40 mt-3">
@@ -3332,11 +3499,11 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
                     </div>
 
                     <div class="flex flex-wrap items-center justify-end gap-1.5 pt-3 mt-3 border-t border-[#1b3d32]/60">
-                        <button class="add-to-init-btn text-xs px-2.5 py-1.5 bg-[#23483d] hover:bg-[#34705d] text-[#eacb67] font-semibold rounded-md border border-[#d4af37]/40 flex items-center gap-1 transition-all" title="Zur Initiative hinzufügen (würfelt 1W20 + Init)">⚔️ + Init</button>
-                        <button class="move-to-lib-btn text-xs px-2.5 py-1.5 bg-[#18362b] hover:bg-[#254d3e] text-[#97c7b2] hover:text-[#eacb67] font-medium rounded-md border border-forest-700/60 flex items-center gap-1 transition-all" title="In Bibliothek (Archiv) verschieben">📚 Zur Bibliothek</button>
-                        <button class="duplicate-btn text-xs px-2.5 py-1.5 bg-[#132822] hover:bg-[#1f3f36] text-gray-300 rounded-md border border-gray-700/60 flex items-center gap-1 transition-all" title="Duplizieren mit aufsteigender Nummer">📋 Kopie</button>
-                        <button class="edit-btn text-xs px-2.5 py-1.5 bg-[#132822] hover:bg-[#1f3f36] text-[#eacb67] rounded-md border border-gray-700/60 flex items-center gap-1 transition-all" title="Bearbeiten">✏️</button>
-                        <button class="delete-btn text-xs p-1.5 text-gray-400 hover:text-red-400 transition-all" title="Löschen">🗑️</button>
+                        <button class="add-to-init-btn text-xs px-2.5 py-1.5 bg-[#23483d] hover:bg-[#34705d] text-[#eacb67] font-semibold rounded-md border border-[#d4af37]/40 flex items-center gap-1 transition-all" title="Zur Initiative hinzufügen (würfelt 1W20 + Init)">+ Init</button>
+                        <button class="move-to-lib-btn text-xs px-2.5 py-1.5 bg-[#18362b] hover:bg-[#254d3e] text-[#97c7b2] hover:text-[#eacb67] font-medium rounded-md border border-forest-700/60 flex items-center gap-1 transition-all" title="In Bibliothek (Archiv) verschieben">Zur Bibliothek</button>
+                        <button class="duplicate-btn text-xs px-2.5 py-1.5 bg-[#132822] hover:bg-[#1f3f36] text-gray-300 rounded-md border border-gray-700/60 flex items-center gap-1 transition-all" title="Duplizieren mit aufsteigender Nummer">Kopie</button>
+                        <button class="edit-btn text-xs px-2.5 py-1.5 bg-[#132822] hover:bg-[#1f3f36] text-[#eacb67] rounded-md border border-gray-700/60 flex items-center gap-1 transition-all" title="Bearbeiten">Bearbeiten</button>
+                        <button class="delete-btn text-xs px-2 py-1.5 text-gray-400 hover:text-red-400 rounded hover:bg-forest-900 transition-all font-bold" title="Löschen">✕</button>
                     </div>
 
                     <div class="monster-details ${isExpanded ? 'block' : 'hidden'} pt-2 border-t border-forest-800/40 mt-3">
@@ -3481,6 +3648,75 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
         }
     }
 
+    let currentMonsterAttrProf = { sta: false, ges: false, kon: false, int: false, wei: false, cha: false };
+
+    function getProfBonusValue() {
+        const input = document.getElementById('monsterProfBonusInput');
+        const valStr = input ? input.value : '+2';
+        const match = String(valStr).match(/-?\d+/);
+        return match ? parseInt(match[0], 10) : 2;
+    }
+
+    function calcBaseMod(score) {
+        const s = parseInt(score, 10);
+        if (isNaN(s)) return 0;
+        return Math.floor((s - 10) / 2);
+    }
+
+    function formatModStr(val) {
+        const num = parseInt(val, 10) || 0;
+        return (num >= 0 ? '+' : '') + num;
+    }
+
+    function updateStatModAndRw(attr) {
+        const valEl = document.getElementById(`m-${attr}-val`);
+        const modEl = document.getElementById(`m-${attr}-mod`);
+        const rwEl = document.getElementById(`m-${attr}-rw`);
+        if (!valEl || !modEl) return;
+
+        const baseMod = calcBaseMod(valEl.value);
+        const profBonus = getProfBonusValue();
+        const isProf = Boolean(currentMonsterAttrProf[attr]);
+        const finalMod = baseMod + (isProf ? profBonus : 0);
+        modEl.value = formatModStr(finalMod);
+        if (rwEl) {
+            rwEl.value = formatModStr(finalMod);
+        }
+    }
+
+    function toggleAttrProf(attr) {
+        currentMonsterAttrProf[attr] = !currentMonsterAttrProf[attr];
+        updateAttrProfBtnUI(attr);
+        updateStatModAndRw(attr);
+    }
+
+    function updateAttrProfBtnUI(attr) {
+        const btn = document.getElementById(`m-${attr}-prof-btn`);
+        if (!btn) return;
+        const isProf = Boolean(currentMonsterAttrProf[attr]);
+        if (isProf) {
+            btn.className = 'attr-prof-btn px-1.5 py-0.5 text-[9px] font-black rounded border border-gold-400 bg-gold-500 text-forest-950 shadow-sm transition-colors';
+            btn.textContent = '✓Ü';
+            btn.title = 'Übungsbonus aktiv (Klicken zum Deaktivieren)';
+        } else {
+            btn.className = 'attr-prof-btn px-1.5 py-0.5 text-[9px] font-bold rounded border border-forest-700 bg-forest-950 text-gray-400 hover:border-gold-500 hover:text-gold-300 transition-colors';
+            btn.textContent = '+Ü';
+            btn.title = 'Übungsbonus auf Modifikator anwenden';
+        }
+    }
+
+    function onStatValInput(attr) {
+        updateStatModAndRw(attr);
+    }
+
+    function onProfBonusInput() {
+        ['sta', 'ges', 'kon', 'int', 'wei', 'cha'].forEach(attr => {
+            if (currentMonsterAttrProf[attr]) {
+                updateStatModAndRw(attr);
+            }
+        });
+    }
+
     function openMonsterModalForEdit(m = null) {
         document.getElementById('monsterModalTitle').textContent = m ? 'Monster bearbeiten' : 'Neues Monster anlegen';
         document.getElementById('monsterIdInput').value = m ? m.id : '';
@@ -3497,6 +3733,8 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
             document.getElementById(`m-${attr}-val`).value = stats[attr]?.val || 10;
             document.getElementById(`m-${attr}-mod`).value = stats[attr]?.mod || '+0';
             document.getElementById(`m-${attr}-rw`).value = stats[attr]?.rw || '+0';
+            currentMonsterAttrProf[attr] = Boolean(stats[attr]?.prof);
+            updateAttrProfBtnUI(attr);
         });
 
         document.getElementById('monsterSkillsInput').value = m ? (m.skills || '') : '';
@@ -3504,6 +3742,7 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
         document.getElementById('monsterResistancesInput').value = m ? (m.resistances || '') : '';
         document.getElementById('monsterSensesInput').value = m ? (m.senses || '') : '';
         document.getElementById('monsterLanguagesInput').value = m ? (m.languages || '') : '';
+        document.getElementById('monsterProfBonusInput').value = m ? (m.profBonus || '+2') : '+2';
         document.getElementById('monsterTacticsInput').value = m ? m.tactics : '';
         document.getElementById('monsterCategorySelect').value = m ? (m.category || 'active') : 'active';
 
@@ -3599,18 +3838,19 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
             init: document.getElementById('monsterInitInput').value || '+0',
             speed: document.getElementById('monsterSpeedInput').value || '9m',
             stats: {
-                sta: { val: parseStatVal('m-sta-val'), mod: document.getElementById('m-sta-mod').value||'+0', rw: document.getElementById('m-sta-rw').value||'+0' },
-                ges: { val: parseStatVal('m-ges-val'), mod: document.getElementById('m-ges-mod').value||'+0', rw: document.getElementById('m-ges-rw').value||'+0' },
-                kon: { val: parseStatVal('m-kon-val'), mod: document.getElementById('m-kon-mod').value||'+0', rw: document.getElementById('m-kon-rw').value||'+0' },
-                int: { val: parseStatVal('m-int-val'), mod: document.getElementById('m-int-mod').value||'+0', rw: document.getElementById('m-int-rw').value||'+0' },
-                wei: { val: parseStatVal('m-wei-val'), mod: document.getElementById('m-wei-mod').value||'+0', rw: document.getElementById('m-wei-rw').value||'+0' },
-                cha: { val: parseStatVal('m-cha-val'), mod: document.getElementById('m-cha-mod').value||'+0', rw: document.getElementById('m-cha-rw').value||'+0' }
+                sta: { val: parseStatVal('m-sta-val'), mod: document.getElementById('m-sta-mod').value||'+0', rw: document.getElementById('m-sta-rw').value||'+0', prof: Boolean(currentMonsterAttrProf.sta) },
+                ges: { val: parseStatVal('m-ges-val'), mod: document.getElementById('m-ges-mod').value||'+0', rw: document.getElementById('m-ges-rw').value||'+0', prof: Boolean(currentMonsterAttrProf.ges) },
+                kon: { val: parseStatVal('m-kon-val'), mod: document.getElementById('m-kon-mod').value||'+0', rw: document.getElementById('m-kon-rw').value||'+0', prof: Boolean(currentMonsterAttrProf.kon) },
+                int: { val: parseStatVal('m-int-val'), mod: document.getElementById('m-int-mod').value||'+0', rw: document.getElementById('m-int-rw').value||'+0', prof: Boolean(currentMonsterAttrProf.int) },
+                wei: { val: parseStatVal('m-wei-val'), mod: document.getElementById('m-wei-mod').value||'+0', rw: document.getElementById('m-wei-rw').value||'+0', prof: Boolean(currentMonsterAttrProf.wei) },
+                cha: { val: parseStatVal('m-cha-val'), mod: document.getElementById('m-cha-mod').value||'+0', rw: document.getElementById('m-cha-rw').value||'+0', prof: Boolean(currentMonsterAttrProf.cha) }
             },
             skills: document.getElementById('monsterSkillsInput').value,
             equipment: document.getElementById('monsterEquipmentInput').value,
             resistances: document.getElementById('monsterResistancesInput').value,
             senses: document.getElementById('monsterSensesInput').value,
             languages: document.getElementById('monsterLanguagesInput').value,
+            profBonus: document.getElementById('monsterProfBonusInput').value || '+2',
             traits: traitsArr,
             actions: actionsArr,
             bonusActions: bonusActionsArr,
@@ -3653,9 +3893,12 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
                     <p class="text-xs text-gray-300">${node.description}</p>
                     ${node.clues ? `<p class="text-[11px] text-gold-300 mt-1"><strong>Hinweis:</strong> ${node.clues}</p>` : ''}
                 </div>
-                <div class="flex justify-end gap-2 pt-2 border-t border-forest-800/60">
-                    <button class="edit-node text-xs text-gold-400">✏️ Bearbeiten</button>
-                    <button class="delete-node text-xs text-red-400">🗑️ Löschen</button>
+                <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-forest-800/60">
+                    <button class="add-to-recap-btn text-xs px-2.5 py-1 bg-gold-500/20 hover:bg-gold-500/30 text-gold-300 rounded border border-gold-500/30 font-semibold transition-colors flex items-center gap-1" title="Titel zum Rückblick hinzufügen">+ Rückblick</button>
+                    <div class="flex items-center gap-2">
+                        <button class="edit-node text-xs text-gold-400 hover:text-gold-300 transition-colors">Bearbeiten</button>
+                        <button class="delete-node text-xs text-red-400 hover:text-red-300 transition-colors">Löschen</button>
+                    </div>
                 </div>
             `;
 
@@ -3700,6 +3943,20 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
                 }
             };
 
+            card.querySelector('.add-to-recap-btn').onclick = (e) => {
+                e.stopPropagation();
+                const title = (node.title || '').trim();
+                if (!title) {
+                    showToast('Knoten hat keinen Titel.', 'warning');
+                    return;
+                }
+                if (!Array.isArray(state.recap)) state.recap = [];
+                state.recap.push(title);
+                saveState();
+                if (state.activeTab === 'auftakt') renderAuftaktTab();
+                showToast(`"${title}" zum Rückblick hinzugefügt!`, 'success');
+            };
+
             card.querySelector('.edit-node').onclick = () => openNodeModalForEdit(node);
             card.querySelector('.delete-node').onclick = () => {
                 if (confirm(`Szene "${node.title}" wirklich löschen?`)) {
@@ -3711,6 +3968,26 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
             };
             container.appendChild(card);
         });
+
+        const clearAllNodesBtn = document.getElementById('clearAllNodesBtn');
+        if (clearAllNodesBtn && !clearAllNodesBtn.dataset.bound) {
+            clearAllNodesBtn.dataset.bound = '1';
+            clearAllNodesBtn.onclick = () => {
+                if (!state.nodes || state.nodes.length === 0) {
+                    showToast('Keine Knoten vorhanden.', 'info');
+                    return;
+                }
+                if (confirm('Möchtest du wirklich alle Karten unter Knoten-Ablauf löschen? Diese Aktion kann nicht rückgängig gemacht werden.')) {
+                    state.nodes.forEach(n => {
+                        if (n && n.id) trackDeletion('nodes', n.id);
+                    });
+                    state.nodes = [];
+                    saveState();
+                    renderNodesTab();
+                    showToast('Alle Knoten gelöscht.', 'info');
+                }
+            };
+        }
     }
 
     function updateNodeStatus(id, newStatus) {
@@ -4724,11 +5001,32 @@ CREATE POLICY "Public campaign access" ON campaign_states FOR ALL USING (true) W
     // 1. Service Worker Registration
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js').then((reg) => {
+            navigator.serviceWorker.register('./sw.js?v=24.0', { updateViaCache: 'none' }).then((reg) => {
                 console.log('[PWA] Service Worker aktiv mit Scope:', reg.scope);
                 reg.update();
             }).catch((err) => {
                 console.warn('[PWA] Service Worker Registrierungsfehler:', err);
+            });
+        });
+
+        // Wenn ein neuer Service Worker übernimmt (skipWaiting + claim), Seite sofort auf neuesten Stand bringen
+        let refreshing = false;
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+            if (!refreshing) {
+                refreshing = true;
+                window.location.reload();
+            }
+        });
+    }
+
+    // Veraltete Caches sofort bereinigen, damit der Browser nie wieder veraltete Versionen aus dem Cache ausliefert
+    if ('caches' in window) {
+        caches.keys().then((keys) => {
+            keys.forEach((key) => {
+                if (key !== 'sylvanus-codex-v24.0') {
+                    console.log('[PWA] Lösche veralteten Cache:', key);
+                    caches.delete(key);
+                }
             });
         });
     }
